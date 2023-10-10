@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Si la solicitud es para un archivo real, directorio o symlink, no reescribir
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+
+    # Reescribir todas las demás solicitudes a index.php
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
