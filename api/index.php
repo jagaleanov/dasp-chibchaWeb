@@ -21,9 +21,12 @@ $authMiddleware->handle();
 
 // Inicializar el enrutador y definir rutas
 $router = require_once 'config/routes.php';
+// print_r($_SERVER["REQUEST_METHOD"]);
+// print_r(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
 // Despachar la solicitud basada en la URI y el método HTTP
 $response = $router->dispatch($_SERVER["REQUEST_METHOD"], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+// print $response;
 
 // Envía respuesta
 header('Content-Type: application/json; charset=utf-8');

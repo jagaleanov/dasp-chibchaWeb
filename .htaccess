@@ -1,11 +1,17 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
+RewriteEngine On
 
-    # Si la solicitud es para un archivo real, directorio o symlink, no reescribir
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-l
+# Deshabilita el listado de directorios
+# Options -Indexes
 
-    # Reescribir todas las demás solicitudes a index.php
-    RewriteRule ^(.*)$ index.php [L,QSA]
-</IfModule>
+# Encabezados CORS (si es necesario)
+# Header set Access-Control-Allow-Origin "*"
+
+RewriteBase /
+
+# Si la solicitud comienza con "api/", redirigir a la carpeta api
+RewriteRule ^api/(.*)$ api/$1 [L]
+
+# Cualquier otra solicitud se redirige a la carpeta spa
+RewriteCond %{REQUEST_URI} !^/api/
+RewriteCond %{REQUEST_URI} !^/spa/
+RewriteRule ^(.*)$ spa/$1 [L]
