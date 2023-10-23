@@ -15,21 +15,38 @@ class Router
     private $routes = [];
 
     // Método para añadir rutas al router
-    public function add($method, $uri, $action)
+    public function add($method, $uri, $action, $isPublic = false)
     {
         $this->routes[] = [
-            'method' => $method,     // Método HTTP: GET, POST, etc.
-            'uri' => $uri,           // URI de la ruta, por ejemplo: /customers/{id}
-            'action' => $action      // Acción a ejecutar, por ejemplo: "CustomerController@show"
+            'method' => $method,
+            'uri' => $uri,
+            'action' => $action,
+            'public' => $isPublic
         ];
+    }
+
+    public function isRoutePublic($requestMethod, $requestUri)
+    {
+        foreach ($this->routes as $route) {
+            $pattern = $this->generatePattern($route['uri']);
+            // print $pattern;
+            // print $requestUri;
+            // print preg_match($pattern, $requestUri);
+            if ($route['method'] == $requestMethod && preg_match($pattern, $requestUri)) {
+                return $route['public'];
+            }
+        }
+        return false; // Por defecto, las rutas son privadas
     }
 
     // Método que maneja las solicitudes entrantes y las despacha al controlador y método correspondiente
     public function dispatch($requestMethod, $requestUri)
     {
+        // $requestUri = "/api" . $requestUri;
         foreach ($this->routes as $route) {
             // Convertimos la URI definida en una expresión regular para hacer coincidir con la URI solicitada
             $pattern = $this->generatePattern($route['uri']);
+
             if ($route['method'] == $requestMethod && preg_match($pattern, $requestUri, $matches)) {
                 array_shift($matches);  // Removemos la primera coincidencia que es la URI completa
 
@@ -38,9 +55,9 @@ class Router
 
                 // Verificamos que el controlador y el método existan
                 if (class_exists($classWithNamespace) && method_exists($classWithNamespace, $method)) {
-                    // Si el controlador es "CustomerController", proporcionamos la dependencia del repositorio
-                    if ($classWithNamespace === "src\\controllers\\CustomerController") {
-                        $repository = new \src\repositories\CustomerRepository();
+                    // Si el controlador es "UserController", proporcionamos la dependencia del repositorio
+                    if ($classWithNamespace === "src\\controllers\\AuthController") {
+                        $repository = new \src\repositories\UserRepository();
                         $controller = new $classWithNamespace($repository);
                     } else {
                         $controller = new $classWithNamespace();

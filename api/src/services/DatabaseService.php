@@ -2,6 +2,8 @@
 
 namespace src\services;
 
+use PDO;
+
 // Servicio para gestionar la conexión a la base de datos usando el patrón Singleton
 class DatabaseService
 {
@@ -17,6 +19,10 @@ class DatabaseService
     {
         // Establece la conexión a la base de datos usando PDO
         $this->connection = new \PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
+        $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+
     }
 
     // Método estático para obtener la única instancia de DatabaseService
