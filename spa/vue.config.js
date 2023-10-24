@@ -8,6 +8,6 @@ module.exports = defineConfig({
   devServer: {
     host: domain,
     port: port,
-    https: { key: './certs/' + domain + '.key', cert: './certs/' + domain + '.crt' },
+    https: { key: './certs/' + domain + '/' + domain + '.key', cert: './certs/' + domain + '/' + domain + '.crt' },
   }
 });
