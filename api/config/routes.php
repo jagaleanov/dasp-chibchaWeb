@@ -22,4 +22,11 @@ $router->add('POST', '/api/customers', 'CustomerController@createCustomer');
 $router->add('PUT', '/api/customers/{id}', 'CustomerController@updateCustomer');
 // $router->add('DELETE', '/api/customers/{id}', 'CustomerController@deleteCustomer');
 
+// Roles
+$router->add('GET', '/api/roles/{id}', 'RolesController@getRole');
+$router->add('GET', '/api/roles', 'RolesController@getAllRoles');
+$router->add('POST', '/api/roles', 'RolesController@createRole');
+$router->add('PUT', '/api/roles/{id}', 'RolesController@updateRole');
+// $router->add('DELETE', '/api/roles/{id}', 'RolesController@deleteRole');
+
 return $router;
