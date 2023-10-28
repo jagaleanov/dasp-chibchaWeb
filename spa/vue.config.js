@@ -5,9 +5,16 @@ const port = 8080
 
 module.exports = defineConfig({
   transpileDependencies: true,
+
   devServer: {
     host: domain,
     port: port,
     https: { key: './certs/' + domain + '/' + domain + '.key', cert: './certs/' + domain + '/' + domain + '.crt' },
+  },
+
+  pluginOptions: {
+    vuetify: {
+			// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
+		}
   }
 });

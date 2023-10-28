@@ -1,22 +1,27 @@
 <template>
-    <v-container>
-        <v-row justify="center">
-            <v-col cols="12" sm="8" md="4">
-                <v-card>
-                    <v-card-title class="headline">
-                        Inicio de sesion
-                    </v-card-title>
-                    <v-card-text>
-                        <v-form @submit.prevent="login">
-                            <v-text-field v-model="username" label="email"></v-text-field>
-                            <v-text-field v-model="password" label="password"></v-text-field>
-                            <v-btn type="submit">Entrar</v-btn>
-                        </v-form>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+    <v-app class="bg-blue-accent-1">
+        <v-container>
+        <v-row justify="center" class=".rounded-circle">
+                <v-col cols="12" sm="8" md="4">
+                    <v-card class="bg-blue-darken-4">
+                        <v-divider class="border-opacity-0"></v-divider>
+                        <v-card-title class="headline" align="center" >
+                            Inicio de sesion
+                        </v-card-title>
+                        <v-divider class="border-opacity-0"></v-divider>
+                        <v-card-text>
+                            <v-form @submit.prevent="login">
+                                <v-text-field v-model="username" label="correo" variant="outlined" prepend-icon="mdi-account-outline"></v-text-field>
+                                <v-text-field v-model="password" label="clave" variant="outlined" prepend-icon="mdi-lastpass"></v-text-field>
+                                <v-btn type="submit" class="bg-blue-darken-3" variant=".rounded-shaped" stacked prepend-icon="mdi-login">Entrar</v-btn>
+                                <v-divider class="border-opacity-0"></v-divider>
+                            </v-form>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-app>
 </template>
 
 
@@ -40,3 +45,7 @@
         }
     }
 </script>
+
+<style>
+
+</style>
