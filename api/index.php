@@ -20,6 +20,7 @@ spl_autoload_register(function ($class) {
 });
 
 use src\middlewares\AuthMiddleware;
+use src\repositories\RolesRepository;
 use src\repositories\UserRepository;
 use src\services\ContainerService;
 
@@ -29,6 +30,8 @@ $container = ContainerService::getInstance();
 // Registrar servicios y repositorios en el contenedor
 $container->register('DatabaseService', DatabaseService::class);
 $container->register('UserRepository', UserRepository::class);
+$container->register('RolesRepository', RolesRepository::class);
+
 
 // Inicializar el enrutador y definir rutas, y pasar el contenedor al enrutador
 $router = new \src\router\Router($container);
