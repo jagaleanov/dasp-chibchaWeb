@@ -72,12 +72,11 @@ class AuthController extends Controller
             $user = new User();
             $user->name = $data['name'];
             $user->last_name = $data['last_name'];
-            $user->name = $data['name'];
             $user->email = $data['email'];
             $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-            $this->userRepository->save($user);
-            return $this->successResponse(['message' => 'Cliente creado exitosamente']);
+            $user = $this->userRepository->save($user);
+            return $this->successResponse(['user' => $user]);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);
         }

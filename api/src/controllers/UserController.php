@@ -56,7 +56,6 @@ class UserController extends Controller
             $user = new User();
             $user->name = $data['name'];
             $user->last_name = $data['last_name'];
-            $user->name = $data['name'];
             $user->email = $data['email'];
             $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
 

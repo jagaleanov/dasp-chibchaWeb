@@ -1,5 +1,5 @@
 <?php
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', '18.228.214.15');
+define('DB_USER', 'chibchaUser23');
+define('DB_PASS', 'password');
 define('DB_NAME', 'chibchaweb');

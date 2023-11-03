@@ -1,3 +1,12 @@
+# <IfModule mod_headers.c>
+#     # Activar el módulo de cabeceras para CORS
+#     Header set Access-Control-Allow-Origin "*"
+#     # Asegúrate de cambiar "*" por el dominio que consume tu API para una mayor seguridad
+#     Header set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, OPTIONS"
+#     Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+#     Header set Access-Control-Allow-Credentials "true"
+# </IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
@@ -8,4 +17,11 @@
 
     # Reescribir todas las demás solicitudes a index.php
     RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
+
+# Responder a las solicitudes de OPTIONS para CORS
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ index.php [R=200,L,E=HTTP_ORIGIN:%{HTTP:ORIGIN}]
 </IfModule>
