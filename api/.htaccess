@@ -1,11 +1,11 @@
-# <IfModule mod_headers.c>
-#     # Activar el módulo de cabeceras para CORS
-#     Header set Access-Control-Allow-Origin "*"
-#     # Asegúrate de cambiar "*" por el dominio que consume tu API para una mayor seguridad
-#     Header set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, OPTIONS"
-#     Header set Access-Control-Allow-Headers "Content-Type, Authorization"
-#     Header set Access-Control-Allow-Credentials "true"
-# </IfModule>
+<IfModule mod_headers.c>
+    # Activar el módulo de cabeceras para CORS
+    Header set Access-Control-Allow-Origin "*"
+    # Asegúrate de cambiar "*" por el dominio que consume tu API para una mayor seguridad
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+    Header set Access-Control-Allow-Credentials "true"
+</IfModule>
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
