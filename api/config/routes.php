@@ -1,9 +1,5 @@
 <?php
 
-// use src\router\Router;
-
-// $router = new Router();
-
 // Definir rutas aquí
 $router->add('POST', '/api/login', 'AuthController@login', true);
 // $router->add('POST', '/api/register', 'AuthController@register', true);
@@ -16,10 +12,10 @@ $router->add('PUT', '/api/users/{id}','UserController@updateUser', true);
 // $router->add('DELETE', '/api/users/{id}', 'UserController@deleteCustomer');
 
 // Clientes
-$router->add('GET', '/api/customers/{id}', 'CustomerController@getCustomer');
-$router->add('GET', '/api/customers', 'CustomerController@getAllCustomers');
-$router->add('POST', '/api/customers', 'CustomerController@createCustomer');
-$router->add('PUT', '/api/customers/{id}', 'CustomerController@updateCustomer');
+$router->add('GET', '/api/customers/{id}', 'CustomerController@getCustomer', true);
+$router->add('GET', '/api/customers', 'CustomerController@getAllCustomers', true);
+$router->add('POST', '/api/customers', 'CustomerController@createCustomer', true);
+$router->add('PUT', '/api/customers/{id}', 'CustomerController@updateCustomer', true);
 // $router->add('DELETE', '/api/customers/{id}', 'CustomerController@deleteCustomer');
 
 return $router;

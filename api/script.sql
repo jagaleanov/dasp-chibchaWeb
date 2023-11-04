@@ -32,6 +32,7 @@ CREATE TABLE customers (
 CREATE TABLE employees (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
+    job_title VARCHAR (50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at datetime DEFAULT NULL,
     INDEX IXFK_employees_users (user_id ASC),

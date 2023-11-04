@@ -4,8 +4,8 @@ namespace src\models;
 
 class User
 {
-
     public $id;
+    public $role_id;
     public $name;
     public $last_name;
     public $email;
@@ -16,7 +16,8 @@ class User
     // Constructor
     public function __construct($data = [])
     {
-        $this->id = isset($data['id']) ? $data['id'] : null;
+        $this->id = isset($data['user_id']) ? $data['user_id'] : null;
+        $this->role_id = isset($data['role_id']) ? $data['role_id'] : null;
         $this->name = isset($data['name']) ? $data['name'] : null;
         $this->last_name = isset($data['last_name']) ? $data['last_name'] : null;
         $this->email = isset($data['email']) ? $data['email'] : null;

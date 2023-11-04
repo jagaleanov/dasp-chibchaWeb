@@ -4,7 +4,6 @@
 namespace src\controllers;
 
 use src\models\User;
-use src\repositories\UserRepository;
 use src\services\ContainerService;
 use src\services\JwtService;
 
@@ -41,8 +40,8 @@ class AuthController extends Controller
             }
 
             $payload = [
-                "iss" => "tu_dominio.com", // emisor
-                "aud" => "tu_dominio.com", // audiencia
+                "iss" => "chibchaweb.com", // emisor
+                "aud" => "chibchaweb.com", // audiencia
                 "iat" => time(), // tiempo de emitido
                 "data" => [ // datos personalizados
                     "userId" => $user->id,
