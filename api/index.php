@@ -33,6 +33,7 @@ $container->register('DatabaseService', DatabaseService::class);
 $container->register('UserRepository', UserRepository::class);
 $container->register('CustomerRepository', CustomerRepository::class);
 $container->register('EmployeeRepository', EmployeeRepository::class);
+$container->register('RoleRepository', EmployeeRepository::class);
 
 // Inicializar el enrutador y definir rutas, y pasar el contenedor al enrutador
 $router = new \src\router\Router($container);

@@ -56,28 +56,4 @@ class AuthController extends Controller
             return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
-    // Método para crear un nuevo cliente
-    public function register()
-    {
-        try {
-            $data = $this->getInputData();
-
-            // Validación de datos de entrada
-            if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password'])) {
-                return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
-            }
-
-            $user = new User();
-            $user->name = $data['name'];
-            $user->last_name = $data['last_name'];
-            $user->email = $data['email'];
-            $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
-
-            $user = $this->userRepository->save($user);
-            return $this->successResponse(['user' => $user]);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
 }
