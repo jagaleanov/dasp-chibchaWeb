@@ -8,19 +8,19 @@ namespace src\controllers;
 use src\models\Customer;
 use src\services\ContainerService;
 
-// Controlador para gestionar usuarios
+// Controlador para gestionar clientes
 class CustomerController extends Controller
 {
-    // Propiedad para el repositorio de usuarios
+    // Propiedad para el repositorio de clientes
     private $customerRepository;
 
-    // Constructor que inyecta el repositorio de usuarios
+    // Constructor que inyecta el repositorio de clientes
     public function __construct()
     {
         $this->customerRepository = ContainerService::getInstance()->get('CustomerRepository');
     }
 
-    // Método para obtener todos los usuarios
+    // Método para obtener todos los clientes
     public function getAllCustomers()
     {
         try {
@@ -32,7 +32,7 @@ class CustomerController extends Controller
         }
     }
 
-    // Método para obtener un usuario por su ID
+    // Método para obtener un cliente por su ID
     public function getCustomer($id)
     {
         try {
@@ -43,7 +43,7 @@ class CustomerController extends Controller
         }
     }
 
-    // Método para crear un nuevo usuario
+    // Método para crear un nuevo cliente
     public function createCustomer()
     {
         try {
@@ -60,7 +60,6 @@ class CustomerController extends Controller
             $customer->email = $data['email'];
             $customer->password = password_hash($data['password'], PASSWORD_DEFAULT);
             $customer->address = $data['address'];
-            $customer->corporation = isset($data['corporation']) ? $data['corporation'] : null;
 
             $customer = $this->customerRepository->save($customer);
             return $this->successResponse(['customer' => $customer]);
@@ -70,13 +69,13 @@ class CustomerController extends Controller
         }
     }
 
-    // Método para actualizar un usuario por su ID
+    // Método para actualizar un cliente por su ID
     public function updateCustomer($id)
     {
         try {
             $data = $this->getInputData();
 
-            if (empty($data['name']) || empty($data['email'])) {
+            if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password']) || empty($data['address'])) {
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
@@ -91,7 +90,6 @@ class CustomerController extends Controller
             $customer->email = $data['email'];
             $customer->password = password_hash($data['password'], PASSWORD_DEFAULT);
             $customer->address = $data['address'];
-            $customer->corporation = isset($data['corporation']) ? $data['corporation'] : null;
             $this->customerRepository->update($customer);
             
             return $this->successResponse(['customer' => $customer]);
@@ -100,7 +98,7 @@ class CustomerController extends Controller
         }
     }
 
-    // Método para eliminar un usuario por su ID
+    // Método para eliminar un cliente por su ID
     public function deleteCustomer($id)
     {
         try {

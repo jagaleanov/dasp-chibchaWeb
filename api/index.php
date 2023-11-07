@@ -22,7 +22,16 @@ spl_autoload_register(function ($class) {
 use src\middlewares\AuthMiddleware;
 use src\repositories\UserRepository;
 use src\repositories\CustomerRepository;
+use src\repositories\DomainRepository;
 use src\repositories\EmployeeRepository;
+use src\repositories\HostPlanRepository;
+use src\repositories\HostRepository;
+use src\repositories\OperativeSystemRepository;
+use src\repositories\PaymentPlanRepository;
+use src\repositories\PaymentRepository;
+use src\repositories\ProviderRepository;
+use src\repositories\RoleRepository;
+use src\repositories\TicketRepository;
 use src\services\ContainerService;
 
 // Inicializar el contenedor de servicios
@@ -30,10 +39,19 @@ $container = ContainerService::getInstance();
 
 // Registrar servicios y repositorios en el contenedor
 $container->register('DatabaseService', DatabaseService::class);
+
 $container->register('UserRepository', UserRepository::class);
 $container->register('CustomerRepository', CustomerRepository::class);
 $container->register('EmployeeRepository', EmployeeRepository::class);
-$container->register('RoleRepository', EmployeeRepository::class);
+$container->register('RoleRepository', RoleRepository::class);
+$container->register('ProviderRepository', ProviderRepository::class);
+$container->register('PaymentPlanRepository', PaymentPlanRepository::class);
+$container->register('HostPlanRepository', HostPlanRepository::class);
+$container->register('OperativeSystemRepository', OperativeSystemRepository::class);
+$container->register('DomainRepository', DomainRepository::class);
+$container->register('HostRepository', HostRepository::class);
+$container->register('PaymentRepository', PaymentRepository::class);
+$container->register('TicketRepository', TicketRepository::class);
 
 // Inicializar el enrutador y definir rutas, y pasar el contenedor al enrutador
 $router = new \src\router\Router($container);
@@ -47,7 +65,6 @@ $authMiddleware->handle();
 
 // Despachar la solicitud basada en la URI y el método HTTP
 $response = $router->dispatch($_SERVER["REQUEST_METHOD"], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-// print $response;
 
 // Envía respuesta
 header('Content-Type: application/json; charset=utf-8');

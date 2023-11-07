@@ -12,18 +12,17 @@ class AuthController extends Controller
 {
     private $userRepository;
 
-    // Constructor que inyecta el repositorio de clientes
+    // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
         $this->userRepository = ContainerService::getInstance()->get('UserRepository');
     }
 
-    // Método para obtener un cliente por su ID
+    // Método para obtener un usuario por su ID
     public function login()
     {
         try {
             $data = $this->getInputData();
-            // print_r($data);
 
             // Validación de datos de entrada
             if (empty($data['email']) || empty($data['password'])) {

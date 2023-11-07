@@ -8,19 +8,19 @@ namespace src\controllers;
 use src\models\Employee;
 use src\services\ContainerService;
 
-// Controlador para gestionar usuarios
+// Controlador para gestionar empleados
 class EmployeeController extends Controller
 {
-    // Propiedad para el repositorio de usuarios
+    // Propiedad para el repositorio de empleados
     private $employeeRepository;
 
-    // Constructor que inyecta el repositorio de usuarios
+    // Constructor que inyecta el repositorio de empleados
     public function __construct()
     {
         $this->employeeRepository = ContainerService::getInstance()->get('EmployeeRepository');
     }
 
-    // Método para obtener todos los usuarios
+    // Método para obtener todos los empleados
     public function getAllEmployees()
     {
         try {
@@ -32,7 +32,7 @@ class EmployeeController extends Controller
         }
     }
 
-    // Método para obtener un usuario por su ID
+    // Método para obtener un empleado por su ID
     public function getEmployee($id)
     {
         try {
@@ -43,14 +43,14 @@ class EmployeeController extends Controller
         }
     }
 
-    // Método para crear un nuevo usuario
+    // Método para crear un nuevo empleado
     public function createEmployee()
     {
         try {
             $data = $this->getInputData();
 
             // Validación de datos de entrada
-            if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password']) || empty($data['job_title'])) {
+            if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password']) || empty($data['mobile_phone'])) {
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
@@ -59,7 +59,7 @@ class EmployeeController extends Controller
             $employee->last_name = $data['last_name'];
             $employee->email = $data['email'];
             $employee->password = password_hash($data['password'], PASSWORD_DEFAULT);
-            $employee->job_title = $data['job_title'];
+            $employee->mobile_phone = $data['mobile_phone'];
 
             $employee = $this->employeeRepository->save($employee);
             return $this->successResponse(['employee' => $employee]);
@@ -69,13 +69,13 @@ class EmployeeController extends Controller
         }
     }
 
-    // Método para actualizar un usuario por su ID
+    // Método para actualizar un empleado por su ID
     public function updateEmployee($id)
     {
         try {
             $data = $this->getInputData();
 
-            if (empty($data['name']) || empty($data['email'])) {
+            if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password']) || empty($data['mobile_phone'])) {
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
@@ -89,7 +89,7 @@ class EmployeeController extends Controller
             $employee->last_name = $data['last_name'];
             $employee->email = $data['email'];
             $employee->password = password_hash($data['password'], PASSWORD_DEFAULT);
-            $employee->job_title = $data['job_title'];
+            $employee->mobile_phone = $data['mobile_phone'];
             $this->employeeRepository->update($employee);
             
             return $this->successResponse(['employee' => $employee]);
@@ -98,7 +98,7 @@ class EmployeeController extends Controller
         }
     }
 
-    // Método para eliminar un usuario por su ID
+    // Método para eliminar un empleado por su ID
     public function deleteEmployee($id)
     {
         try {

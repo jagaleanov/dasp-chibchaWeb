@@ -5,46 +5,46 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Role;
+use src\models\PaymentPlan;
 use src\services\ContainerService;
 
-// Controlador para gestionar roles
-class RoleController extends Controller
+// Controlador para gestionar planes de pago
+class PaymentPlanController extends Controller
 {
-    // Propiedad para el repositorio de roles
-    private $roleRepository;
+    // Propiedad para el repositorio de usuarios
+    private $paymentPlanRepository;
 
-    // Constructor que inyecta el repositorio de roles
+    // Constructor que inyecta el repositorio de planes de pago
     public function __construct()
     {
-        $this->roleRepository = ContainerService::getInstance()->get('RoleRepository');
+        $this->paymentPlanRepository = ContainerService::getInstance()->get('PaymentPlanRepository');
     }
 
-    // Método para obtener todos los roles
-    public function getAllRoles()
+    // Método para obtener todos los planes de pago
+    public function getAllPaymentPlans()
     {
         try {
-            $users = $this->roleRepository->findAll();
-            return $this->successResponse($users);
+            $paymentPlans = $this->paymentPlanRepository->findAll();
+            return $this->successResponse($paymentPlans);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para obtener un rol por su ID
-    public function getRole($id)
+    // Método para obtener un plan de pagos por su ID
+    public function getPaymentPlan($id)
     {
         try {
-            $user = $this->roleRepository->find($id);
-            return $this->successResponse($user);
+            $paymentPlan = $this->paymentPlanRepository->find($id);
+            return $this->successResponse($paymentPlan);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para crear un nuevo rol
-    public function createRole()
+    // Método para crear un nuevo plan de pagos
+    public function createPaymentPlan()
     {
         try {
             $data = $this->getInputData();
@@ -54,19 +54,19 @@ class RoleController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $role = new Role();
-            $role->name = $data['name'];
-            $role = $this->roleRepository->save($role);
+            $paymentPlan = new PaymentPlan();
+            $paymentPlan->name = $data['name'];
+            $paymentPlan = $this->paymentPlanRepository->save($paymentPlan);
             
-            return $this->successResponse(['role' => $role]);
+            return $this->successResponse(['paymentPlan' => $paymentPlan]);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
             
         }
     }
 
-    // Método para actualizar un rol por su ID
-    public function updateRole($id)
+    // Método para actualizar un plan de pagos por su ID
+    public function updatePaymentPlan($id)
     {
         try {
             $data = $this->getInputData();
@@ -75,32 +75,32 @@ class RoleController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $role = $this->roleRepository->find($id);
+            $paymentPlan = $this->paymentPlanRepository->find($id);
 
-            if (!$role) {
+            if (!$paymentPlan) {
                 return $this->notFoundResponse();
             }
 
-            $role->name = $data['name'];
-            $this->roleRepository->update($role);
+            $paymentPlan->name = $data['name'];
+            $this->paymentPlanRepository->update($paymentPlan);
             
-            return $this->successResponse(['role' => $role]);
+            return $this->successResponse(['paymentPlan' => $paymentPlan]);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para eliminar un rol por su ID
-    public function deleteRole($id)
+    // Método para eliminar un plan de pagos por su ID
+    public function deletePaymentPlan($id)
     {
         try {
-            $user = $this->roleRepository->find($id);
+            $paymentPlan = $this->paymentPlanRepository->find($id);
 
-            if (!$user) {
+            if (!$paymentPlan) {
                 return $this->notFoundResponse();
             }
 
-            $this->roleRepository->delete($user);
+            $this->paymentPlanRepository->delete($paymentPlan);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

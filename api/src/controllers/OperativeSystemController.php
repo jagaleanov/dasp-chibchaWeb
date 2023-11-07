@@ -5,46 +5,46 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Role;
+use src\models\OperativeSystem;
 use src\services\ContainerService;
 
-// Controlador para gestionar roles
-class RoleController extends Controller
+// Controlador para gestionar sistemas operativos
+class OperativeSystemController extends Controller
 {
-    // Propiedad para el repositorio de roles
-    private $roleRepository;
+    // Propiedad para el repositorio de sistemas operativos
+    private $operativeSystemRepository;
 
-    // Constructor que inyecta el repositorio de roles
+    // Constructor que inyecta el repositorio de sistemas operativos
     public function __construct()
     {
-        $this->roleRepository = ContainerService::getInstance()->get('RoleRepository');
+        $this->operativeSystemRepository = ContainerService::getInstance()->get('OperativeSystemRepository');
     }
 
-    // Método para obtener todos los roles
-    public function getAllRoles()
+    // Método para obtener todos los sistemas operativos
+    public function getAllOperativeSystems()
     {
         try {
-            $users = $this->roleRepository->findAll();
-            return $this->successResponse($users);
+            $operativeSystems = $this->operativeSystemRepository->findAll();
+            return $this->successResponse($operativeSystems);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para obtener un rol por su ID
-    public function getRole($id)
+    // Método para obtener un sistema operativo por su ID
+    public function getOperativeSystem($id)
     {
         try {
-            $user = $this->roleRepository->find($id);
-            return $this->successResponse($user);
+            $operativeSystem = $this->operativeSystemRepository->find($id);
+            return $this->successResponse($operativeSystem);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para crear un nuevo rol
-    public function createRole()
+    // Método para crear un nuevo sistema operativo
+    public function createOperativeSystem()
     {
         try {
             $data = $this->getInputData();
@@ -54,19 +54,19 @@ class RoleController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $role = new Role();
-            $role->name = $data['name'];
-            $role = $this->roleRepository->save($role);
+            $operativeSystem = new OperativeSystem();
+            $operativeSystem->name = $data['name'];
+            $operativeSystem = $this->operativeSystemRepository->save($operativeSystem);
             
-            return $this->successResponse(['role' => $role]);
+            return $this->successResponse(['operativeSystem' => $operativeSystem]);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
             
         }
     }
 
-    // Método para actualizar un rol por su ID
-    public function updateRole($id)
+    // Método para actualizar un sistema operativo por su ID
+    public function updateOperativeSystem($id)
     {
         try {
             $data = $this->getInputData();
@@ -75,32 +75,32 @@ class RoleController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $role = $this->roleRepository->find($id);
+            $operativeSystem = $this->operativeSystemRepository->find($id);
 
-            if (!$role) {
+            if (!$operativeSystem) {
                 return $this->notFoundResponse();
             }
 
-            $role->name = $data['name'];
-            $this->roleRepository->update($role);
+            $operativeSystem->name = $data['name'];
+            $this->operativeSystemRepository->update($operativeSystem);
             
-            return $this->successResponse(['role' => $role]);
+            return $this->successResponse(['operativeSystem' => $operativeSystem]);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para eliminar un rol por su ID
-    public function deleteRole($id)
+    // Método para eliminar un sistema operativo por su ID
+    public function deleteOperativeSystem($id)
     {
         try {
-            $user = $this->roleRepository->find($id);
+            $operativeSystem = $this->operativeSystemRepository->find($id);
 
-            if (!$user) {
+            if (!$operativeSystem) {
                 return $this->notFoundResponse();
             }
 
-            $this->roleRepository->delete($user);
+            $this->operativeSystemRepository->delete($operativeSystem);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

@@ -5,46 +5,46 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Role;
+use src\models\HostPlan;
 use src\services\ContainerService;
 
-// Controlador para gestionar roles
-class RoleController extends Controller
+// Controlador para gestionar planes de hosting
+class HostPlanController extends Controller
 {
-    // Propiedad para el repositorio de roles
-    private $roleRepository;
+    // Propiedad para el repositorio de planes de hosting
+    private $hostPlanRepository;
 
-    // Constructor que inyecta el repositorio de roles
+    // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->roleRepository = ContainerService::getInstance()->get('RoleRepository');
+        $this->hostPlanRepository = ContainerService::getInstance()->get('HostPlanRepository');
     }
 
-    // Método para obtener todos los roles
-    public function getAllRoles()
+    // Método para obtener todos los planes de hosting
+    public function getAllHostPlans()
     {
         try {
-            $users = $this->roleRepository->findAll();
-            return $this->successResponse($users);
+            $hostPlans = $this->hostPlanRepository->findAll();
+            return $this->successResponse($hostPlans);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para obtener un rol por su ID
-    public function getRole($id)
+    // Método para obtener un plan de hosting por su ID
+    public function getHostPlan($id)
     {
         try {
-            $user = $this->roleRepository->find($id);
-            return $this->successResponse($user);
+            $hostPlan = $this->hostPlanRepository->find($id);
+            return $this->successResponse($hostPlan);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para crear un nuevo rol
-    public function createRole()
+    // Método para crear un nuevo plan de hosting
+    public function createHostPlan()
     {
         try {
             $data = $this->getInputData();
@@ -54,19 +54,19 @@ class RoleController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $role = new Role();
-            $role->name = $data['name'];
-            $role = $this->roleRepository->save($role);
+            $hostPlan = new HostPlan();
+            $hostPlan->name = $data['name'];
+            $hostPlan = $this->hostPlanRepository->save($hostPlan);
             
-            return $this->successResponse(['role' => $role]);
+            return $this->successResponse(['hostPlan' => $hostPlan]);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
             
         }
     }
 
-    // Método para actualizar un rol por su ID
-    public function updateRole($id)
+    // Método para actualizar un plan de hosting por su ID
+    public function updateHostPlan($id)
     {
         try {
             $data = $this->getInputData();
@@ -75,32 +75,32 @@ class RoleController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $role = $this->roleRepository->find($id);
+            $hostPlan = $this->hostPlanRepository->find($id);
 
-            if (!$role) {
+            if (!$hostPlan) {
                 return $this->notFoundResponse();
             }
 
-            $role->name = $data['name'];
-            $this->roleRepository->update($role);
+            $hostPlan->name = $data['name'];
+            $this->hostPlanRepository->update($hostPlan);
             
-            return $this->successResponse(['role' => $role]);
+            return $this->successResponse(['hostPlan' => $hostPlan]);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para eliminar un rol por su ID
-    public function deleteRole($id)
+    // Método para eliminar un plan de hosting por su ID
+    public function deleteHostPlan($id)
     {
         try {
-            $user = $this->roleRepository->find($id);
+            $hostPlan = $this->hostPlanRepository->find($id);
 
-            if (!$user) {
+            if (!$hostPlan) {
                 return $this->notFoundResponse();
             }
 
-            $this->roleRepository->delete($user);
+            $this->hostPlanRepository->delete($hostPlan);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

@@ -5,34 +5,33 @@ namespace src\repositories;
 
 // Importaciones de otras clases que se usarán en el repositorio
 
-use src\models\Role;
+use src\models\Provider;
 
-// Repositorio para gestionar operaciones relacionadas con los roles en la base de datos
-class RoleRepository extends Repository
+// Repositorio para gestionar operaciones relacionadas con los providers en la base de datos
+class ProviderRepository extends Repository
 {
-    // Método para encontrar un rol por su ID
+    // Método para encontrar un proveedor de dominios por su ID
     public function find($id)
     {
         $stmt = $this->connection->prepare(
-            "SELECT *
-            FROM roles WHERE id = :id"
+            "SELECT * FROM providers WHERE id = :id"
         );
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch();
 
         if ($data) {
-            return new Role($data);
+            return new Provider($data);
         }
 
         // Si no se encuentra el cliente, se retorna null
         return null;
     }
 
-    // Método para encontrar todos los roles
+    // Método para encontrar todos los clientes, con opción de filtro por nombre o email
     public function findAll($search = null)
     {
         $query =
-            "SELECT * FROM roles ";
+            "SELECT * FROM providers ";
         $params = [];
 
         // Aplicación de filtros si se proporcionan
@@ -46,69 +45,70 @@ class RoleRepository extends Repository
 
         $data = $stmt->fetchAll();
 
-        $roles = [];
-        foreach ($data as $roleData) {
-            $roles[] = new Role($roleData);
+        $providers = [];
+        foreach ($data as $providerData) {
+            $providers[] = new Provider($providerData);
         }
 
-        return $roles;
+        return $providers;
     }
 
-    // Método para insertar un rol en la base de datos
-    public function save(Role $role)
+    // Método para insertar un proveedor de dominios en la base de datos
+    public function save(Provider $provider)
     {
         try {
             // Inserción del usuario 
             $stmt = $this->connection->prepare(
-                "INSERT INTO roles (name) VALUES (:name)"
+                "INSERT INTO providers (name) VALUES (:name)"
             );
             $stmt->execute([
-                'name' => $role->name,
+                'name' => $provider->name,
             ]);
-            $roleId = $this->connection->lastInsertId();
+            $providerId = $this->connection->lastInsertId();
 
             //Respuesta
-            return $this->find($roleId);
+            return $this->find($providerId);
         } catch (\Exception $e) {
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
 
-    // Método para actualizar un rol en la base de datos
-    public function update(Role $role)
+    // Método para actualizar un proveedor de dominios en la base de datos
+    public function update(Provider $provider)
     {
         try {
 
             // Actualización del cliente
             $stmt = $this->connection->prepare(
-                "UPDATE roles SET 
+                "UPDATE providers SET 
                 name = :name
                 WHERE id = :id"
             );
             $stmt->execute([
-                'name' => $role->name,
-                'id' => $role->id
+                'name' => $provider->name,
+                'id' => $provider->id
             ]);
 
             //Respuesta
-            return $this->find($role->id);
+            return $this->find($provider->id);
         } catch (\Exception $e) {
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
 
-    // Método para eliminar un rol por su ID
+    // Método para eliminar un proveedor de dominios por su ID
     public function delete($id)
     {
         try {
-            //Validación de la relación del user y el role
-            $stmt = $this->connection->prepare("DELETE FROM roles WHERE id = :id");
+
+            //Validación de la relación del user y el provider
+            $stmt = $this->connection->prepare("DELETE FROM providers WHERE id = :id");
             $stmt->execute(['id' => $id]);
 
             //Respuesta
             return $stmt->rowCount() == 1;
         } catch (\Exception $e) {
-            throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
+            // Si hay un error, revertir la transacción
         }
     }
 }

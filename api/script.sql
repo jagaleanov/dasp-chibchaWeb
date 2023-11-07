@@ -1,3 +1,4 @@
+USE chibchaweb;
 CREATE TABLE roles (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR (50) NULL,
@@ -21,7 +22,6 @@ CREATE TABLE users (
 CREATE TABLE customers (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
-    corporation VARCHAR (50) NULL,
     address VARCHAR (100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at datetime DEFAULT NULL,
@@ -32,9 +32,9 @@ CREATE TABLE customers (
 CREATE TABLE employees (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
-    job_title VARCHAR (50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at datetime DEFAULT NULL,
+    mobile_phone VARCHAR (10) NOT NULL,
     INDEX IXFK_employees_users (user_id ASC),
     PRIMARY KEY (id)
 );
@@ -57,7 +57,7 @@ CREATE TABLE operative_systems (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE domain_distribuitors (
+CREATE TABLE providers (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR (50) NOT NULL,
     PRIMARY KEY (id)
@@ -69,6 +69,7 @@ CREATE TABLE hosts (
     host_plan_id TINYINT UNSIGNED NOT NULL,
     payment_plan_id TINYINT UNSIGNED NOT NULL,
     operative_system_id TINYINT UNSIGNED NOT NULL,
+    ip VARCHAR (15) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at datetime DEFAULT NULL,
     INDEX IXFK_hosts_customers (customer_id ASC),
@@ -80,49 +81,56 @@ CREATE TABLE hosts (
 
 CREATE TABLE credit_cards (
     customer_id INT UNSIGNED NOT NULL,
-    number VARCHAR (15) NOT NULL,
+    number VARCHAR (16) NOT NULL,
     type ENUM('VISA', 'MASTERCARD', 'AMEX') NOT NULL,
-    expiration_date DATE NOT NULL,
+    expiration_year INT (4) UNSIGNED NOT NULL,
+    expiration_month TINYINT (2) UNSIGNED NOT NULL,
     security_code VARCHAR (3) NOT NULL,
     name VARCHAR (50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at datetime DEFAULT NULL,
     INDEX IXFK_credit_cards_customers (customer_id ASC),
-    PRIMARY KEY (number, customer_id)
+    PRIMARY KEY (number, customer_id),
+    UNIQUE INDEX U_credit_cards (customer_id ASC,number ASC),
+    CONSTRAINT CHK_expiration_month CHECK (month >= 1 AND month <= 12)
 );
 
-CREATE TABLE domain_requests (
+CREATE TABLE domains (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     customer_id INT NOT NULL,
-    domain_distribuitor_id INT NOT NULL,
+    provider_id INT NOT NULL,
     domain VARCHAR (50) NOT NULL,
+    status TINYINT (1) UNSIGNED NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at datetime DEFAULT NULL,
-    INDEX IXFK_domain_requests_customers (customer_id ASC),
-    INDEX IXFK_domain_requests_domain_distribuitors (domain_distribuitor_id ASC),
+    INDEX IXFK_domains_customers (customer_id ASC),
+    INDEX IXFK_domains_providers (provider_id ASC),
     PRIMARY KEY (id),
-    UNIQUE INDEX U_domain_requests_domain (domain ASC)
+    UNIQUE INDEX U_domains_domain (domain ASC)
 );
 
 CREATE TABLE payments (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     host_id INT UNSIGNED NOT NULL,
+    credit_card_customer_id INT UNSIGNED NOT NULL,
+    credit_card_number VARCHAR (16) NOT NULL,
     amount INT UNSIGNED NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at datetime DEFAULT NULL,
     INDEX IXFK_payments_hosts (host_id ASC),
+    INDEX IXFK_payments_credit_cards (credit_card_customer_id ASC,credit_card_number ASC),
     PRIMARY KEY (id)
 );
 
 CREATE TABLE tickets (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     host_id INT UNSIGNED NOT NULL,
-    user_id INT UNSIGNED NULL,
-    status VARCHAR (50) NOT NULL,
-    employee_id INT NOT NULL,
+    role_id INT DEFAULT NULL,
+    status TINYINT (1) UNSIGNED NOT NULL DEFAULT 0,
+    description TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at datetime DEFAULT NULL,
-    INDEX IXFK_tickets_employees (employee_id ASC),
     INDEX IXFK_tickets_hosts (host_id ASC),
-    PRIMARY KEY (id, host_id)
+    INDEX IXFK_tickets_roles (role_id ASC),
+    PRIMARY KEY (id)
 );

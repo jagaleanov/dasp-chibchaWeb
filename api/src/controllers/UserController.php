@@ -35,58 +35,8 @@ class UserController extends Controller
     public function getUser($id)
     {
         try {
-            $users = $this->userRepository->find($id);
-            return $this->successResponse($users);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Método para crear un nuevo usuario
-    public function createUser()
-    {
-        try {
-            $data = $this->getInputData();
-
-            // Validación de datos de entrada
-            if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password'])) {
-                return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
-            }
-
-            $user = new User();
-            $user->name = $data['name'];
-            $user->last_name = $data['last_name'];
-            $user->email = $data['email'];
-            $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
-
-            $user = $this->userRepository->save($user);
-            return $this->successResponse(['user' => $user]);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Método para actualizar un usuario por su ID
-    public function updateUser($id)
-    {
-        try {
-            $data = $this->getInputData();
-
-            if (empty($data['name']) || empty($data['email'])) {
-                return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
-            }
-
             $user = $this->userRepository->find($id);
-
-            if (!$user) {
-                return $this->notFoundResponse();
-            }
-
-            $user->name = $data['name'];
-            $user->email = $data['email'];
-            $this->userRepository->save($user);
-
-            return $this->successResponse(['message' => 'Cliente actualizado exitosamente']);
+            return $this->successResponse($user);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);
         }

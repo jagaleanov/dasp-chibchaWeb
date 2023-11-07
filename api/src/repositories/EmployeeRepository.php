@@ -14,7 +14,7 @@ class EmployeeRepository extends Repository
     public function find($id)
     {
         $stmt = $this->connection->prepare(
-            "SELECT e.id, u.name, u.last_name, u.email, u.password, u.role_id, e.job_title, e.user_id, e.created_at, e.updated_at
+            "SELECT e.id, u.name, u.last_name, u.email, u.password, u.role_id, e.mobile_phone, e.user_id, e.created_at, e.updated_at
             FROM employees e 
             JOIN users u ON e.user_id = u.id 
             WHERE e.id = :id"
@@ -34,7 +34,7 @@ class EmployeeRepository extends Repository
     public function findByUserId($userId)
     {
         $stmt = $this->connection->prepare(
-            "SELECT e.id, u.name, u.last_name, u.email, u.password, u.role_id, e.job_title, e.user_id, e.created_at, e.updated_at
+            "SELECT e.id, u.name, u.last_name, u.email, u.password, u.role_id, e.mobile_phone, e.user_id, e.created_at, e.updated_at
             FROM employees e 
             JOIN users u ON e.user_id = u.id 
             WHERE e.user_id = :user_id"
@@ -54,7 +54,7 @@ class EmployeeRepository extends Repository
     public function findAll($search = null)
     {
         $query =
-            "SELECT e.id, u.name, u.last_name, u.email, u.password, u.role_id, e.job_title, e.user_id, e.created_at, e.updated_at
+            "SELECT e.id, u.name, u.last_name, u.email, u.password, u.role_id, e.mobile_phone, e.user_id, e.created_at, e.updated_at
         FROM employees e
         JOIN users u ON e.user_id = u.id";
         $params = [];
@@ -81,7 +81,6 @@ class EmployeeRepository extends Repository
     // Método para insertar un empleado en la base de datos
     public function save(Employee $employee)
     {
-
         // Iniciar una transacción
         $this->connection->beginTransaction();
 
@@ -95,17 +94,17 @@ class EmployeeRepository extends Repository
                 'last_name' => $employee->last_name,
                 'email' => $employee->email,
                 'password' => $employee->password,
-                'role_id' => 1
+                'role_id' => $employee->role_id
             ]);
             $userId = $this->connection->lastInsertId();
 
             // Inserción del empleado 
             $stmt = $this->connection->prepare(
-                "INSERT INTO employees (user_id, job_title) VALUES (:user_id, :job_title)"
+                "INSERT INTO employees (user_id, mobile_phone) VALUES (:user_id, :mobile_phone)"
             );
             $stmt->execute([
                 'user_id' => $userId,
-                'job_title' => $employee->job_title,
+                'mobile_phone' => $employee->mobile_phone,
             ]);
 
             // Confirmar la transacción
@@ -123,6 +122,8 @@ class EmployeeRepository extends Repository
     // Método para actualizar un empleado en la base de datos
     public function update(Employee $employee)
     {
+        // Iniciar una transacción
+        $this->connection->beginTransaction();
         try {
             //Validación de la relación del user y el employee
             $stmt = $this->connection->prepare(
@@ -134,7 +135,7 @@ class EmployeeRepository extends Repository
             );
             $stmt->execute([
                 'id' => $employee->id,
-                'user_id' => $employee->user_id,
+                'user_id' => $employee->user_id
             ]);
 
             // Iniciar una transacción
@@ -146,7 +147,9 @@ class EmployeeRepository extends Repository
                     name = :name, 
                     last_name = :last_name,
                     email = :email ,
-                    password = :password 
+                    password = :password ,
+                    role_id = :role_id ,
+                    updated_at = :updated_at
                     WHERE id = :id"
             );
             $stmt->execute([
@@ -154,25 +157,29 @@ class EmployeeRepository extends Repository
                 'last_name' => $employee->last_name,
                 'email' => $employee->email,
                 'password' => $employee->password,
+                'role_id' => $employee->role_id,
+                'updated_at' => date('Y-m-d H:i:s'),
                 'id' => $employee->user_id
             ]);
 
             // Actualización del empleado
             $stmt = $this->connection->prepare(
                 "UPDATE employees SET 
-                    job_title = :job_title
+                    mobile_phone = :mobile_phone,
+                    updated_at = :updated_at
                     WHERE id = :id"
             );
             $stmt->execute([
-                'job_title' => $employee->job_title,
+                'mobile_phone' => $employee->mobile_phone,
+                'updated_at' => date('Y-m-d H:i:s'),
+                'id' => $employee->id,
             ]);
 
             // Confirmar la transacción
             $this->connection->commit();
 
             //Respuesta
-            $employeeId = $employee->id;
-            return $this->find($employeeId);
+            return $this->find($employee->id);
         } catch (\Exception $e) {
             // Si hay un error, revertir la transacción
             $this->connection->rollback();
@@ -190,7 +197,6 @@ class EmployeeRepository extends Repository
             //Validación de la relación del user y el employee
             $stmt = $this->connection->prepare("DELETE FROM employees WHERE id = :id");
             $stmt->execute(['id' => $id]);
-            return $stmt->rowCount() == 1;
 
             // Confirmar la transacción
             $this->connection->commit();

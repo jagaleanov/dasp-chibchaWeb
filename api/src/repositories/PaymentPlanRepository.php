@@ -5,34 +5,33 @@ namespace src\repositories;
 
 // Importaciones de otras clases que se usarán en el repositorio
 
-use src\models\Role;
+use src\models\PaymentPlan;
 
-// Repositorio para gestionar operaciones relacionadas con los roles en la base de datos
-class RoleRepository extends Repository
+// Repositorio para gestionar operaciones relacionadas con los payment_plans en la base de datos
+class PaymentPlanRepository extends Repository
 {
     // Método para encontrar un rol por su ID
     public function find($id)
     {
         $stmt = $this->connection->prepare(
-            "SELECT *
-            FROM roles WHERE id = :id"
+            "SELECT * FROM payment_plans WHERE id = :id"
         );
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch();
 
         if ($data) {
-            return new Role($data);
+            return new PaymentPlan($data);
         }
 
         // Si no se encuentra el cliente, se retorna null
         return null;
     }
 
-    // Método para encontrar todos los roles
+    // Método para encontrar todos los payment_plans
     public function findAll($search = null)
     {
         $query =
-            "SELECT * FROM roles ";
+            "SELECT * FROM payment_plans ";
         $params = [];
 
         // Aplicación de filtros si se proporcionan
@@ -45,53 +44,51 @@ class RoleRepository extends Repository
         $stmt->execute($params);
 
         $data = $stmt->fetchAll();
-
-        $roles = [];
-        foreach ($data as $roleData) {
-            $roles[] = new Role($roleData);
+        $paymentPlans = [];
+        foreach ($data as $paymentPlanData) {
+            $paymentPlans[] = new PaymentPlan($paymentPlanData);
         }
 
-        return $roles;
+        return $paymentPlans;
     }
 
     // Método para insertar un rol en la base de datos
-    public function save(Role $role)
+    public function save(PaymentPlan $paymentPlan)
     {
         try {
             // Inserción del usuario 
             $stmt = $this->connection->prepare(
-                "INSERT INTO roles (name) VALUES (:name)"
+                "INSERT INTO payment_plans (name) VALUES (:name)"
             );
             $stmt->execute([
-                'name' => $role->name,
+                'name' => $paymentPlan->name
             ]);
-            $roleId = $this->connection->lastInsertId();
+            $paymentPlanId = $this->connection->lastInsertId();
 
             //Respuesta
-            return $this->find($roleId);
+            return $this->find($paymentPlanId);
         } catch (\Exception $e) {
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
 
     // Método para actualizar un rol en la base de datos
-    public function update(Role $role)
+    public function update(PaymentPlan $paymentPlan)
     {
         try {
-
             // Actualización del cliente
             $stmt = $this->connection->prepare(
-                "UPDATE roles SET 
+                "UPDATE payment_plans SET 
                 name = :name
                 WHERE id = :id"
             );
             $stmt->execute([
-                'name' => $role->name,
-                'id' => $role->id
+                'name' => $paymentPlan->name,
+                'id' => $paymentPlan->id
             ]);
 
             //Respuesta
-            return $this->find($role->id);
+            return $this->find($paymentPlan->id);
         } catch (\Exception $e) {
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
@@ -101,8 +98,11 @@ class RoleRepository extends Repository
     public function delete($id)
     {
         try {
-            //Validación de la relación del user y el role
-            $stmt = $this->connection->prepare("DELETE FROM roles WHERE id = :id");
+            // Iniciar una transacción
+            $this->connection->beginTransaction();
+
+            //Validación de la relación del user y el paymentplan
+            $stmt = $this->connection->prepare("DELETE FROM payment_plans WHERE id = :id");
             $stmt->execute(['id' => $id]);
 
             //Respuesta

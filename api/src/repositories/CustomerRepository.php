@@ -14,7 +14,7 @@ class CustomerRepository extends Repository
     public function find($id)
     {
         $stmt = $this->connection->prepare(
-            "SELECT c.id, u.name, u.last_name, u.email, u.password, u.role_id, c.corporation, c.address, c .user_id, c.created_at, c.updated_at
+            "SELECT c.id, u.name, u.last_name, u.email, u.password, c.address, c .user_id, c.created_at, c.updated_at
             FROM customers c 
             JOIN users u ON c.user_id = u.id 
             WHERE c.id = :id"
@@ -34,7 +34,7 @@ class CustomerRepository extends Repository
     public function findByUserId($userId)
     {
         $stmt = $this->connection->prepare(
-            "SELECT c.id, u.name, u.last_name, u.email, u.password, u.role_id, c.corporation, c.address, c .user_id, c.created_at, c.updated_at
+            "SELECT c.id, u.name, u.last_name, u.email, u.password, c.address, c .user_id, c.created_at, c.updated_at
             FROM customers c 
             JOIN users u ON c.user_id = u.id 
             WHERE c.user_id = :user_id"
@@ -54,7 +54,7 @@ class CustomerRepository extends Repository
     public function findAll($search = null)
     {
         $query =
-            "SELECT c.id, u.name, u.last_name, u.email, u.password, u.role_id, c.corporation, c.address, c .user_id, c.created_at, c.updated_at
+            "SELECT c.id, u.name, u.last_name, u.email, u.password, c.address, c .user_id, c.created_at, c.updated_at
         FROM customers c
         JOIN users u ON c.user_id = u.id";
         $params = [];
@@ -81,7 +81,6 @@ class CustomerRepository extends Repository
     // Método para insertar un cliente en la base de datos
     public function save(Customer $customer)
     {
-
         // Iniciar una transacción
         $this->connection->beginTransaction();
 
@@ -101,11 +100,10 @@ class CustomerRepository extends Repository
 
             // Inserción del cliente 
             $stmt = $this->connection->prepare(
-                "INSERT INTO customers (user_id, corporation, address) VALUES (:user_id, :corporation, :address)"
+                "INSERT INTO customers (user_id,  address) VALUES (:user_id, :address)"
             );
             $stmt->execute([
                 'user_id' => $userId,
-                'corporation' => $customer->corporation,
                 'address' => $customer->address,
             ]);
 
@@ -124,6 +122,8 @@ class CustomerRepository extends Repository
     // Método para actualizar un cliente en la base de datos
     public function update(Customer $customer)
     {
+        // Iniciar una transacción
+        $this->connection->beginTransaction();
         try {
             //Validación de la relación del user y el customer
             $stmt = $this->connection->prepare(
@@ -147,7 +147,8 @@ class CustomerRepository extends Repository
                     name = :name, 
                     last_name = :last_name ,
                     email = :email ,
-                    password = :password 
+                    password = :password ,
+                    updated_at = :updated_at
                     WHERE id = :id"
             );
             $stmt->execute([
@@ -155,19 +156,20 @@ class CustomerRepository extends Repository
                 'last_name' => $customer->last_name,
                 'email' => $customer->email,
                 'password' => $customer->password,
+                'updated_at' => date('Y-m-d H:i:s'),
                 'id' => $customer->user_id
             ]);
 
             // Actualización del cliente
             $stmt = $this->connection->prepare(
                 "UPDATE customers SET 
-                    corporation = :corporation,
-                    address = :address 
+                    address = :address,
+                    updated_at = :updated_at 
                     WHERE id = :id"
             );
             $stmt->execute([
-                'corporation' => $customer->corporation,
                 'address' => $customer->address,
+                'updated_at' => date('Y-m-d H:i:s'),
                 'id' => $customer->id
             ]);
 
@@ -194,7 +196,6 @@ class CustomerRepository extends Repository
             //Validación de la relación del user y el customer
             $stmt = $this->connection->prepare("DELETE FROM customers WHERE id = :id");
             $stmt->execute(['id' => $id]);
-            return $stmt->rowCount() == 1;
 
             // Confirmar la transacción
             $this->connection->commit();

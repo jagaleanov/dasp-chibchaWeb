@@ -5,34 +5,33 @@ namespace src\repositories;
 
 // Importaciones de otras clases que se usarán en el repositorio
 
-use src\models\Role;
+use src\models\OperativeSystem;
 
-// Repositorio para gestionar operaciones relacionadas con los roles en la base de datos
-class RoleRepository extends Repository
+// Repositorio para gestionar operaciones relacionadas con los operative_systems en la base de datos
+class OperativeSystemRepository extends Repository
 {
     // Método para encontrar un rol por su ID
     public function find($id)
     {
         $stmt = $this->connection->prepare(
-            "SELECT *
-            FROM roles WHERE id = :id"
+            "SELECT * FROM operative_systems WHERE id = :id"
         );
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch();
 
         if ($data) {
-            return new Role($data);
+            return new OperativeSystem($data);
         }
 
         // Si no se encuentra el cliente, se retorna null
         return null;
     }
 
-    // Método para encontrar todos los roles
+    // Método para encontrar todos los operative_systems
     public function findAll($search = null)
     {
         $query =
-            "SELECT * FROM roles ";
+            "SELECT * FROM operative_systems ";
         $params = [];
 
         // Aplicación de filtros si se proporcionan
@@ -46,53 +45,67 @@ class RoleRepository extends Repository
 
         $data = $stmt->fetchAll();
 
-        $roles = [];
-        foreach ($data as $roleData) {
-            $roles[] = new Role($roleData);
+        $operativeSystems = [];
+        foreach ($data as $operativeSystemData) {
+            $operativeSystems[] = new OperativeSystem($operativeSystemData);
         }
 
-        return $roles;
+        return $operativeSystems;
     }
 
     // Método para insertar un rol en la base de datos
-    public function save(Role $role)
+    public function save(OperativeSystem $operativeSystem)
     {
+
+        // Iniciar una transacción
+        $this->connection->beginTransaction();
+
         try {
             // Inserción del usuario 
             $stmt = $this->connection->prepare(
-                "INSERT INTO roles (name) VALUES (:name)"
+                "INSERT INTO operative_systems (name) VALUES (:name)"
             );
             $stmt->execute([
-                'name' => $role->name,
+                'name' => $operativeSystem->name,
             ]);
-            $roleId = $this->connection->lastInsertId();
+            $operativeSystemId = $this->connection->lastInsertId();
+
+            // Confirmar la transacción
+            $this->connection->commit();
 
             //Respuesta
-            return $this->find($roleId);
+            return $this->find($operativeSystemId);
         } catch (\Exception $e) {
+            // Si hay un error, revertir la transacción
+            $this->connection->rollback();
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
 
     // Método para actualizar un rol en la base de datos
-    public function update(Role $role)
+    public function update(OperativeSystem $operativeSystem)
     {
         try {
 
             // Actualización del cliente
             $stmt = $this->connection->prepare(
-                "UPDATE roles SET 
+                "UPDATE operative_systems SET 
                 name = :name
                 WHERE id = :id"
             );
             $stmt->execute([
-                'name' => $role->name,
-                'id' => $role->id
+                'name' => $operativeSystem->name,
+                'id' => $operativeSystem->id
             ]);
 
+            // Confirmar la transacción
+            $this->connection->commit();
+
             //Respuesta
-            return $this->find($role->id);
+            return $this->find($operativeSystem->id);
         } catch (\Exception $e) {
+            // Si hay un error, revertir la transacción
+            $this->connection->rollback();
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
@@ -101,8 +114,8 @@ class RoleRepository extends Repository
     public function delete($id)
     {
         try {
-            //Validación de la relación del user y el role
-            $stmt = $this->connection->prepare("DELETE FROM roles WHERE id = :id");
+            //Validación de la relación del user y el hostplan
+            $stmt = $this->connection->prepare("DELETE FROM operative_systems WHERE id = :id");
             $stmt->execute(['id' => $id]);
 
             //Respuesta

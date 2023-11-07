@@ -29,10 +29,6 @@ class Router
     {
         foreach ($this->routes as $route) {
             $pattern = $this->generatePattern($route['uri']);
-            // print $pattern;
-            // print $requestUri;
-            // print $route['method'] == $requestMethod;
-            // print preg_match($pattern, $requestUri);
             if ($route['method'] == $requestMethod && preg_match($pattern, $requestUri)) {
                 return $route['public'];
             }
@@ -43,21 +39,15 @@ class Router
     // Método que maneja las solicitudes entrantes y las despacha al controlador y método correspondiente
     public function dispatch($requestMethod, $requestUri)
     {
-        // print $requestMethod;
-        // print $requestUri;
-        // $requestUri = "/api" . $requestUri;
         foreach ($this->routes as $route) {
             // Convertimos la URI definida en una expresión regular para hacer coincidir con la URI solicitada
             $pattern = $this->generatePattern($route['uri']);
-            // exit;
 
             if ($route['method'] == $requestMethod && preg_match($pattern, $requestUri, $matches)) {
                 array_shift($matches);  // Removemos la primera coincidencia que es la URI completa
 
                 list($class, $method) = explode("@", $route['action']);
                 $classWithNamespace = "src\\controllers\\" . $class;
-                // print_r($classWithNamespace);
-                // print_r(class_exists($classWithNamespace));
 
                 // Verificamos que el controlador y el método existan
                 if (class_exists($classWithNamespace) && method_exists($classWithNamespace, $method)) {
