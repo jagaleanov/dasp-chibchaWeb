@@ -1,6 +1,8 @@
 <?php
 
 // Definir rutas aquí
+
+// Login
 $router->add('POST', '/api/login', 'AuthController@login', true);
 
 // Usuarios
