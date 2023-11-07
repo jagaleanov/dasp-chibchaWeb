@@ -69,7 +69,7 @@ $router->add('PUT', '/api/domains/{id}', 'DomainController@updateDomainRequest',
 $router->add('GET', '/api/credit-cards/{customerId,number}', 'CreditCardController@getCreditCard', true);
 $router->add('GET', '/api/credit-cards', 'CreditCardController@getAllCreditCards', true);
 $router->add('POST', '/api/credit-cards', 'CreditCardController@createCreditCard', true);
-$router->add('DELETE', '/api/credit-cards/{customerId,number}', 'CreditCardController@deleteCreditCard');
+$router->add('DELETE', '/api/credit-cards/{customerId,number}', 'CreditCardController@deleteCreditCard',true);
 
 // Hosts
 $router->add('GET', '/api/hosts/{id}', 'HostController@getHost', true);
