@@ -17,11 +17,11 @@ $router->add('PUT', '/api/customers/{id}', 'CustomerController@updateCustomer', 
 // $router->add('DELETE', '/api/customers/{id}', 'CustomerController@deleteCustomer');
 
 // Empleados
-$router->add('GET', '/api/employees/{id}', 'EmployeeController@getCustomer', true);
-$router->add('GET', '/api/employees', 'EmployeeController@getAllCustomers', true);
-$router->add('POST', '/api/employees', 'EmployeeController@createCustomer', true);
-$router->add('PUT', '/api/employees/{id}', 'EmployeeController@updateCustomer', true);
-// $router->add('DELETE', '/api/customers/{id}', 'EmployeeController@deleteCustomer');
+$router->add('GET', '/api/employees/{id}', 'EmployeeController@getEmployee', true);
+$router->add('GET', '/api/employees', 'EmployeeController@getAllEmployees', true);
+$router->add('POST', '/api/employees', 'EmployeeController@createEmployee', true);
+$router->add('PUT', '/api/employees/{id}', 'EmployeeController@updateEmployee', true);
+// $router->add('DELETE', '/api/customers/{id}', 'EmployeeController@deleteEmployee');
 
 // Roles
 $router->add('GET', '/api/roles/{id}', 'RoleController@getRole', true);
