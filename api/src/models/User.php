@@ -16,7 +16,7 @@ class User
     // Constructor
     public function __construct($data = [])
     {
-        $this->id = isset($data['user_id']) ? $data['user_id'] : null;
+        $this->id = isset($data['user_id']) ? $data['user_id'] : (isset($data['id']) ? $data['id'] : null);
         $this->role_id = isset($data['role_id']) ? $data['role_id'] : null;
         $this->name = isset($data['name']) ? $data['name'] : null;
         $this->last_name = isset($data['last_name']) ? $data['last_name'] : null;

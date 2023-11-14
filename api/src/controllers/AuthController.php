@@ -11,11 +11,13 @@ use src\services\JwtService;
 class AuthController extends Controller
 {
     private $userRepository;
+    private $roleRepository;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
         $this->userRepository = ContainerService::getInstance()->get('UserRepository');
+        $this->roleRepository = ContainerService::getInstance()->get('RoleRepository');
     }
 
     // Método para obtener un usuario por su ID
@@ -33,6 +35,7 @@ class AuthController extends Controller
             if (!$user) {
                 return $this->errorResponse('Usuario inexistente', self::HTTP_BAD_REQUEST);
             }
+            $role = $this->roleRepository->find($user->role_id);
 
             if (!password_verify($data['password'], $user->password)) {
                 return $this->errorResponse('Password inválido', self::HTTP_BAD_REQUEST);
@@ -50,7 +53,7 @@ class AuthController extends Controller
 
             $token = JwtService::encode($payload);
 
-            return $this->successResponse(['token' => $token, 'user' => $user]);
+            return $this->successResponse(['token' => $token, 'user' => $user, 'role' => $role]);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);
         }

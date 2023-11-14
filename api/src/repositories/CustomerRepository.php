@@ -5,7 +5,10 @@ namespace src\repositories;
 
 // Importaciones de otras clases que se usarán en el repositorio
 
+use src\models\CreditCard;
 use src\models\Customer;
+use src\models\Host;
+use src\models\Payment;
 
 // Repositorio para gestionar operaciones relacionadas con los clientes en la base de datos
 class CustomerRepository extends Repository
@@ -112,6 +115,7 @@ class CustomerRepository extends Repository
 
             //Respuesta
             return $this->findByUserId($userId);
+            
         } catch (\Exception $e) {
             // Si hay un error, revertir la transacción
             $this->connection->rollback();

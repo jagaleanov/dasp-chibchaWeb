@@ -43,6 +43,21 @@ class CreditCardController extends Controller
         }
     }
 
+    // Método para obtener un tarjeta de crédito por su ID
+    public function validateCreditCard($number)
+    {
+        try {
+            $creditCard = $this->creditCardRepository->getCreditCardType($number);
+            if(!$creditCard){
+                return $this->errorResponse('Tarjeta inválida', self::HTTP_BAD_REQUEST);  
+            }
+            return $this->successResponse($creditCard);
+            
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/, self::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // Método para crear un nuevo tarjeta de crédito
     public function createCreditCard()
     {
@@ -54,28 +69,9 @@ class CreditCardController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            // Asegúrate de que el número de tarjeta sea un string y esté limpio de espacios o guiones
-            $data['number'] = str_replace(array('-', ' '), '', $data['number']);
-
-            // Verifica la marca de la tarjeta basándose en los primeros dígitos
-            if (preg_match("/^4[0-9]{12}(?:[0-9]{3})?$/", $data['number'])) {
-                $type = 'Visa';
-            } elseif (preg_match("/^5[1-5][0-9]{14}$/", $data['number'])) {
-                $type = 'MasterCard';
-            } elseif (preg_match("/^3[47][0-9]{13}$/", $data['number'])) {
-                $type = 'American Express';
-            } elseif (preg_match("/^3(?:0[0-5]|[68][0-9])[0-9]{11}$/", $data['number'])) {
-                $type = 'Diners Club';
-            } elseif (preg_match("/^6(?:011|5[0-9]{2})[0-9]{12}$/", $data['number'])) {
-                $type = 'Discover';
-            } elseif (preg_match("/^(?:2131|1800|35\d{3})\d{11}$/", $data['number'])) {
-                $type = 'JCB';
-            }
-
             $creditCard = new CreditCard();
             $creditCard->customer_id = $data['customer_id'];
             $creditCard->number = $data['number'];
-            $creditCard->type = $type;
             $creditCard->expiration_year = $data['expiration_year'];
             $creditCard->expiration_month = $data['expiration_month'];
             $creditCard->security_code = $data['security_code'];

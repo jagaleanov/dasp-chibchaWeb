@@ -20,6 +20,7 @@ spl_autoload_register(function ($class) {
 });
 
 use src\middlewares\AuthMiddleware;
+use src\repositories\CreditCardRepository;
 use src\repositories\UserRepository;
 use src\repositories\CustomerRepository;
 use src\repositories\DomainRepository;
@@ -52,6 +53,7 @@ $container->register('DomainRepository', DomainRepository::class);
 $container->register('HostRepository', HostRepository::class);
 $container->register('PaymentRepository', PaymentRepository::class);
 $container->register('TicketRepository', TicketRepository::class);
+$container->register('CreditCardRepository', CreditCardRepository::class);
 
 // Inicializar el enrutador y definir rutas, y pasar el contenedor al enrutador
 $router = new \src\router\Router($container);

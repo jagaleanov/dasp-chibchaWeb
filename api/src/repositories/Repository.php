@@ -18,4 +18,19 @@ class Repository
     {
         $this->connection = DatabaseService::getInstance()->getConnection();
     }
+    
+    public function beginTransaction()
+    {
+        $this->connection->beginTransaction();
+    }
+    
+    public function commit()
+    {
+        $this->connection->commit();
+    }
+    
+    public function rollback()
+    {
+        $this->connection->rollback();
+    }
 }

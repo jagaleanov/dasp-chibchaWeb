@@ -1,10 +1,16 @@
-<IfModule mod_headers.c>
-    # Activar el módulo de cabeceras para CORS
-    Header set Access-Control-Allow-Origin "*"
-    Header set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-    Header set Access-Control-Allow-Headers "X-Requested-With, Content-Type, Authorization, Accept, Origin"
-    Header set Access-Control-Allow-Credentials "true"
-</IfModule>
+    # <IfModule mod_headers.c>
+    #     Header set Access-Control-Allow-Origin "*"
+    #     Header set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    #     Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+    #     Header set Access-Control-Allow-Credentials "true"
+    # </IfModule>
+
+    # # Añadir manejo para solicitudes OPTIONS
+    # <IfModule mod_rewrite.c>
+    #     RewriteEngine On
+    #     RewriteCond %{REQUEST_METHOD} OPTIONS
+    #     RewriteRule ^ - [R=200,L,E=HTTP_ACCESS_CONTROL_REQUEST_METHOD:%{HTTP:Access-Control-Request-Method},E=HTTP_ACCESS_CONTROL_REQUEST_HEADERS:%{HTTP:Access-Control-Request-Headers}]
+    # </IfModule>
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
@@ -16,11 +22,4 @@
 
     # Reescribir todas las demás solicitudes a index.php
     RewriteRule ^(.*)$ index.php [L,QSA]
-</IfModule>
-
-# Responder a las solicitudes de OPTIONS para CORS
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{REQUEST_METHOD} OPTIONS
-    RewriteRule ^(.*)$ index.php [R=200,L,E=HTTP_ORIGIN:%{HTTP:ORIGIN}]
 </IfModule>

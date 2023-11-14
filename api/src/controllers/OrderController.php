@@ -12,7 +12,7 @@ use src\models\Payment;
 use src\services\ContainerService;
 
 // Controlador para gestionar clientes
-class CustomerController extends Controller
+class OrderController extends Controller
 {
     // Propiedad para el repositorio de clientes
     private $customerRepository;
@@ -27,31 +27,8 @@ class CustomerController extends Controller
         $this->paymentRepository = ContainerService::getInstance()->get('PaymentRepository');
     }
 
-    // Método para obtener todos los clientes
-    public function getAllCustomers()
-    {
-        try {
-            $users = $this->customerRepository->findAll();
-            return $this->successResponse($users);
-        } catch (\Exception $e) {
-            // En caso de error, se retorna un mensaje de error
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Método para obtener un cliente por su ID
-    public function getCustomer($id)
-    {
-        try {
-            $users = $this->customerRepository->find($id);
-            return $this->successResponse($users);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
     // Método para crear un nuevo cliente
-    public function createCustomer()
+    public function createOrder()
     {
         try {
             $data = $this->getInputData();
@@ -142,49 +119,36 @@ class CustomerController extends Controller
         }
     }
 
-    // Método para actualizar un cliente por su ID
-    public function updateCustomer($id)
+    // Método para crear un nuevo cliente
+    public function getAmount($hostingPlanId,$operativeSystemId,$paymentPlanId)
     {
         try {
-            $data = $this->getInputData();
-
-            if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password']) || empty($data['address'])) {
-                return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
+            $amount = 0;
+            if($hostingPlanId != 'null' && $operativeSystemId != 'null' && $paymentPlanId != 'null'){
+                if($hostingPlanId > 1){
+                    $amount += 100;
+                }else{
+                    $amount += 150;
+                }
+                
+                if($operativeSystemId > 1){
+                    $amount += 100;
+                }else{
+                    $amount += 150;
+                }
+                
+                if($paymentPlanId > 1){
+                    $amount += 100;
+                }else{
+                    $amount += 150;
+                }
             }
 
-            $customer = $this->customerRepository->find($id);
-
-            if (!$customer) {
-                return $this->notFoundResponse();
-            }
-
-            $customer->name = $data['name'];
-            $customer->last_name = $data['last_name'];
-            $customer->email = $data['email'];
-            $customer->password = password_hash($data['password'], PASSWORD_DEFAULT);
-            $customer->address = $data['address'];
-            $this->customerRepository->update($customer);
-
-            return $this->successResponse(['customer' => $customer]);
+            return $this->successResponse($amount);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Método para eliminar un cliente por su ID
-    public function deleteCustomer($id)
-    {
-        try {
-            $user = $this->customerRepository->find($id);
-
-            if (!$user) {
-                return $this->notFoundResponse();
-            }
-
-            $this->customerRepository->delete($user);
-            return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+            // Si hay un error, revertir la transacción
+            $this->customerRepository->rollback();
+            return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/, self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
