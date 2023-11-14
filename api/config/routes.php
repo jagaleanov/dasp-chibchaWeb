@@ -96,5 +96,6 @@ $router->add('PUT', '/api/payments/{id}', 'PaymentController@updatePayment', tru
 
 // Orders
 $router->add('GET', '/api/orders/amount/{hostingPlanId}/{operativeSystemId}/{paymentPlanId}', 'OrderController@getAmount', true);
+$router->add('POST', '/api/orders', 'OrderController@createOrder', true);
 
 return $router;

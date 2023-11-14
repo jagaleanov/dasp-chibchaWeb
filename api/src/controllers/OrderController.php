@@ -18,6 +18,7 @@ class OrderController extends Controller
     private $customerRepository;
     private $hostRepository;
     private $paymentRepository;
+    private $creditCardRepository;
 
     // Constructor que inyecta el repositorio de clientes
     public function __construct()
@@ -25,6 +26,7 @@ class OrderController extends Controller
         $this->customerRepository = ContainerService::getInstance()->get('CustomerRepository');
         $this->hostRepository = ContainerService::getInstance()->get('HostRepository');
         $this->paymentRepository = ContainerService::getInstance()->get('PaymentRepository');
+        $this->creditCardRepository = ContainerService::getInstance()->get('CreditCardRepository');
     }
 
     // Método para crear un nuevo cliente
@@ -40,7 +42,7 @@ class OrderController extends Controller
                 || empty($data['email'])
                 || empty($data['password'])
                 || empty($data['address'])
-                || empty($data['hosting_plan'])
+                || empty($data['host_plan'])
                 || empty($data['operative_system'])
                 || empty($data['payment_plan'])
                 || empty($data['credit_card_number'])
@@ -71,14 +73,14 @@ class OrderController extends Controller
 
             $creditCard = new CreditCard();
             $creditCard->customer_id = $customer->id;
-            $creditCard->number = $data['last_name'];
+            $creditCard->number = $data['credit_card_number'];
             $creditCard->type = $data['email'];
             $creditCard->expiration_year = $data['credit_card_year'];
             $creditCard->expiration_month = $data['credit_card_month'];
             $creditCard->security_code = $data['credit_card_code'];
             $creditCard->name = $data['credit_card_name'];
 
-            $creditCard = $this->customerRepository->save($creditCard);
+            $creditCard = $this->creditCardRepository->save($creditCard);
             if(!$creditCard){
                 $this->customerRepository->rollback();
                 return $this->errorResponse('Tarjeta de crédito inválida', self::HTTP_BAD_REQUEST);
@@ -86,7 +88,7 @@ class OrderController extends Controller
 
             $host = new Host();
             $host->customer_id = $customer->id;
-            $host->host_plan_id = $data['hosting_plan'];
+            $host->host_plan_id = $data['host_plan'];
             $host->payment_plan_id = $data['payment_plan'];
             $host->operative_system_id = $data['operative_system'];
 
@@ -98,7 +100,7 @@ class OrderController extends Controller
 
             $payment = new Payment();
             $payment->host_id = $host->id;
-            $payment->credit_card_customer_id = $creditCard->id;
+            $payment->credit_card_customer_id = $creditCard->customer_id;
             $payment->credit_card_number = $creditCard->number;
             $payment->amount = $data['amount'];
 

@@ -85,7 +85,7 @@ class CustomerRepository extends Repository
     public function save(Customer $customer)
     {
         // Iniciar una transacción
-        $this->connection->beginTransaction();
+        // $this->connection->beginTransaction();
 
         try {
             // Inserción del usuario 
@@ -111,14 +111,14 @@ class CustomerRepository extends Repository
             ]);
 
             // Confirmar la transacción
-            $this->connection->commit();
+            // $this->connection->commit();
 
             //Respuesta
             return $this->findByUserId($userId);
-            
+
         } catch (\Exception $e) {
             // Si hay un error, revertir la transacción
-            $this->connection->rollback();
+            // $this->connection->rollback();
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
