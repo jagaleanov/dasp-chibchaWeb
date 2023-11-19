@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\Host;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar dominios
 class HostController extends Controller
@@ -17,7 +17,7 @@ class HostController extends Controller
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->hostRepository = ContainerService::getInstance()->get('HostRepository');
+        $this->hostRepository = RepositoryService::getInstance()->get('HostRepository');
     }
 
     // Método para obtener todos los dominios
@@ -25,6 +25,18 @@ class HostController extends Controller
     {
         try {
             $hosts = $this->hostRepository->findAll();
+            return $this->successResponse($hosts);
+        } catch (\Exception $e) {
+            // En caso de error, se retorna un mensaje de error
+            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Método para obtener todos los dominios
+    public function getCustomerHosts($customerId)
+    {
+        try {
+            $hosts = $this->hostRepository->findAll($customerId);
             return $this->successResponse($hosts);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error

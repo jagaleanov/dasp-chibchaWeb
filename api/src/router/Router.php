@@ -2,48 +2,34 @@
 
 namespace src\router;
 
-use src\traits\ApiResponse;
+use src\services\LayoutService;
 
 // Clase Router que gestiona las rutas y su correspondencia con los controladores y métodos
 class Router
 {
 
-    // Uso del trait ApiResponse para manejar respuestas de la API
-    use ApiResponse;
-
     // Array que contendrá todas las rutas definidas
     private $routes = [];
 
     // Método para añadir rutas al router
-    public function add($method, $uri, $action, $isPublic = false)
+    public function add($uri, $action)
     {
         $this->routes[] = [
-            'method' => $method,
             'uri' => $uri,
             'action' => $action,
-            'public' => $isPublic
         ];
     }
 
-    public function isRoutePublic($requestMethod, $requestUri)
-    {
-        foreach ($this->routes as $route) {
-            $pattern = $this->generatePattern($route['uri']);
-            if ($route['method'] == $requestMethod && preg_match($pattern, $requestUri)) {
-                return $route['public'];
-            }
-        }
-        return false; // Por defecto, las rutas son privadas
-    }
-
     // Método que maneja las solicitudes entrantes y las despacha al controlador y método correspondiente
-    public function dispatch($requestMethod, $requestUri)
+    public function dispatch($requestUri)
     {
         foreach ($this->routes as $route) {
             // Convertimos la URI definida en una expresión regular para hacer coincidir con la URI solicitada
             $pattern = $this->generatePattern($route['uri']);
+            // print "<pre>";print_r($pattern);print "</pre>";
+            // print "<pre>";print_r($requestUri);print "</pre>";
 
-            if ($route['method'] == $requestMethod && preg_match($pattern, $requestUri, $matches)) {
+            if ( preg_match($pattern, $requestUri, $matches)) {
                 array_shift($matches);  // Removemos la primera coincidencia que es la URI completa
 
                 list($class, $method) = explode("@", $route['action']);
@@ -65,8 +51,10 @@ class Router
         }
 
         // Si no se encuentra ninguna ruta que coincida, devolvemos un error 404
-        header("HTTP/1.1 404 Not Found");
-        return $this->notFoundResponse();  // Usamos el método del trait para devolver una respuesta coherente
+        $layoutService = LayoutService::getInstance();
+        $layoutService->view('error404');
+        // header("HTTP/1.1 404 Not Found");
+        // return $this->notFoundResponse();  // Usamos el método del trait para devolver una respuesta coherente
     }
 
     // Método privado que convierte la URI con parámetros (por ej. {id}) en una expresión regular

@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\Domain;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar dominios
 class DomainController extends Controller
@@ -17,7 +17,7 @@ class DomainController extends Controller
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->domainRepository = ContainerService::getInstance()->get('DomainRepository');
+        $this->domainRepository = RepositoryService::getInstance()->get('DomainRepository');
     }
 
     // Método para obtener todos los dominios

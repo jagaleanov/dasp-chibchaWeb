@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\Employee;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar empleados
 class EmployeeController extends Controller
@@ -17,7 +17,7 @@ class EmployeeController extends Controller
     // Constructor que inyecta el repositorio de empleados
     public function __construct()
     {
-        $this->employeeRepository = ContainerService::getInstance()->get('EmployeeRepository');
+        $this->employeeRepository = RepositoryService::getInstance()->get('EmployeeRepository');
     }
 
     // Método para obtener todos los empleados
@@ -50,7 +50,7 @@ class EmployeeController extends Controller
             $data = $this->getInputData();
 
             // Validación de datos de entrada
-            if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password']) || empty($data['mobile_phone'])) {
+            if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password']) || empty($data['mobile_phone']) || empty($data['role_id'])) {
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
@@ -58,6 +58,7 @@ class EmployeeController extends Controller
             $employee->name = $data['name'];
             $employee->last_name = $data['last_name'];
             $employee->email = $data['email'];
+            $employee->role_id = $data['role_id'];
             $employee->password = password_hash($data['password'], PASSWORD_DEFAULT);
             $employee->mobile_phone = $data['mobile_phone'];
 

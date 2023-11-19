@@ -2,14 +2,12 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    exit;
-}
 
 // Incluir configuraciones y servicios
+require_once 'config/config.php';
 require_once 'config/database.php';
 require_once 'src/services/DatabaseService.php';
-require_once 'src/services/ContainerService.php';
+require_once 'src/services/RepositoryService.php';
 
 // Autocarga simple 
 spl_autoload_register(function ($class) {
@@ -20,6 +18,8 @@ spl_autoload_register(function ($class) {
 });
 
 use src\middlewares\AuthMiddleware;
+
+
 use src\repositories\CreditCardRepository;
 use src\repositories\UserRepository;
 use src\repositories\CustomerRepository;
@@ -33,13 +33,12 @@ use src\repositories\PaymentRepository;
 use src\repositories\ProviderRepository;
 use src\repositories\RoleRepository;
 use src\repositories\TicketRepository;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Inicializar el contenedor de servicios
-$container = ContainerService::getInstance();
+$container = RepositoryService::getInstance();
 
-// Registrar servicios y repositorios en el contenedor
-$container->register('DatabaseService', DatabaseService::class);
+// Registrar  repositorios en el contenedor
 
 $container->register('UserRepository', UserRepository::class);
 $container->register('CustomerRepository', CustomerRepository::class);
@@ -61,13 +60,9 @@ $router = new \src\router\Router($container);
 // Inicializar el enrutador y definir rutas
 require_once 'config/routes.php';
 
-// Inicializar middleware global (si lo tienes)
-$authMiddleware = new AuthMiddleware($router);
-$authMiddleware->handle();
-
 // Despachar la solicitud basada en la URI y el método HTTP
-$response = $router->dispatch($_SERVER["REQUEST_METHOD"], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+/*$response = */$router->dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
-// Envía respuesta
-header('Content-Type: application/json; charset=utf-8');
-echo json_encode($response, JSON_UNESCAPED_UNICODE);
+// // Envía respuesta
+// header('Content-Type: application/json; charset=utf-8');
+// echo json_encode($response, JSON_UNESCAPED_UNICODE);

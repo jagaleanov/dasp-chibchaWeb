@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\HostPlan;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar planes de hosting
 class HostPlanController extends Controller
@@ -17,7 +17,7 @@ class HostPlanController extends Controller
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->hostPlanRepository = ContainerService::getInstance()->get('HostPlanRepository');
+        $this->hostPlanRepository = RepositoryService::getInstance()->get('HostPlanRepository');
     }
 
     // Método para obtener todos los planes de hosting

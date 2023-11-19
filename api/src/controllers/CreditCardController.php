@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\CreditCard;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar tarjetas de crédito
 class CreditCardController extends Controller
@@ -17,7 +17,8 @@ class CreditCardController extends Controller
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->creditCardRepository = ContainerService::getInstance()->get('CreditCardRepository');
+        parent::__construct();
+        $this->creditCardRepository = RepositoryService::getInstance()->get('CreditCardRepository');
     }
 
     // Método para obtener todos los tarjetas de crédito
@@ -44,17 +45,39 @@ class CreditCardController extends Controller
     }
 
     // Método para obtener un tarjeta de crédito por su ID
-    public function validateCreditCard($number)
+    public function validateCreditCard()
     {
         try {
-            $creditCard = $this->creditCardRepository->getCreditCardType($number);
-            if(!$creditCard){
-                return $this->errorResponse('Tarjeta inválida', self::HTTP_BAD_REQUEST);  
+            if (
+                !isset($_POST['credit_card_number'])
+            ) {
+                $res = [
+                    'success' => false,
+                    'data' => null,
+                ];
+            } else {
+                $number = $_POST['credit_card_number'];
+
+                $creditCard = $this->creditCardRepository->getCreditCardType($number);
+                if (!$creditCard) {
+                    $res = [
+                        'success' => false,
+                        'message' => 'Tarjeta invalida',
+                    ];
+                } else {
+                    $res = [
+                        'success' => true,
+                        'data' => $creditCard,
+                    ];
+                }
             }
-            return $this->successResponse($creditCard);
-            
+            print json_encode($res);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/, self::HTTP_INTERNAL_SERVER_ERROR);
+            $res = [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+            print json_encode($res);
         }
     }
 

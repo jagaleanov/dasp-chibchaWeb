@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\OperativeSystem;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar sistemas operativos
 class OperativeSystemController extends Controller
@@ -17,7 +17,7 @@ class OperativeSystemController extends Controller
     // Constructor que inyecta el repositorio de sistemas operativos
     public function __construct()
     {
-        $this->operativeSystemRepository = ContainerService::getInstance()->get('OperativeSystemRepository');
+        $this->operativeSystemRepository = RepositoryService::getInstance()->get('OperativeSystemRepository');
     }
 
     // Método para obtener todos los sistemas operativos

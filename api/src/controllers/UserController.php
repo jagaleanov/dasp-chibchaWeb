@@ -5,18 +5,20 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 use src\models\User;
-use src\services\ContainerService;
+use src\services\LayoutService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar usuarios
 class UserController extends Controller
 {
     // Propiedad para el repositorio de usuarios
-    private $userRepository;
+    private $userRepository,$layoutService;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->userRepository = ContainerService::getInstance()->get('UserRepository');
+        $this->userRepository = RepositoryService::getInstance()->get('UserRepository');
+        $this->layoutService = LayoutService::getInstance();
     }
 
     // Método para obtener todos los usuarios
@@ -24,6 +26,7 @@ class UserController extends Controller
     {
         try {
             $users = $this->userRepository->findAll();
+            $this->layoutService->view('home');
             return $this->successResponse($users);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error

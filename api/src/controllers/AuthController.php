@@ -3,8 +3,9 @@
 // Espacio de nombres utilizado por el controlador
 namespace src\controllers;
 
+use Exception;
 use src\models\User;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 use src\services\JwtService;
 
 // Controlador para gestionar clientes
@@ -16,46 +17,79 @@ class AuthController extends Controller
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->userRepository = ContainerService::getInstance()->get('UserRepository');
-        $this->roleRepository = ContainerService::getInstance()->get('RoleRepository');
+        parent::__construct();
+        $this->userRepository = RepositoryService::getInstance()->get('UserRepository');
+        $this->roleRepository = RepositoryService::getInstance()->get('RoleRepository');
     }
 
-    // Método para obtener un usuario por su ID
-    public function login()
+    public function loginForm()
     {
+        // print"<pre>";print_r($_SESSION);print"</pre>";
         try {
-            $data = $this->getInputData();
+            if (isset($_POST['submit'])) {
+                // print"<pre>";print_r($_POST);print"</pre>";
+                // Validación de datos de entrada
+                $rules = [
+                    [
+                        'field' => 'email',
+                        'label' => 'correo electrónico',
+                        'rules' => ['required']
+                    ],
+                    [
+                        'field' => 'password',
+                        'label' => 'contraseña',
+                        'rules' => ['required']
+                    ],
+                ];
 
-            // Validación de datos de entrada
-            if (empty($data['email']) || empty($data['password'])) {
-                return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
+                $validate = $this->validationService->validate($_POST, $rules);
+
+                if ($validate->valid === true) {
+                    $res = $this->login($validate->sanitizedData);
+
+                    if ($res->success) {
+                        header('Location:' . BASE_URL . '/home');
+                    } else {
+                        $this->layoutService->setMessage([
+                            'danger' => [$res->message],
+                        ]);
+                    }
+                } else {
+                    $this->layoutService->setMessage([
+                        'danger' => $validate->errors,
+                    ]);
+                }
             }
-
+            $this->layoutService->view('auth/login');
+        } catch (\Exception $e) {
+            print_r($e);
+        }
+    }
+    // Método para iniciar sesión
+    private function login($data)
+    {
+        print"<pre>";print_r($data);print"</pre>";
+        try {
             $user = $this->userRepository->getByEmail($data['email']);
             if (!$user) {
-                return $this->errorResponse('Usuario inexistente', self::HTTP_BAD_REQUEST);
+                throw new Exception('Usuario inexistente');
             }
-            $role = $this->roleRepository->find($user->role_id);
 
             if (!password_verify($data['password'], $user->password)) {
-                return $this->errorResponse('Password inválido', self::HTTP_BAD_REQUEST);
+                throw new Exception('Password inválido');
             }
+            
+            $_SESSION['userId'] = $user->id;
 
-            $payload = [
-                "iss" => "chibchaweb.com", // emisor
-                "aud" => "chibchaweb.com", // audiencia
-                "iat" => time(), // tiempo de emitido
-                "data" => [ // datos personalizados
-                    "userId" => $user->id,
-                    "userEmail" => $user->email
-                ]
+            return (object)[
+                'success' => true,
+                // 'data' => ['user' => $user],
             ];
-
-            $token = JwtService::encode($payload);
-
-            return $this->successResponse(['token' => $token, 'user' => $user, 'role' => $role]);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);
+            return (object)[
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
         }
     }
 }

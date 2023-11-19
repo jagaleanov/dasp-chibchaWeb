@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\Provider;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar provedores
 class ProviderController extends Controller
@@ -17,7 +17,7 @@ class ProviderController extends Controller
     // Constructor que inyecta el repositorio de provedores
     public function __construct()
     {
-        $this->providerRepository = ContainerService::getInstance()->get('ProviderRepository');
+        $this->providerRepository = RepositoryService::getInstance()->get('ProviderRepository');
     }
 
     // Método para obtener todos los provedores

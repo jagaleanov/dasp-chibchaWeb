@@ -20,6 +20,8 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-l
 
+    RewriteCond %{REQUEST_URI} !^/assets/
+
     # Reescribir todas las demás solicitudes a index.php
     RewriteRule ^(.*)$ index.php [L,QSA]
 </IfModule>

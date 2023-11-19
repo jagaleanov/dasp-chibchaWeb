@@ -45,16 +45,23 @@ class HostRepository extends Repository
     }
 
     // Método para encontrar todos los clientes, con opción de filtro por nombre o email
-    public function findAll($search = null)
+    public function findAll($customer_id = null)
     {
+        // $query =
+        //     "SELECT h.*,
+        //     os.name AS operative_system_name
+        //     FROM hosts h
+        //     JOIN operative_systems os ON h.operative_system_id = os.id
+        //     JOIN payment_plans pp ON h.payment_plan_id = pp.id
+        //     JOIN host_plans hp ON h.host_plan_id = hp.id";
         $query =
             "SELECT * FROM hosts";
         $params = [];
 
         // Aplicación de filtros si se proporcionan
-        if (!empty($search)) {
-            $query .= " WHERE name LIKE :search";
-            $params['search'] = '%' . $search . '%';
+        if (!empty($customer_id)) {
+            $query .= " WHERE customer_id LIKE :customer_id";
+            $params['customer_id'] = '%' . $customer_id . '%';
         }
 
         $stmt = $this->connection->prepare($query);
@@ -74,13 +81,11 @@ class HostRepository extends Repository
     public function save(Host $host)
     {
         try {
-
-            do{
+            do {
                 // IP address format: xxx.xxx.xxx.xxx
                 // Each xxx should be a number between 0 and 255.
                 $ip = rand(0, 255) . '.' . rand(0, 255) . '.' . rand(0, 255) . '.' . rand(0, 255);
-            }
-            while($this->findByIp($ip != null));
+            } while ($this->findByIp($ip != null));
 
             // Inserción del usuario 
             $stmt = $this->connection->prepare(

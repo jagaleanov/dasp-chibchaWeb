@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\Ticket;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar dominios
 class TicketController extends Controller
@@ -17,7 +17,7 @@ class TicketController extends Controller
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->ticketRepository = ContainerService::getInstance()->get('TicketRepository');
+        $this->ticketRepository = RepositoryService::getInstance()->get('TicketRepository');
     }
 
     // Método para obtener todos los dominios

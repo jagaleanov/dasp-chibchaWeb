@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\Role;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar roles
 class RoleController extends Controller
@@ -17,18 +17,18 @@ class RoleController extends Controller
     // Constructor que inyecta el repositorio de roles
     public function __construct()
     {
-        $this->roleRepository = ContainerService::getInstance()->get('RoleRepository');
+        $this->roleRepository = RepositoryService::getInstance()->get('RoleRepository');
     }
 
     // Método para obtener todos los roles
     public function getAllRoles()
     {
         try {
-            $users = $this->roleRepository->findAll();
-            return $this->successResponse($users);
+            $roles = $this->roleRepository->findAll();
+            return $this->successResponse($roles);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/ , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -36,10 +36,10 @@ class RoleController extends Controller
     public function getRole($id)
     {
         try {
-            $user = $this->roleRepository->find($id);
-            return $this->successResponse($user);
+            $role = $this->roleRepository->find($id);
+            return $this->successResponse($role);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/ , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -60,7 +60,7 @@ class RoleController extends Controller
             
             return $this->successResponse(['role' => $role]);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/ , self::HTTP_INTERNAL_SERVER_ERROR);
             
         }
     }
@@ -86,7 +86,7 @@ class RoleController extends Controller
             
             return $this->successResponse(['role' => $role]);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/ , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -103,7 +103,7 @@ class RoleController extends Controller
             $this->roleRepository->delete($user);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/ , self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

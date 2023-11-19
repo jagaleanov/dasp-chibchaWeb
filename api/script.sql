@@ -36,9 +36,9 @@ CREATE TABLE customers (
 CREATE TABLE employees (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
+    mobile_phone VARCHAR (10) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME DEFAULT NULL,
-    mobile_phone VARCHAR (10) NOT NULL,
     PRIMARY KEY (id),
     INDEX IXFK_employees_users (user_id ASC),
     CONSTRAINT FK_employees_users FOREIGN KEY (user_id) REFERENCES users(id)
@@ -160,4 +160,4 @@ CREATE TABLE tickets (
 INSERT INTO host_plans VALUES (1,'Chibcha-Platino'),(2,'Chibcha-Plata'),(3,'Chibcha-Oro');
 INSERT INTO operative_systems VALUES (1,'Linux'),(2,'Windows');
 INSERT INTO payment_plans VALUES (1,'Semanal'),(2,'Mensual'),(3,'Trimestral'),(4,'Anual');
-INSERT INTO roles VALUES (1,'customer'),(2,'emp1'),(3,'emp2'),(4,'emp3'),(5,'super-admin');
+INSERT INTO roles VALUES (1,'Cliente'),(2,'Soporte pagos'),(3,'Soporte host'),(4,'Soporte dominio'),(5,'Soporte tecnico'),(6,'Super Admin');

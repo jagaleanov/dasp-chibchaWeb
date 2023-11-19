@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\Payment;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar dominios
 class PaymentController extends Controller
@@ -17,7 +17,7 @@ class PaymentController extends Controller
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->paymentRepository = ContainerService::getInstance()->get('PaymentRepository');
+        $this->paymentRepository = RepositoryService::getInstance()->get('PaymentRepository');
     }
 
     // Método para obtener todos los dominios

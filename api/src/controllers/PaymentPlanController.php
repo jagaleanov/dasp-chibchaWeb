@@ -6,7 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use src\models\PaymentPlan;
-use src\services\ContainerService;
+use src\services\RepositoryService;
 
 // Controlador para gestionar planes de pago
 class PaymentPlanController extends Controller
@@ -17,7 +17,7 @@ class PaymentPlanController extends Controller
     // Constructor que inyecta el repositorio de planes de pago
     public function __construct()
     {
-        $this->paymentPlanRepository = ContainerService::getInstance()->get('PaymentPlanRepository');
+        $this->paymentPlanRepository = RepositoryService::getInstance()->get('PaymentPlanRepository');
     }
 
     // Método para obtener todos los planes de pago
