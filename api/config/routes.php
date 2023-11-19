@@ -64,6 +64,7 @@ $router->add('/api/customers/details', 'CustomerController@customerDetails');
 // // $router->add('DELETE', '/api/operative-systems/{id}', 'OperativeSystemController@deleteOperativeSystem');
 
 // // Domains
+$router->add('/api/domains/new/{hostId}', 'DomainController@newDomain');
 // $router->add('GET', '/api/domains/{id}', 'DomainController@getDomainRequest');
 // $router->add('GET', '/api/domains', 'DomainController@getAllDomainRequests');
 // // $router->add('POST', '/api/domains', 'DomainController@createDomainRequest');
@@ -86,6 +87,7 @@ $router->add('/api/credit-cards/validate', 'CreditCardController@validateCreditC
 // // $router->add('DELETE', '/api/hosts/{id}', 'HostController@deleteHost');
 
 // // Tickets
+$router->add('/api/tickets/new/{hostId}', 'TicketController@newTicket');
 // $router->add('GET', '/api/tickets/{id}', 'TicketController@getTicket', true);
 // $router->add('GET', '/api/tickets', 'TicketController@getAllTickets', true);
 // $router->add('POST', '/api/tickets', 'TicketController@createTicket', true);

@@ -16,7 +16,7 @@ CREATE TABLE users (
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX U_users_email (email ASC),
-    INDEX IXFK_users_roles (role_id ASC),
+    INDEX IX_users_roles (role_id ASC),
     CONSTRAINT FK_users_roles FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
@@ -28,7 +28,7 @@ CREATE TABLE customers (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
-    INDEX IXFK_customers_users (user_id ASC),
+    INDEX IX_customers_users (user_id ASC),
     CONSTRAINT FK_customers_users FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -40,7 +40,7 @@ CREATE TABLE employees (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
-    INDEX IXFK_employees_users (user_id ASC),
+    INDEX IX_employees_users (user_id ASC),
     CONSTRAINT FK_employees_users FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -79,13 +79,13 @@ CREATE TABLE hosts (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
-    INDEX IXFK_hosts_customers (customer_id ASC),
+    INDEX IX_hosts_customers (customer_id ASC),
     CONSTRAINT FK_hosts_customers FOREIGN KEY (customer_id) REFERENCES customers(id),
-    INDEX IXFK_hosts_host_plans (host_plan_id ASC),
+    INDEX IX_hosts_host_plans (host_plan_id ASC),
     CONSTRAINT FK_hosts_host_plans FOREIGN KEY (host_plan_id) REFERENCES host_plans(id),
-    INDEX IXFK_hosts_operative_systems (operative_system_id ASC),
+    INDEX IX_hosts_operative_systems (operative_system_id ASC),
     CONSTRAINT FK_hosts_operative_systems FOREIGN KEY (operative_system_id) REFERENCES operative_systems(id),
-    INDEX IXFK_hosts_payment_plans (payment_plan_id ASC),
+    INDEX IX_hosts_payment_plans (payment_plan_id ASC),
     CONSTRAINT FK_hosts_payment_plans FOREIGN KEY (payment_plan_id) REFERENCES payment_plans(id)
 );
 
@@ -102,7 +102,7 @@ CREATE TABLE credit_cards (
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (number, customer_id),
     UNIQUE INDEX U_credit_cards (customer_id ASC, number ASC),
-    INDEX IXFK_credit_cards_customers (customer_id ASC),
+    INDEX IX_credit_cards_customers (customer_id ASC),
     CONSTRAINT FK_credit_cards_customers FOREIGN KEY (customer_id) REFERENCES customers(id),
     CONSTRAINT CHK_expiration_month CHECK (expiration_month >= 1 AND expiration_month <= 12)
 );
@@ -118,9 +118,9 @@ CREATE TABLE domains (
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX U_domains_domain (domain ASC),
-    INDEX IXFK_domains_hosts (host_id ASC),
+    INDEX IX_domains_hosts (host_id ASC),
     CONSTRAINT FK_domains_hosts FOREIGN KEY (host_id) REFERENCES hosts(id),
-    INDEX IXFK_domains_providers (provider_id ASC),
+    INDEX IX_domains_providers (provider_id ASC),
     CONSTRAINT FK_domains_providers FOREIGN KEY (provider_id) REFERENCES providers(id)
 );
 
@@ -134,9 +134,9 @@ CREATE TABLE payments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
-    INDEX IXFK_payments_hosts (host_id ASC),
+    INDEX IX_payments_hosts (host_id ASC),
     CONSTRAINT FK_payments_hosts FOREIGN KEY (host_id) REFERENCES hosts(id),
-    INDEX IXFK_payments_credit_cards (credit_card_customer_id ASC, credit_card_number ASC),
+    INDEX IX_payments_credit_cards (credit_card_customer_id ASC, credit_card_number ASC),
     CONSTRAINT payments_FK FOREIGN KEY (credit_card_number, credit_card_customer_id) REFERENCES credit_cards (number, customer_id)
 );
 
@@ -150,9 +150,9 @@ CREATE TABLE tickets (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
-    INDEX IXFK_tickets_hosts (host_id ASC),
+    INDEX IX_tickets_hosts (host_id ASC),
     CONSTRAINT FK_tickets_hosts FOREIGN KEY (host_id) REFERENCES hosts(id),
-    INDEX IXFK_tickets_roles (role_id ASC),
+    INDEX IX_tickets_roles (role_id ASC),
     CONSTRAINT FK_tickets_roles FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 

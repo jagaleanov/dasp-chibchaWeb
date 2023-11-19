@@ -1,21 +1,13 @@
 <?php
-
-// Espacio de nombres utilizado por el controlador
 namespace src\controllers;
-
-// Importaciones de otras clases que se usarán en el controlador
 
 use Exception;
 use src\services\ModelService;
 use stdClass;
-
-// Controlador para gestionar clientes
 class OrderController extends Controller
 {
-    // Propiedad para el repositorio de clientes
     private $customerModel, $hostModel, $paymentModel, $creditCardModel, $operativeSystemModel, $hostPlanModel, $paymentPlanModel;
 
-    // Constructor que inyecta el repositorio de clientes
     public function __construct()
     {
         parent::__construct();
@@ -40,26 +32,6 @@ class OrderController extends Controller
     public function newOrder()
     {
         try {
-
-            // $post = [
-            //     'name',
-            //     'last_name',
-            //     'email',
-            //     'password',
-            //     'host_plan_id',
-            //     'operative_system_id',
-            //     'payment_plan_id',
-            //     'credit_card_number',
-            //     'credit_card_name',
-            //     'credit_card_month',
-            //     'credit_card_year',
-            //     'credit_card_code',
-            //     'credit_card_type',
-            //     'amount',
-            // ];
-
-            // print "SUBMIT ".$this->postService->get('name');
-
             if ($this->postService->get('submit')) {
                 // Validación de datos de entrada
                 $rules = [
@@ -364,12 +336,7 @@ class OrderController extends Controller
 
     private function probabilisticFail($probability)
     {
-
-        // Genera un número aleatorio entre 0 y 100
         $randomNumber = mt_rand(0, 100);
-
-        // Compara el número aleatorio con la probabilidad
-        // Si el número aleatorio es menor que la probabilidad, devuelve 1, de lo contrario, devuelve 0
         return $randomNumber < $probability;
     }
 }

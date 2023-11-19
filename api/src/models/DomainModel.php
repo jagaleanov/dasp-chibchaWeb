@@ -58,13 +58,12 @@ class DomainModel extends Model
         try {
             // Inserción del usuario 
             $stmt = $this->connection->prepare(
-                "INSERT INTO domains (customer_id, provider_id, domain, status) VALUES (:customer_id, :provider_id, :domain, :status)"
+                "INSERT INTO domains (host_id, domain, provider_id) VALUES (:host_id, :domain, :provider_id)"
             );
             $stmt->execute([
-                'customer_id' => $domain->customer_id,
-                'provider_id' => $domain->provider_id,
+                'host_id' => $domain->host_id,
                 'domain' => $domain->domain,
-                'status' => $domain->status,
+                'provider_id' => $domain->provider_id,
             ]);
             $domainId = $this->connection->lastInsertId();
 

@@ -24,7 +24,7 @@ class PostService
     {
         // print_r($this->post);
         if ($postName) {
-            return isset($this->post[$postName]) ? ($this->post[$postName] != null ?$this->post[$postName]:true) : false;
+            return isset($this->post[$postName]) ? ($this->post[$postName] != null ?$this->post[$postName]:'') : false;
         } else {
             return $this->post;
         }

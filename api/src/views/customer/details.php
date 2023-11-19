@@ -41,12 +41,12 @@
                     <div class="text-right align-items-end">
                         <p><small class="text-muted"><?= $host->created_at ?></small></p>
                         <p>
-                            <a href="#" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
+                            <a href="<?=BASE_URL?>/tickets/new/<?= $host->id ?>" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
                                 Ticket de soporte
                             </a>
                         </p>
                         <p>
-                            <a href="#" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
+                            <a href="<?=BASE_URL?>/domains/new/<?= $host->id ?>" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
                                 Nuevo dominio
                             </a>
                         </p>

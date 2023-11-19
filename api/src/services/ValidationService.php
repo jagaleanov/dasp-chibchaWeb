@@ -40,7 +40,7 @@ class ValidationService
                     case 'escape':
                         $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
                         break;
-                    // Agregar aquí más reglas de saneamiento según sea necesario
+                        // Agregar aquí más reglas de saneamiento según sea necesario
                 }
             }
             $this->sanitizedData[$field] = $value;
@@ -118,9 +118,9 @@ class ValidationService
                         }
                         break;
 
-                    case 'url':
-                        if (!filter_var($value, FILTER_VALIDATE_URL)) {
-                            $this->errors[] = "El campo $label debe ser una URL válida.";
+                    case 'domain':
+                        if (!preg_match('/^[A-Za-z0-9-]{1,63}(?<!-)\.[A-Za-z]{2,6}$/', $value)) {
+                            $this->errors[] = "El campo $label debe ser un dominio válido.";
                         }
                         break;
                 }

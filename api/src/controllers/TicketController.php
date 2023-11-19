@@ -1,23 +1,108 @@
 <?php
 
-// Espacio de nombres utilizado por el controlador
 namespace src\controllers;
 
-// Importaciones de otras clases que se usarán en el controlador
-
+use Exception;
 use src\services\ModelService;
+use stdClass;
 
-// Controlador para gestionar dominios
 class TicketController extends Controller
 {
-    // Propiedad para el repositorio de dominios
-    private $ticketModel;
+    private $ticketModel,$hostModel;
 
-    // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
+        parent::__construct();
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
+        $this->hostModel = ModelService::getInstance()->get('HostModel');
     }
+
+    public function newTicket($hostId)
+    {
+        try {
+
+            if ($this->postService->get('submit')) {
+                // Validación de datos de entrada
+                $rules = [
+                    [
+                        'field' => 'description',
+                        'label' => 'descripcion',
+                        'rules' => ['required', 'alpha']
+                    ],
+                ];
+
+                $validate = $this->validationService->validate($this->postService->get(), $rules);
+
+                if ($validate->valid === true) {
+                    $validatedData = $validate->sanitizedData;
+                    $validatedData['host_id'] = $hostId;
+                    $res = $this->createTicket($validatedData);
+
+                    if ($res->success) {
+                        header('Location:' . BASE_URL . '/customers/details');
+                    } else {
+                        $this->layoutService->setMessage([
+                            'danger' => [$res->message],
+                        ]);
+                    }
+                } else {
+                    $this->layoutService->setMessage([
+                        'danger' => $validate->errors,
+                    ]);
+                }
+            }
+
+            $host = $this->hostModel->find($hostId);
+
+            $data = [
+                'post' => $this->postService,
+                'host' => $host,
+            ];
+
+            $this->layoutService->view('tickets/new', $data);
+        } catch (\Exception $e) {
+            print_r($e);
+        }
+    }
+
+    private function createTicket($data)
+    {
+        try {
+            // Iniciar una transacción
+            $this->ticketModel->beginTransaction();
+
+            $ticket = new stdClass();
+            $ticket->description = $data['description'];
+            $ticket->host_id = $data['host_id'];
+
+            $ticket = $this->ticketModel->save($ticket);
+            if (!$ticket) {
+                $this->ticketModel->rollback();
+                throw new Exception('Datos de cliente inválidos');
+            }
+
+            // Confirmar la transacción
+            $this->ticketModel->commit();
+
+            return (object)[
+                'success' => true,
+                'data' => $ticket,
+            ];
+        } catch (\Exception $e) {
+            return (object)[
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+
+
+
+
+
+
+
 
     // Método para obtener todos los dominios
     public function getAllTickets()
@@ -27,7 +112,7 @@ class TicketController extends Controller
             return $this->successResponse($tickets);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -38,58 +123,58 @@ class TicketController extends Controller
             $ticket = $this->ticketModel->find($id);
             return $this->successResponse($ticket);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para crear un nuevo dominio
-    public function createTicket()
-    {
-        try {
-            $data = $this->getInputData();
+    // // Método para crear un nuevo dominio
+    // public function createTicket()
+    // {
+    //     try {
+    //         $data = $this->getInputData();
 
-            // Validación de datos de entrada
-            if (empty($data['host_id']) || empty($data['description'])) {
-                return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
-            }
+    //         // Validación de datos de entrada
+    //         if (empty($data['host_id']) || empty($data['description'])) {
+    //             return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
+    //         }
 
-            $ticket = new Ticket();
-            $ticket->host_id = $data['host_id'];
-            $ticket->description = $data['description'];
-            $ticket = $this->ticketModel->save($ticket);
-            
-            return $this->successResponse(['ticket' => $ticket]);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
-            
-        }
-    }
+    //         $ticket = new Ticket();
+    //         $ticket->host_id = $data['host_id'];
+    //         $ticket->description = $data['description'];
+    //         $ticket = $this->ticketModel->save($ticket);
 
-    // Método para actualizar un dominio por su ID
-    public function updateTicketRole($id)
-    {
-        try {
-            $data = $this->getInputData();
+    //         return $this->successResponse(['ticket' => $ticket]);
+    //     } catch (\Exception $e) {
+    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
 
-            // Validación de datos de entrada
-            if (empty($data['role_id'])) {
-                return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
-            }
+    //     }
+    // }
 
-            $ticket = $this->ticketModel->find($id);
+    // // Método para actualizar un dominio por su ID
+    // public function updateTicketRole($id)
+    // {
+    //     try {
+    //         $data = $this->getInputData();
 
-            if (!$ticket) {
-                return $this->notFoundResponse();
-            }
+    //         // Validación de datos de entrada
+    //         if (empty($data['role_id'])) {
+    //             return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
+    //         }
 
-            $role_id = $data['role_id'];
-            $this->ticketModel->updateRole($id, $role_id);
-            
-            return $this->successResponse(['ticket' => $ticket]);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
+    //         $ticket = $this->ticketModel->find($id);
+
+    //         if (!$ticket) {
+    //             return $this->notFoundResponse();
+    //         }
+
+    //         $role_id = $data['role_id'];
+    //         $this->ticketModel->updateRole($id, $role_id);
+
+    //         return $this->successResponse(['ticket' => $ticket]);
+    //     } catch (\Exception $e) {
+    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 
     // Método para actualizar un dominio por su ID
     public function updateTicketStatus($id)
@@ -110,27 +195,27 @@ class TicketController extends Controller
 
             $status = $data['status'];
             $this->ticketModel->updateStatus($id, $status);
-            
+
             return $this->successResponse(['ticket' => $ticket]);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Método para eliminar un dominio por su ID
-    public function deleteTicket($id)
-    {
-        try {
-            $ticket = $this->ticketModel->find($id);
+    // // Método para eliminar un dominio por su ID
+    // public function deleteTicket($id)
+    // {
+    //     try {
+    //         $ticket = $this->ticketModel->find($id);
 
-            if (!$ticket) {
-                return $this->notFoundResponse();
-            }
+    //         if (!$ticket) {
+    //             return $this->notFoundResponse();
+    //         }
 
-            $this->ticketModel->delete($ticket);
-            return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
+    //         $this->ticketModel->delete($ticket);
+    //         return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
+    //     } catch (\Exception $e) {
+    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 }

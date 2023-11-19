@@ -1,7 +1,7 @@
+<div class="container">
 <form method="post">
     <h4 class="mb-4">Nuevo cliente</h4>
-    <div class="row">
-
+    <div>
         <h5 class="mb-4">Datos del cliente</h5>
         <div class="row">
             <div class="col-sm-6 col-12 mb-3">
@@ -35,7 +35,7 @@
                     <?php
                     foreach ($hostPlans as $hostPlan) {
                     ?>
-                        <option value="<?= $hostPlan->id ?>" <?= $post->get('host_plan_id')== $hostPlan->id ?'selected':'' ?>>
+                        <option value="<?= $hostPlan->id ?>" <?= $post->get('host_plan_id') == $hostPlan->id ? 'selected' : '' ?>>
                             <?= $hostPlan->name ?>
                         </option>
                     <?php
@@ -50,7 +50,7 @@
                     <?php
                     foreach ($operativeSystems as $operativeSystem) {
                     ?>
-                        <option value="<?= $operativeSystem->id ?>" <?= $post->get('operative_system_id')== $operativeSystem->id ?'selected':'' ?>>
+                        <option value="<?= $operativeSystem->id ?>" <?= $post->get('operative_system_id') == $operativeSystem->id ? 'selected' : '' ?>>
                             <?= $operativeSystem->name ?>
                         </option>
                     <?php
@@ -65,7 +65,7 @@
                     <?php
                     foreach ($paymentPlans as $paymentPlan) {
                     ?>
-                        <option value="<?= $paymentPlan->id ?>" <?= $post->get('payment_plan_id')== $paymentPlan->id ?'selected':'' ?>>
+                        <option value="<?= $paymentPlan->id ?>" <?= $post->get('payment_plan_id') == $paymentPlan->id ? 'selected' : '' ?>>
                             <?= $paymentPlan->name ?>
                         </option>
                     <?php
@@ -101,7 +101,7 @@
                     <?php
                     for ($i = 1; $i < 13; $i++) {
                     ?>
-                        <option value="<?= $i ?>" <?= $post->get('credit_card_month')== $i ?'selected':'' ?>>
+                        <option value="<?= $i ?>" <?= $post->get('credit_card_month') == $i ? 'selected' : '' ?>>
                             <?= $i ?>
                         </option>
                     <?php
@@ -116,7 +116,7 @@
                     <?php
                     for ($i = 0; $i < 15; $i++) {
                     ?>
-                        <option value="<?= date('Y') + $i ?>" <?= $post->get('credit_card_year')== date('Y') + $i ?'selected':'' ?>>
+                        <option value="<?= date('Y') + $i ?>" <?= $post->get('credit_card_year') == date('Y') + $i ? 'selected' : '' ?>>
                             <?= date('Y') +  $i ?>
                         </option>
                     <?php
@@ -132,8 +132,9 @@
 
 
         <div class="col-12 mb-3">
-            <button class="btn btn-primary me-2" type="submit" name="submit">Comprar</button>
+            <button class="btn btn-primary me-2" type="submit" name="submit" value="submit">Comprar</button>
         </div>
     </div>
 
 </form>
+</div>
