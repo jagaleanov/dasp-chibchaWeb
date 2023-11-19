@@ -1,14 +1,10 @@
 <?php
 
 // Espacio de nombres utilizado por el repositorio
-namespace src\repositories;
-
-// Importaciones de otras clases que se usarán en el repositorio
-
-use src\models\User;
+namespace src\models;
 
 // Repositorio para gestionar operaciones relacionadas con los clientes en la base de datos
-class UserRepository extends Repository
+class UserModel extends Model
 {
     // Método para encontrar un cliente por su ID
     public function find($id)
@@ -18,7 +14,7 @@ class UserRepository extends Repository
         $data = $stmt->fetch();
 
         if ($data) {
-            return new User($data);
+            return (object) $data;
         }
 
         // Si no se encuentra el cliente, se retorna null
@@ -44,7 +40,7 @@ class UserRepository extends Repository
 
         $users = [];
         foreach ($data as $userData) {
-            $users[] = new User($userData);
+            $users[] = (object) $userData;
         }
 
         return $users;
@@ -58,7 +54,7 @@ class UserRepository extends Repository
         $data = $stmt->fetch();
 
         if ($data) {
-            return new User($data);
+            return (object) $data;
         }
 
         // Si no se encuentra el cliente, se retorna null

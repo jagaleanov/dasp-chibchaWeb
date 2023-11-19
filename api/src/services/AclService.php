@@ -2,7 +2,7 @@
 
 namespace src\services;
 
-use src\services\RepositoryService;
+use src\services\ModelService;
 use stdClass;
 
 class AclService
@@ -10,13 +10,13 @@ class AclService
     private static $instance = null;
     private $user;
     // private $permissions;
-    private $userRepository;
+    private $userModel;
 
     private function __construct()
     {
         $this->user = new stdClass();
         // $this->permissions = [];
-        $this->userRepository = RepositoryService::getInstance()->get('UserRepository');
+        $this->userModel = ModelService::getInstance()->get('UserModel');
         $this->setUser();
     }
 
@@ -31,7 +31,7 @@ class AclService
     public function setUser()
     {
         if (isset($_SESSION['userId'])) {
-            $this->user =  $this->userRepository->find($_SESSION['userId']);
+            $this->user =  $this->userModel->find($_SESSION['userId']);
         } else {
             $this->user = new stdClass();
             $this->user->role = 1;

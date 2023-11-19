@@ -39,8 +39,8 @@ class Router
                 if (class_exists($classWithNamespace) && method_exists($classWithNamespace, $method)) {
                     // Si el controlador es "UserController", proporcionamos la dependencia del repositorio
                     if ($classWithNamespace === "src\\controllers\\AuthController") {
-                        $repository = new \src\repositories\UserRepository();
-                        $controller = new $classWithNamespace($repository);
+                        $model = new \src\models\UserModel();
+                        $controller = new $classWithNamespace($model);
                     } else {
                         $controller = new $classWithNamespace();
                     }

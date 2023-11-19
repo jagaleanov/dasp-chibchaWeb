@@ -5,26 +5,25 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Payment;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar dominios
 class PaymentController extends Controller
 {
     // Propiedad para el repositorio de dominios
-    private $paymentRepository;
+    private $paymentModel;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->paymentRepository = RepositoryService::getInstance()->get('PaymentRepository');
+        $this->paymentModel = ModelService::getInstance()->get('PaymentModel');
     }
 
     // Método para obtener todos los dominios
     public function getAllPayments()
     {
         try {
-            $payments = $this->paymentRepository->findAll();
+            $payments = $this->paymentModel->findAll();
             return $this->successResponse($payments);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -36,7 +35,7 @@ class PaymentController extends Controller
     public function getPayment($id)
     {
         try {
-            $payment = $this->paymentRepository->find($id);
+            $payment = $this->paymentModel->find($id);
             return $this->successResponse($payment);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
@@ -59,7 +58,7 @@ class PaymentController extends Controller
             $payment->credit_card_customer_id = $data['credit_card_customer_id'];
             $payment->credit_card_number = $data['credit_card_number'];
             $payment->amount = $data['amount'];
-            $payment = $this->paymentRepository->save($payment);
+            $payment = $this->paymentModel->save($payment);
             
             return $this->successResponse(['payment' => $payment]);
         } catch (\Exception $e) {
@@ -79,7 +78,7 @@ class PaymentController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $payment = $this->paymentRepository->find($id);
+            $payment = $this->paymentModel->find($id);
 
             if (!$payment) {
                 return $this->notFoundResponse();
@@ -89,7 +88,7 @@ class PaymentController extends Controller
             $payment->credit_card_customer_id = $data['credit_card_customer_id'];
             $payment->credit_card_number = $data['credit_card_number'];
             $payment->amount = $data['amount'];
-            $this->paymentRepository->update($payment);
+            $this->paymentModel->update($payment);
             
             return $this->successResponse(['payment' => $payment]);
         } catch (\Exception $e) {
@@ -101,13 +100,13 @@ class PaymentController extends Controller
     public function deletePayment($id)
     {
         try {
-            $payment = $this->paymentRepository->find($id);
+            $payment = $this->paymentModel->find($id);
 
             if (!$payment) {
                 return $this->notFoundResponse();
             }
 
-            $this->paymentRepository->delete($payment);
+            $this->paymentModel->delete($payment);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

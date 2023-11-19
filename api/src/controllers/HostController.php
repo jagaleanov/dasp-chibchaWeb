@@ -5,26 +5,25 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Host;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar dominios
 class HostController extends Controller
 {
     // Propiedad para el repositorio de dominios
-    private $hostRepository;
+    private $hostModel;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->hostRepository = RepositoryService::getInstance()->get('HostRepository');
+        $this->hostModel = ModelService::getInstance()->get('HostModel');
     }
 
     // Método para obtener todos los dominios
     public function getAllHosts()
     {
         try {
-            $hosts = $this->hostRepository->findAll();
+            $hosts = $this->hostModel->findAll();
             return $this->successResponse($hosts);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -36,7 +35,7 @@ class HostController extends Controller
     public function getCustomerHosts($customerId)
     {
         try {
-            $hosts = $this->hostRepository->findAll($customerId);
+            $hosts = $this->hostModel->findAll($customerId);
             return $this->successResponse($hosts);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -48,7 +47,7 @@ class HostController extends Controller
     public function getHost($id)
     {
         try {
-            $host = $this->hostRepository->find($id);
+            $host = $this->hostModel->find($id);
             return $this->successResponse($host);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
@@ -71,7 +70,7 @@ class HostController extends Controller
             $host->host_plan_id = $data['host_plan_id'];
             $host->payment_plan_id = $data['payment_plan_id'];
             $host->operative_system_id = $data['operative_system_id'];
-            $host = $this->hostRepository->save($host);
+            $host = $this->hostModel->save($host);
             
             return $this->successResponse(['host' => $host]);
         } catch (\Exception $e) {
@@ -91,7 +90,7 @@ class HostController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $host = $this->hostRepository->find($id);
+            $host = $this->hostModel->find($id);
 
             if (!$host) {
                 return $this->notFoundResponse();
@@ -101,7 +100,7 @@ class HostController extends Controller
             $host->host_plan_id = $data['host_plan_id'];
             $host->payment_plan_id = $data['payment_plan_id'];
             $host->operative_system_id = $data['operative_system_id'];
-            $this->hostRepository->update($host);
+            $this->hostModel->update($host);
             
             return $this->successResponse(['host' => $host]);
         } catch (\Exception $e) {
@@ -113,13 +112,13 @@ class HostController extends Controller
     public function deleteHost($id)
     {
         try {
-            $host = $this->hostRepository->find($id);
+            $host = $this->hostModel->find($id);
 
             if (!$host) {
                 return $this->notFoundResponse();
             }
 
-            $this->hostRepository->delete($host);
+            $this->hostModel->delete($host);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

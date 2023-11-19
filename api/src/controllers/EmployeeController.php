@@ -5,26 +5,25 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Employee;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar empleados
 class EmployeeController extends Controller
 {
     // Propiedad para el repositorio de empleados
-    private $employeeRepository;
+    private $employeeModel;
 
     // Constructor que inyecta el repositorio de empleados
     public function __construct()
     {
-        $this->employeeRepository = RepositoryService::getInstance()->get('EmployeeRepository');
+        $this->employeeModel = ModelService::getInstance()->get('EmployeeModel');
     }
 
     // Método para obtener todos los empleados
     public function getAllEmployees()
     {
         try {
-            $users = $this->employeeRepository->findAll();
+            $users = $this->employeeModel->findAll();
             return $this->successResponse($users);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -36,7 +35,7 @@ class EmployeeController extends Controller
     public function getEmployee($id)
     {
         try {
-            $users = $this->employeeRepository->find($id);
+            $users = $this->employeeModel->find($id);
             return $this->successResponse($users);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
@@ -62,7 +61,7 @@ class EmployeeController extends Controller
             $employee->password = password_hash($data['password'], PASSWORD_DEFAULT);
             $employee->mobile_phone = $data['mobile_phone'];
 
-            $employee = $this->employeeRepository->save($employee);
+            $employee = $this->employeeModel->save($employee);
             return $this->successResponse(['employee' => $employee]);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
@@ -80,7 +79,7 @@ class EmployeeController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $employee = $this->employeeRepository->find($id);
+            $employee = $this->employeeModel->find($id);
 
             if (!$employee) {
                 return $this->notFoundResponse();
@@ -91,7 +90,7 @@ class EmployeeController extends Controller
             $employee->email = $data['email'];
             $employee->password = password_hash($data['password'], PASSWORD_DEFAULT);
             $employee->mobile_phone = $data['mobile_phone'];
-            $this->employeeRepository->update($employee);
+            $this->employeeModel->update($employee);
             
             return $this->successResponse(['employee' => $employee]);
         } catch (\Exception $e) {
@@ -103,13 +102,13 @@ class EmployeeController extends Controller
     public function deleteEmployee($id)
     {
         try {
-            $user = $this->employeeRepository->find($id);
+            $user = $this->employeeModel->find($id);
 
             if (!$user) {
                 return $this->notFoundResponse();
             }
 
-            $this->employeeRepository->delete($user);
+            $this->employeeModel->delete($user);
             return $this->successResponse(['message' => 'Empleado eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

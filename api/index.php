@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 require_once 'config/config.php';
 require_once 'config/database.php';
 require_once 'src/services/DatabaseService.php';
-require_once 'src/services/RepositoryService.php';
+require_once 'src/services/ModelService.php';
 
 // Autocarga simple 
 spl_autoload_register(function ($class) {
@@ -20,39 +20,39 @@ spl_autoload_register(function ($class) {
 use src\middlewares\AuthMiddleware;
 
 
-use src\repositories\CreditCardRepository;
-use src\repositories\UserRepository;
-use src\repositories\CustomerRepository;
-use src\repositories\DomainRepository;
-use src\repositories\EmployeeRepository;
-use src\repositories\HostPlanRepository;
-use src\repositories\HostRepository;
-use src\repositories\OperativeSystemRepository;
-use src\repositories\PaymentPlanRepository;
-use src\repositories\PaymentRepository;
-use src\repositories\ProviderRepository;
-use src\repositories\RoleRepository;
-use src\repositories\TicketRepository;
-use src\services\RepositoryService;
+use src\models\CreditCardModel;
+use src\models\UserModel;
+use src\models\CustomerModel;
+use src\models\DomainModel;
+use src\models\EmployeeModel;
+use src\models\HostPlanModel;
+use src\models\HostModel;
+use src\models\OperativeSystemModel;
+use src\models\PaymentPlanModel;
+use src\models\PaymentModel;
+use src\models\ProviderModel;
+use src\models\RoleModel;
+use src\models\TicketModel;
+use src\services\ModelService;
 
 // Inicializar el contenedor de servicios
-$container = RepositoryService::getInstance();
+$container = ModelService::getInstance();
 
 // Registrar  repositorios en el contenedor
 
-$container->register('UserRepository', UserRepository::class);
-$container->register('CustomerRepository', CustomerRepository::class);
-$container->register('EmployeeRepository', EmployeeRepository::class);
-$container->register('RoleRepository', RoleRepository::class);
-$container->register('ProviderRepository', ProviderRepository::class);
-$container->register('PaymentPlanRepository', PaymentPlanRepository::class);
-$container->register('HostPlanRepository', HostPlanRepository::class);
-$container->register('OperativeSystemRepository', OperativeSystemRepository::class);
-$container->register('DomainRepository', DomainRepository::class);
-$container->register('HostRepository', HostRepository::class);
-$container->register('PaymentRepository', PaymentRepository::class);
-$container->register('TicketRepository', TicketRepository::class);
-$container->register('CreditCardRepository', CreditCardRepository::class);
+$container->register('UserModel', UserModel::class);
+$container->register('CustomerModel', CustomerModel::class);
+$container->register('EmployeeModel', EmployeeModel::class);
+$container->register('RoleModel', RoleModel::class);
+$container->register('ProviderModel', ProviderModel::class);
+$container->register('PaymentPlanModel', PaymentPlanModel::class);
+$container->register('HostPlanModel', HostPlanModel::class);
+$container->register('OperativeSystemModel', OperativeSystemModel::class);
+$container->register('DomainModel', DomainModel::class);
+$container->register('HostModel', HostModel::class);
+$container->register('PaymentModel', PaymentModel::class);
+$container->register('TicketModel', TicketModel::class);
+$container->register('CreditCardModel', CreditCardModel::class);
 
 // Inicializar el enrutador y definir rutas, y pasar el contenedor al enrutador
 $router = new \src\router\Router($container);

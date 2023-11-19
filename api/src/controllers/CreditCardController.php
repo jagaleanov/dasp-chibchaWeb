@@ -5,27 +5,26 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\CreditCard;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar tarjetas de crédito
 class CreditCardController extends Controller
 {
     // Propiedad para el repositorio de tarjetas de crédito
-    private $creditCardRepository;
+    private $creditCardModel;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
         parent::__construct();
-        $this->creditCardRepository = RepositoryService::getInstance()->get('CreditCardRepository');
+        $this->creditCardModel = ModelService::getInstance()->get('CreditCardModel');
     }
 
     // Método para obtener todos los tarjetas de crédito
     public function getAllCreditCards()
     {
         try {
-            $creditCards = $this->creditCardRepository->findAll();
+            $creditCards = $this->creditCardModel->findAll();
             return $this->successResponse($creditCards);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -37,7 +36,7 @@ class CreditCardController extends Controller
     public function getCreditCard($customerId, $number)
     {
         try {
-            $creditCard = $this->creditCardRepository->find($customerId, $number);
+            $creditCard = $this->creditCardModel->find($customerId, $number);
             return $this->successResponse($creditCard);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
@@ -58,7 +57,7 @@ class CreditCardController extends Controller
             } else {
                 $number = $_POST['credit_card_number'];
 
-                $creditCard = $this->creditCardRepository->getCreditCardType($number);
+                $creditCard = $this->creditCardModel->getCreditCardType($number);
                 if (!$creditCard) {
                     $res = [
                         'success' => false,
@@ -99,7 +98,7 @@ class CreditCardController extends Controller
             $creditCard->expiration_month = $data['expiration_month'];
             $creditCard->security_code = $data['security_code'];
             $creditCard->name = $data['name'];
-            $creditCard = $this->creditCardRepository->save($creditCard);
+            $creditCard = $this->creditCardModel->save($creditCard);
 
             return $this->successResponse(['creditCard' => $creditCard]);
         } catch (\Exception $e) {
@@ -107,20 +106,20 @@ class CreditCardController extends Controller
         }
     }
 
-    // Método para eliminar un tarjeta de crédito por su ID
-    public function deleteCreditCard($customerId, $number)
-    {
-        try {
-            $creditCard = $this->creditCardRepository->find($customerId, $number);
+    // // Método para eliminar un tarjeta de crédito por su ID
+    // public function deleteCreditCard($customerId, $number)
+    // {
+    //     try {
+    //         $creditCard = $this->creditCardModel->find($customerId, $number);
 
-            if (!$creditCard) {
-                return $this->notFoundResponse();
-            }
+    //         if (!$creditCard) {
+    //             return $this->notFoundResponse();
+    //         }
 
-            $this->creditCardRepository->delete($creditCard);
-            return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
+    //         $this->creditCardModel->delete($creditCard);
+    //         return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
+    //     } catch (\Exception $e) {
+    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 }

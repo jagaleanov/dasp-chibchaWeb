@@ -2,22 +2,19 @@
 
 // Espacio de nombres utilizado por el controlador
 namespace src\controllers;
-
-// Importaciones de otras clases que se usarán en el controlador
-use src\models\User;
 use src\services\LayoutService;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar usuarios
 class UserController extends Controller
 {
     // Propiedad para el repositorio de usuarios
-    private $userRepository,$layoutService;
+    private $userModel,$layoutService;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->userRepository = RepositoryService::getInstance()->get('UserRepository');
+        $this->userModel = ModelService::getInstance()->get('UserModel');
         $this->layoutService = LayoutService::getInstance();
     }
 
@@ -25,7 +22,7 @@ class UserController extends Controller
     public function getAllUsers()
     {
         try {
-            $users = $this->userRepository->findAll();
+            $users = $this->userModel->findAll();
             $this->layoutService->view('home');
             return $this->successResponse($users);
         } catch (\Exception $e) {
@@ -38,7 +35,7 @@ class UserController extends Controller
     public function getUser($id)
     {
         try {
-            $user = $this->userRepository->find($id);
+            $user = $this->userModel->find($id);
             return $this->successResponse($user);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);
@@ -49,13 +46,13 @@ class UserController extends Controller
     public function deleteUser($id)
     {
         try {
-            $user = $this->userRepository->find($id);
+            $user = $this->userModel->find($id);
 
             if (!$user) {
                 return $this->notFoundResponse();
             }
 
-            $this->userRepository->delete($user);
+            $this->userModel->delete($user);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), self::HTTP_INTERNAL_SERVER_ERROR);

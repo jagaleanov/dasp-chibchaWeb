@@ -1,14 +1,10 @@
 <?php
 
 // Espacio de nombres utilizado por el repositorio
-namespace src\repositories;
-
-// Importaciones de otras clases que se usarán en el repositorio
-
-use src\models\Employee;
+namespace src\models;
 
 // Repositorio para gestionar operaciones relacionadas con los empleados en la base de datos
-class EmployeeRepository extends Repository
+class EmployeeModel extends Model
 {
     // Método para encontrar un empleado por su ID
     public function find($id)
@@ -23,7 +19,7 @@ class EmployeeRepository extends Repository
         $data = $stmt->fetch();
 
         if ($data) {
-            return new Employee($data);
+            return (object) $data;
         }
 
         // Si no se encuentra el empleado, se retorna null
@@ -43,7 +39,7 @@ class EmployeeRepository extends Repository
         $data = $stmt->fetch();
 
         if ($data) {
-            return new Employee($data);
+            return (object) $data;
         }
 
         // Si no se encuentra el empleado, se retorna null
@@ -72,14 +68,14 @@ class EmployeeRepository extends Repository
 
         $employees = [];
         foreach ($data as $employeeData) {
-            $employees[] = new Employee($employeeData);
+            $employees[] = (object) $employeeData;
         }
 
         return $employees;
     }
 
     // Método para insertar un empleado en la base de datos
-    public function save(Employee $employee)
+    public function save($employee)
     {
         // Iniciar una transacción
         $this->connection->beginTransaction();
@@ -120,7 +116,7 @@ class EmployeeRepository extends Repository
     }
 
     // Método para actualizar un empleado en la base de datos
-    public function update(Employee $employee)
+    public function update($employee)
     {
         // Iniciar una transacción
         $this->connection->beginTransaction();

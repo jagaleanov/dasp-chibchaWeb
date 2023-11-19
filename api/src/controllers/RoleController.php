@@ -5,26 +5,25 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Role;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar roles
 class RoleController extends Controller
 {
     // Propiedad para el repositorio de roles
-    private $roleRepository;
+    private $roleModel;
 
     // Constructor que inyecta el repositorio de roles
     public function __construct()
     {
-        $this->roleRepository = RepositoryService::getInstance()->get('RoleRepository');
+        $this->roleModel = ModelService::getInstance()->get('RoleModel');
     }
 
     // Método para obtener todos los roles
     public function getAllRoles()
     {
         try {
-            $roles = $this->roleRepository->findAll();
+            $roles = $this->roleModel->findAll();
             return $this->successResponse($roles);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -36,7 +35,7 @@ class RoleController extends Controller
     public function getRole($id)
     {
         try {
-            $role = $this->roleRepository->find($id);
+            $role = $this->roleModel->find($id);
             return $this->successResponse($role);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/ , self::HTTP_INTERNAL_SERVER_ERROR);
@@ -56,7 +55,7 @@ class RoleController extends Controller
 
             $role = new Role();
             $role->name = $data['name'];
-            $role = $this->roleRepository->save($role);
+            $role = $this->roleModel->save($role);
             
             return $this->successResponse(['role' => $role]);
         } catch (\Exception $e) {
@@ -75,14 +74,14 @@ class RoleController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $role = $this->roleRepository->find($id);
+            $role = $this->roleModel->find($id);
 
             if (!$role) {
                 return $this->notFoundResponse();
             }
 
             $role->name = $data['name'];
-            $this->roleRepository->update($role);
+            $this->roleModel->update($role);
             
             return $this->successResponse(['role' => $role]);
         } catch (\Exception $e) {
@@ -94,13 +93,13 @@ class RoleController extends Controller
     public function deleteRole($id)
     {
         try {
-            $user = $this->roleRepository->find($id);
+            $user = $this->roleModel->find($id);
 
             if (!$user) {
                 return $this->notFoundResponse();
             }
 
-            $this->roleRepository->delete($user);
+            $this->roleModel->delete($user);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() /*. ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString()*/ , self::HTTP_INTERNAL_SERVER_ERROR);

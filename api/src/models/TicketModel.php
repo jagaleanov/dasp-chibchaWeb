@@ -1,14 +1,10 @@
 <?php
 
 // Espacio de nombres utilizado por el repositorio
-namespace src\repositories;
-
-// Importaciones de otras clases que se usarán en el repositorio
-
-use src\models\Ticket;
+namespace src\models;
 
 // Repositorio para gestionar operaciones relacionadas con los tickets en la base de datos
-class TicketRepository extends Repository
+class TicketModel extends Model
 {
     // Método para encontrar un proveedor de dominios por su ID
     public function find($id)
@@ -20,7 +16,7 @@ class TicketRepository extends Repository
         $data = $stmt->fetch();
 
         if ($data) {
-            return new Ticket($data);
+            return (object) $data;
         }
 
         // Si no se encuentra el cliente, se retorna null
@@ -28,26 +24,31 @@ class TicketRepository extends Repository
     }
 
     // Método para encontrar todos los clientes, con opción de filtro por nombre o email
-    public function findAll()
+    public function findAll($filters = [])
     {
-        $query =
-            "SELECT * FROM tickets";
+        $query = "SELECT t.*, h.ip FROM tickets t
+        JOIN hosts h ON t.host_id = h.id";
+
+        // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
+        $whereData = $this->buildWhereClause($filters);
+        $query .= $whereData['whereClause'];
+        $params = $whereData['params'];
 
         $stmt = $this->connection->prepare($query);
-        $stmt->execute();
+        $stmt->execute($params);
 
         $data = $stmt->fetchAll();
 
         $tickets = [];
         foreach ($data as $ticketData) {
-            $tickets[] = new Ticket($ticketData);
+            $tickets[] = (object) $ticketData;
         }
 
         return $tickets;
     }
 
     // Método para insertar un proveedor de dominios en la base de datos
-    public function save(Ticket $ticket)
+    public function save($ticket)
     {
         try {
             // Inserción del usuario 
@@ -90,8 +91,8 @@ class TicketRepository extends Repository
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
-    
-    public function updateStatus($id, $status )
+
+    public function updateStatus($id, $status)
     {
         try {
             // Actualización del cliente
@@ -114,18 +115,18 @@ class TicketRepository extends Repository
         }
     }
 
-    // Método para eliminar un proveedor de dominios por su ID
-    public function delete($id)
-    {
-        try {
-            //Validación de la relación del user y el ticket
-            $stmt = $this->connection->prepare("DELETE FROM tickets WHERE id = :id");
-            $stmt->execute(['id' => $id]);
+    // // Método para eliminar un proveedor de dominios por su ID
+    // public function delete($id)
+    // {
+    //     try {
+    //         //Validación de la relación del user y el ticket
+    //         $stmt = $this->connection->prepare("DELETE FROM tickets WHERE id = :id");
+    //         $stmt->execute(['id' => $id]);
 
-            //Respuesta
-            return $stmt->rowCount() == 1;
-        } catch (\Exception $e) {
-            throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
-        }
-    }
+    //         //Respuesta
+    //         return $stmt->rowCount() == 1;
+    //     } catch (\Exception $e) {
+    //         throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
+    //     }
+    // }
 }

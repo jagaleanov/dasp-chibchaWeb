@@ -5,26 +5,25 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Domain;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar dominios
 class DomainController extends Controller
 {
     // Propiedad para el repositorio de dominios
-    private $domainRepository;
+    private $domainModel;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->domainRepository = RepositoryService::getInstance()->get('DomainRepository');
+        $this->domainModel = ModelService::getInstance()->get('DomainModel');
     }
 
     // Método para obtener todos los dominios
     public function getAllDomains()
     {
         try {
-            $domains = $this->domainRepository->findAll();
+            $domains = $this->domainModel->findAll();
             return $this->successResponse($domains);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -36,7 +35,7 @@ class DomainController extends Controller
     public function getDomain($id)
     {
         try {
-            $domain = $this->domainRepository->find($id);
+            $domain = $this->domainModel->find($id);
             return $this->successResponse($domain);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
@@ -59,7 +58,7 @@ class DomainController extends Controller
             $domain->provider_id = $data['provider_id'];
             $domain->domain = $data['domain'];
             $domain->status = $data['status'];
-            $domain = $this->domainRepository->save($domain);
+            $domain = $this->domainModel->save($domain);
             
             return $this->successResponse(['domain' => $domain]);
         } catch (\Exception $e) {
@@ -79,7 +78,7 @@ class DomainController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $domain = $this->domainRepository->find($id);
+            $domain = $this->domainModel->find($id);
 
             if (!$domain) {
                 return $this->notFoundResponse();
@@ -89,7 +88,7 @@ class DomainController extends Controller
             $domain->provider_id = $data['provider_id'];
             $domain->domain = $data['domain'];
             $domain->status = $data['status'];
-            $this->domainRepository->update($domain);
+            $this->domainModel->update($domain);
             
             return $this->successResponse(['domain' => $domain]);
         } catch (\Exception $e) {
@@ -101,13 +100,13 @@ class DomainController extends Controller
     public function deleteDomain($id)
     {
         try {
-            $domain = $this->domainRepository->find($id);
+            $domain = $this->domainModel->find($id);
 
             if (!$domain) {
                 return $this->notFoundResponse();
             }
 
-            $this->domainRepository->delete($domain);
+            $this->domainModel->delete($domain);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

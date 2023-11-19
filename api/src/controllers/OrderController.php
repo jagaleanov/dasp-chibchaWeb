@@ -6,29 +6,25 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use Exception;
-use src\models\CreditCard;
-use src\models\Customer;
-use src\models\Host;
-use src\models\Payment;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar clientes
 class OrderController extends Controller
 {
     // Propiedad para el repositorio de clientes
-    private $customerRepository, $hostRepository, $paymentRepository, $creditCardRepository, $operativeSystemRepository, $hostPlanRepository, $paymentPlanRepository;
+    private $customerModel, $hostModel, $paymentModel, $creditCardModel, $operativeSystemModel, $hostPlanModel, $paymentPlanModel;
 
     // Constructor que inyecta el repositorio de clientes
     public function __construct()
     {
         parent::__construct();
-        $this->customerRepository = RepositoryService::getInstance()->get('CustomerRepository');
-        $this->hostRepository = RepositoryService::getInstance()->get('HostRepository');
-        $this->paymentRepository = RepositoryService::getInstance()->get('PaymentRepository');
-        $this->creditCardRepository = RepositoryService::getInstance()->get('CreditCardRepository');
-        $this->operativeSystemRepository = RepositoryService::getInstance()->get('OperativeSystemRepository');
-        $this->hostPlanRepository = RepositoryService::getInstance()->get('HostPlanRepository');
-        $this->paymentPlanRepository = RepositoryService::getInstance()->get('PaymentPlanRepository');
+        $this->customerModel = ModelService::getInstance()->get('CustomerModel');
+        $this->hostModel = ModelService::getInstance()->get('HostModel');
+        $this->paymentModel = ModelService::getInstance()->get('PaymentModel');
+        $this->creditCardModel = ModelService::getInstance()->get('CreditCardModel');
+        $this->operativeSystemModel = ModelService::getInstance()->get('OperativeSystemModel');
+        $this->hostPlanModel = ModelService::getInstance()->get('HostPlanModel');
+        $this->paymentPlanModel = ModelService::getInstance()->get('PaymentPlanModel');
     }
     public function newOrder()
     {
@@ -127,9 +123,9 @@ class OrderController extends Controller
                     ]);
                 }
             }
-            $operativeSystems = $this->operativeSystemRepository->findAll();
-            $hostPlans = $this->hostPlanRepository->findAll();
-            $paymentPlans = $this->paymentPlanRepository->findAll();
+            $operativeSystems = $this->operativeSystemModel->findAll();
+            $hostPlans = $this->hostPlanModel->findAll();
+            $paymentPlans = $this->paymentPlanModel->findAll();
 
 
 
@@ -206,7 +202,7 @@ class OrderController extends Controller
             }
 
             // Iniciar una transacción
-            $this->customerRepository->beginTransaction();
+            $this->customerModel->beginTransaction();
 
             $customer = new Customer();
             $customer->name = $data['name'];
@@ -215,9 +211,9 @@ class OrderController extends Controller
             $customer->password = password_hash($data['password'], PASSWORD_DEFAULT);
             $customer->address = $data['address'];
 
-            $customer = $this->customerRepository->save($customer);
+            $customer = $this->customerModel->save($customer);
             if (!$customer) {
-                $this->customerRepository->rollback();
+                $this->customerModel->rollback();
                 throw new Exception('Datos de cliente inválidos');
             }
 
@@ -230,9 +226,9 @@ class OrderController extends Controller
             $creditCard->security_code = $data['credit_card_code'];
             $creditCard->name = $data['credit_card_name'];
 
-            $creditCard = $this->creditCardRepository->save($creditCard);
+            $creditCard = $this->creditCardModel->save($creditCard);
             if (!$creditCard) {
-                $this->customerRepository->rollback();
+                $this->customerModel->rollback();
                 throw new Exception('Tarjeta de crédito inválida');
             }
 
@@ -242,9 +238,9 @@ class OrderController extends Controller
             $host->payment_plan_id = $data['payment_plan_id'];
             $host->operative_system_id = $data['operative_system_id'];
 
-            $host = $this->hostRepository->save($host);
+            $host = $this->hostModel->save($host);
             if (!$customer) {
-                $this->customerRepository->rollback();
+                $this->customerModel->rollback();
                 throw new Exception('Datos de host inválidos');
             }
 
@@ -254,14 +250,14 @@ class OrderController extends Controller
             $payment->credit_card_number = $creditCard->number;
             $payment->amount = $data['amount'];
 
-            $payment = $this->paymentRepository->save($payment);
+            $payment = $this->paymentModel->save($payment);
             if (!$payment) {
-                $this->customerRepository->rollback();
+                $this->customerModel->rollback();
                 throw new Exception('Datos de pago inválidos');
             }
 
             // Confirmar la transacción
-            $this->customerRepository->commit();
+            $this->customerModel->commit();
 
             return (object)[
                 'success' => true,

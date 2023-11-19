@@ -5,26 +5,25 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Provider;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar provedores
 class ProviderController extends Controller
 {
     // Propiedad para el repositorio de provedores
-    private $providerRepository;
+    private $providerModel;
 
     // Constructor que inyecta el repositorio de provedores
     public function __construct()
     {
-        $this->providerRepository = RepositoryService::getInstance()->get('ProviderRepository');
+        $this->providerModel = ModelService::getInstance()->get('ProviderModel');
     }
 
     // Método para obtener todos los provedores
     public function getAllProviders()
     {
         try {
-            $providers = $this->providerRepository->findAll();
+            $providers = $this->providerModel->findAll();
             return $this->successResponse($providers);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -36,7 +35,7 @@ class ProviderController extends Controller
     public function getProvider($id)
     {
         try {
-            $provider = $this->providerRepository->find($id);
+            $provider = $this->providerModel->find($id);
             return $this->successResponse($provider);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
@@ -56,7 +55,7 @@ class ProviderController extends Controller
 
             $provider = new Provider();
             $provider->name = $data['name'];
-            $provider = $this->providerRepository->save($provider);
+            $provider = $this->providerModel->save($provider);
             
             return $this->successResponse(['provider' => $provider]);
         } catch (\Exception $e) {
@@ -75,14 +74,14 @@ class ProviderController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $provider = $this->providerRepository->find($id);
+            $provider = $this->providerModel->find($id);
 
             if (!$provider) {
                 return $this->notFoundResponse();
             }
 
             $provider->name = $data['name'];
-            $this->providerRepository->update($provider);
+            $this->providerModel->update($provider);
             
             return $this->successResponse(['provider' => $provider]);
         } catch (\Exception $e) {
@@ -94,13 +93,13 @@ class ProviderController extends Controller
     public function deleteProvider($id)
     {
         try {
-            $provider = $this->providerRepository->find($id);
+            $provider = $this->providerModel->find($id);
 
             if (!$provider) {
                 return $this->notFoundResponse();
             }
 
-            $this->providerRepository->delete($provider);
+            $this->providerModel->delete($provider);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

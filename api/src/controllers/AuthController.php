@@ -4,22 +4,20 @@
 namespace src\controllers;
 
 use Exception;
-use src\models\User;
-use src\services\RepositoryService;
-use src\services\JwtService;
+use src\services\ModelService;
 
 // Controlador para gestionar clientes
 class AuthController extends Controller
 {
-    private $userRepository;
-    private $roleRepository;
+    private $userModel;
+    private $roleModel;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
         parent::__construct();
-        $this->userRepository = RepositoryService::getInstance()->get('UserRepository');
-        $this->roleRepository = RepositoryService::getInstance()->get('RoleRepository');
+        $this->userModel = ModelService::getInstance()->get('UserModel');
+        $this->roleModel = ModelService::getInstance()->get('RoleModel');
     }
 
     public function loginForm()
@@ -48,7 +46,7 @@ class AuthController extends Controller
                     $res = $this->login($validate->sanitizedData);
 
                     if ($res->success) {
-                        header('Location:' . BASE_URL . '/home');
+                        header('Location:' . BASE_URL . '/customers/details');
                     } else {
                         $this->layoutService->setMessage([
                             'danger' => [$res->message],
@@ -70,7 +68,7 @@ class AuthController extends Controller
     {
         print"<pre>";print_r($data);print"</pre>";
         try {
-            $user = $this->userRepository->getByEmail($data['email']);
+            $user = $this->userModel->getByEmail($data['email']);
             if (!$user) {
                 throw new Exception('Usuario inexistente');
             }

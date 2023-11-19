@@ -5,26 +5,25 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\Ticket;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar dominios
 class TicketController extends Controller
 {
     // Propiedad para el repositorio de dominios
-    private $ticketRepository;
+    private $ticketModel;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->ticketRepository = RepositoryService::getInstance()->get('TicketRepository');
+        $this->ticketModel = ModelService::getInstance()->get('TicketModel');
     }
 
     // Método para obtener todos los dominios
     public function getAllTickets()
     {
         try {
-            $tickets = $this->ticketRepository->findAll();
+            $tickets = $this->ticketModel->findAll();
             return $this->successResponse($tickets);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -36,7 +35,7 @@ class TicketController extends Controller
     public function getTicket($id)
     {
         try {
-            $ticket = $this->ticketRepository->find($id);
+            $ticket = $this->ticketModel->find($id);
             return $this->successResponse($ticket);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
@@ -57,7 +56,7 @@ class TicketController extends Controller
             $ticket = new Ticket();
             $ticket->host_id = $data['host_id'];
             $ticket->description = $data['description'];
-            $ticket = $this->ticketRepository->save($ticket);
+            $ticket = $this->ticketModel->save($ticket);
             
             return $this->successResponse(['ticket' => $ticket]);
         } catch (\Exception $e) {
@@ -77,14 +76,14 @@ class TicketController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $ticket = $this->ticketRepository->find($id);
+            $ticket = $this->ticketModel->find($id);
 
             if (!$ticket) {
                 return $this->notFoundResponse();
             }
 
             $role_id = $data['role_id'];
-            $this->ticketRepository->updateRole($id, $role_id);
+            $this->ticketModel->updateRole($id, $role_id);
             
             return $this->successResponse(['ticket' => $ticket]);
         } catch (\Exception $e) {
@@ -103,14 +102,14 @@ class TicketController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $ticket = $this->ticketRepository->find($id);
+            $ticket = $this->ticketModel->find($id);
 
             if (!$ticket) {
                 return $this->notFoundResponse();
             }
 
             $status = $data['status'];
-            $this->ticketRepository->updateStatus($id, $status);
+            $this->ticketModel->updateStatus($id, $status);
             
             return $this->successResponse(['ticket' => $ticket]);
         } catch (\Exception $e) {
@@ -122,13 +121,13 @@ class TicketController extends Controller
     public function deleteTicket($id)
     {
         try {
-            $ticket = $this->ticketRepository->find($id);
+            $ticket = $this->ticketModel->find($id);
 
             if (!$ticket) {
                 return $this->notFoundResponse();
             }
 
-            $this->ticketRepository->delete($ticket);
+            $this->ticketModel->delete($ticket);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

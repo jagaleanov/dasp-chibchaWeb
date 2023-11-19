@@ -1,14 +1,10 @@
 <?php
 
 // Espacio de nombres utilizado por el repositorio
-namespace src\repositories;
-
-// Importaciones de otras clases que se usarán en el repositorio
-
-use src\models\CreditCard;
+namespace src\models;
 
 // Repositorio para gestionar operaciones relacionadas con los creditCards en la base de datos
-class CreditCardRepository extends Repository
+class CreditCardModel extends Model
 {
     // Método para encontrar un proveedor de tarjetas de crédito por su ID
     public function find($customer_id,$number)
@@ -26,7 +22,7 @@ class CreditCardRepository extends Repository
         $data = $stmt->fetch();
 
         if ($data) {
-            return new CreditCard($data);
+            return (object) $data;
         }
 
         // Si no se encuentra el cliente, se retorna null
@@ -53,14 +49,14 @@ class CreditCardRepository extends Repository
 
         $creditCards = [];
         foreach ($data as $creditCardData) {
-            $creditCards[] = new CreditCard($creditCardData);
+            $creditCards[] = (object) $creditCardData;
         }
 
         return $creditCards;
     }
 
     // Método para insertar un proveedor de tarjetas de crédito en la base de datos
-    public function save(CreditCard $creditCard)
+    public function save($creditCard)
     {
         try {
             $type = $this->getCreditCardType($creditCard->number);

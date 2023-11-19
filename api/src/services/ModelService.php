@@ -2,7 +2,7 @@
 
 namespace src\services;
 
-class RepositoryService
+class ModelService
 {
     private static $instance = null;
     private $services = [];

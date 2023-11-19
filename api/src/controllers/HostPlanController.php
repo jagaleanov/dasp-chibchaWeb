@@ -5,26 +5,25 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
-use src\models\HostPlan;
-use src\services\RepositoryService;
+use src\services\ModelService;
 
 // Controlador para gestionar planes de hosting
 class HostPlanController extends Controller
 {
     // Propiedad para el repositorio de planes de hosting
-    private $hostPlanRepository;
+    private $hostPlanModel;
 
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
-        $this->hostPlanRepository = RepositoryService::getInstance()->get('HostPlanRepository');
+        $this->hostPlanModel = ModelService::getInstance()->get('HostPlanModel');
     }
 
     // Método para obtener todos los planes de hosting
     public function getAllHostPlans()
     {
         try {
-            $hostPlans = $this->hostPlanRepository->findAll();
+            $hostPlans = $this->hostPlanModel->findAll();
             return $this->successResponse($hostPlans);
         } catch (\Exception $e) {
             // En caso de error, se retorna un mensaje de error
@@ -36,7 +35,7 @@ class HostPlanController extends Controller
     public function getHostPlan($id)
     {
         try {
-            $hostPlan = $this->hostPlanRepository->find($id);
+            $hostPlan = $this->hostPlanModel->find($id);
             return $this->successResponse($hostPlan);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
@@ -56,7 +55,7 @@ class HostPlanController extends Controller
 
             $hostPlan = new HostPlan();
             $hostPlan->name = $data['name'];
-            $hostPlan = $this->hostPlanRepository->save($hostPlan);
+            $hostPlan = $this->hostPlanModel->save($hostPlan);
             
             return $this->successResponse(['hostPlan' => $hostPlan]);
         } catch (\Exception $e) {
@@ -75,14 +74,14 @@ class HostPlanController extends Controller
                 return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
             }
 
-            $hostPlan = $this->hostPlanRepository->find($id);
+            $hostPlan = $this->hostPlanModel->find($id);
 
             if (!$hostPlan) {
                 return $this->notFoundResponse();
             }
 
             $hostPlan->name = $data['name'];
-            $this->hostPlanRepository->update($hostPlan);
+            $this->hostPlanModel->update($hostPlan);
             
             return $this->successResponse(['hostPlan' => $hostPlan]);
         } catch (\Exception $e) {
@@ -94,13 +93,13 @@ class HostPlanController extends Controller
     public function deleteHostPlan($id)
     {
         try {
-            $hostPlan = $this->hostPlanRepository->find($id);
+            $hostPlan = $this->hostPlanModel->find($id);
 
             if (!$hostPlan) {
                 return $this->notFoundResponse();
             }
 
-            $this->hostPlanRepository->delete($hostPlan);
+            $this->hostPlanModel->delete($hostPlan);
             return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);

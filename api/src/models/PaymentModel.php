@@ -1,14 +1,10 @@
 <?php
 
 // Espacio de nombres utilizado por el repositorio
-namespace src\repositories;
-
-// Importaciones de otras clases que se usarán en el repositorio
-
-use src\models\Payment;
+namespace src\models;
 
 // Repositorio para gestionar operaciones relacionadas con los payments en la base de datos
-class PaymentRepository extends Repository
+class PaymentModel extends Model
 {
     // Método para encontrar un proveedor de dominios por su ID
     public function find($id)
@@ -20,7 +16,7 @@ class PaymentRepository extends Repository
         $data = $stmt->fetch();
 
         if ($data) {
-            return new Payment($data);
+            return (object) $data;
         }
 
         // Si no se encuentra el cliente, se retorna null
@@ -47,14 +43,14 @@ class PaymentRepository extends Repository
 
         $payments = [];
         foreach ($data as $paymentData) {
-            $payments[] = new Payment($paymentData);
+            $payments[] = (object) $paymentData;
         }
 
         return $payments;
     }
 
     // Método para insertar un proveedor de dominios en la base de datos
-    public function save(Payment $payment)
+    public function save($payment)
     {
         try {
             // Inserción del usuario 
@@ -77,7 +73,7 @@ class PaymentRepository extends Repository
     }
 
     // Método para actualizar un proveedor de dominios en la base de datos
-    public function update(Payment $payment)
+    public function update($payment)
     {
         try {
             // Actualización del cliente
@@ -106,18 +102,18 @@ class PaymentRepository extends Repository
         }
     }
 
-    // Método para eliminar un proveedor de dominios por su ID
-    public function delete($id)
-    {
-        try {
-            //Validación de la relación del user y el payment
-            $stmt = $this->connection->prepare("DELETE FROM payments WHERE id = :id");
-            $stmt->execute(['id' => $id]);
+    // // Método para eliminar un proveedor de dominios por su ID
+    // public function delete($id)
+    // {
+    //     try {
+    //         //Validación de la relación del user y el payment
+    //         $stmt = $this->connection->prepare("DELETE FROM payments WHERE id = :id");
+    //         $stmt->execute(['id' => $id]);
 
-            //Respuesta
-            return $stmt->rowCount() == 1;
-        } catch (\Exception $e) {
-            throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
-        }
-    }
+    //         //Respuesta
+    //         return $stmt->rowCount() == 1;
+    //     } catch (\Exception $e) {
+    //         throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
+    //     }
+    // }
 }

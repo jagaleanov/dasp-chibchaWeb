@@ -110,7 +110,7 @@ CREATE TABLE credit_cards (
 
 CREATE TABLE domains (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    customer_id INT UNSIGNED NOT NULL,
+    host_id INT UNSIGNED,
     provider_id INT UNSIGNED NOT NULL,
     domain VARCHAR (50) NOT NULL,
     status TINYINT (1) UNSIGNED NOT NULL DEFAULT 0,
@@ -118,8 +118,8 @@ CREATE TABLE domains (
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX U_domains_domain (domain ASC),
-    INDEX IXFK_domains_customers (customer_id ASC),
-    CONSTRAINT FK_domains_customers FOREIGN KEY (customer_id) REFERENCES customers(id),
+    INDEX IXFK_domains_hosts (host_id ASC),
+    CONSTRAINT FK_domains_hosts FOREIGN KEY (host_id) REFERENCES hosts(id),
     INDEX IXFK_domains_providers (provider_id ASC),
     CONSTRAINT FK_domains_providers FOREIGN KEY (provider_id) REFERENCES providers(id)
 );
