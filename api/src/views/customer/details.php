@@ -33,22 +33,30 @@
                                 <p class="mb-1"><?= $domain->domain ?></p>
                             <?php } ?>
                         <?php } ?>
+                    </div>
+                    <div>
                         <p class="mb-1"><small class="text-muted"><?= $host->operative_system_name ?>/<?= $host->payment_plan_name ?></small></p>
                         <p class="mb-1"><?= $host->host_plan_name ?></p>
                     </div>
-                    <div>
-                        <p><a href="#" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">Iniciar ticket de
-                                soporte</a></p>
-                    </div>
                     <div class="text-right align-items-end">
                         <p><small class="text-muted"><?= $host->created_at ?></small></p>
+                        <p>
+                            <a href="#" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
+                                Ticket de soporte
+                            </a>
+                        </p>
+                        <p>
+                            <a href="#" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
+                                Nuevo dominio
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
         <?php } ?>
     </div>
     <div class="d-flex flex-row-reverse my-2">
-        <a href="#" class="btn btn-primary btn-lg btn-sm" role="button" aria-pressed="true">Comprar un nuevo hosting</a>
+        <a href="#" class="btn btn-primary btn-lg btn-sm" role="button" aria-pressed="true">Nuevo hosting</a>
     </div>
 
     <h4 class="modal-title my-4">Tickets de soporte</h4>

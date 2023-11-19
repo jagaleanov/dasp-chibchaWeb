@@ -7,6 +7,7 @@ namespace src\controllers;
 
 use Exception;
 use src\services\ModelService;
+use stdClass;
 
 // Controlador para gestionar clientes
 class OrderController extends Controller
@@ -26,11 +27,40 @@ class OrderController extends Controller
         $this->hostPlanModel = ModelService::getInstance()->get('HostPlanModel');
         $this->paymentPlanModel = ModelService::getInstance()->get('PaymentPlanModel');
     }
+
+    public function capturePostData($fields)
+    {
+        $postData = [];
+        foreach ($fields as $field) {
+            $postData[$field] = isset($_POST[$field]) ? $_POST[$field] : null;
+        }
+        return $postData;
+    }
+
     public function newOrder()
     {
         try {
 
-            if (isset($_POST['submit'])) {
+            // $post = [
+            //     'name',
+            //     'last_name',
+            //     'email',
+            //     'password',
+            //     'host_plan_id',
+            //     'operative_system_id',
+            //     'payment_plan_id',
+            //     'credit_card_number',
+            //     'credit_card_name',
+            //     'credit_card_month',
+            //     'credit_card_year',
+            //     'credit_card_code',
+            //     'credit_card_type',
+            //     'amount',
+            // ];
+
+            // print "SUBMIT ".$this->postService->get('name');
+
+            if ($this->postService->get('submit')) {
                 // Validación de datos de entrada
                 $rules = [
                     [
@@ -52,6 +82,11 @@ class OrderController extends Controller
                         'field' => 'password',
                         'label' => 'contraseña',
                         'rules' => ['required', 'min_length:6']
+                    ],
+                    [
+                        'field' => 'address',
+                        'label' => 'dirección',
+                        'rules' => ['required']
                     ],
                     [
                         'field' => 'host_plan_id',
@@ -81,7 +116,7 @@ class OrderController extends Controller
                     [
                         'field' => 'credit_card_month',
                         'label' => 'mes en la tarjeta de crédito',
-                        'rules' => ['required', 'integer','min:1','max:12']
+                        'rules' => ['required', 'integer', 'min:1', 'max:12']
                     ],
                     [
                         'field' => 'credit_card_year',
@@ -105,13 +140,13 @@ class OrderController extends Controller
                     ],
                 ];
 
-                $validate = $this->validationService->validate($_POST, $rules);
+                $validate = $this->validationService->validate($this->postService->get(), $rules);
 
                 if ($validate->valid === true) {
                     $res = $this->createOrder($validate->sanitizedData);
 
                     if ($res->success) {
-                        header('Location:' . BASE_URL . '/home');
+                        header('Location:' . BASE_URL . '/login');
                     } else {
                         $this->layoutService->setMessage([
                             'danger' => [$res->message],
@@ -127,9 +162,8 @@ class OrderController extends Controller
             $hostPlans = $this->hostPlanModel->findAll();
             $paymentPlans = $this->paymentPlanModel->findAll();
 
-
-
             $data = [
+                'post' => $this->postService,
                 'operativeSystems' => $operativeSystems,
                 'hostPlans' => $hostPlans,
                 'paymentPlans' => $paymentPlans,
@@ -137,13 +171,15 @@ class OrderController extends Controller
 
             $this->layoutService->setScript('
                 $(document).ready(function () {
-                    $("#host_plan").change(function () {
+                    getTotal();
+                    validateCreditCard();
+                    $("#host_plan_id").change(function () {
                         getTotal();
                     });
-                    $("#operative_system").change(function () {
+                    $("#operative_system_id").change(function () {
                         getTotal();
                     });
-                    $("#payment_plan").change(function () {
+                    $("#payment_plan_id").change(function () {
                         getTotal();
                     });
                     $("#credit_card_number").keyup(function () {
@@ -156,9 +192,9 @@ class OrderController extends Controller
 						url: "' . BASE_URL . '/orders/amount",
 						type: "POST",
 						data: { 
-                            host_plan: $("#host_plan").val(),
-                            operative_system: $("#operative_system").val(),
-                            payment_plan: $("#payment_plan").val(),
+                            host_plan: $("#host_plan_id").val(),
+                            operative_system: $("#operative_system_id").val(),
+                            payment_plan: $("#payment_plan_id").val(),
                         },
 						success: function (resp) {
                             resp=JSON.parse(resp)
@@ -204,7 +240,7 @@ class OrderController extends Controller
             // Iniciar una transacción
             $this->customerModel->beginTransaction();
 
-            $customer = new Customer();
+            $customer = new stdClass();
             $customer->name = $data['name'];
             $customer->last_name = $data['last_name'];
             $customer->email = $data['email'];
@@ -217,7 +253,7 @@ class OrderController extends Controller
                 throw new Exception('Datos de cliente inválidos');
             }
 
-            $creditCard = new CreditCard();
+            $creditCard = new stdClass();
             $creditCard->customer_id = $customer->id;
             $creditCard->number = $data['credit_card_number'];
             $creditCard->type = $data['email'];
@@ -232,7 +268,7 @@ class OrderController extends Controller
                 throw new Exception('Tarjeta de crédito inválida');
             }
 
-            $host = new Host();
+            $host = new stdClass();
             $host->customer_id = $customer->id;
             $host->host_plan_id = $data['host_plan_id'];
             $host->payment_plan_id = $data['payment_plan_id'];
@@ -244,7 +280,7 @@ class OrderController extends Controller
                 throw new Exception('Datos de host inválidos');
             }
 
-            $payment = new Payment();
+            $payment = new stdClass();
             $payment->host_id = $host->id;
             $payment->credit_card_customer_id = $creditCard->customer_id;
             $payment->credit_card_number = $creditCard->number;

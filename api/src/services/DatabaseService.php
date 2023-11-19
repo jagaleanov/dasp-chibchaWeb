@@ -28,7 +28,7 @@ class DatabaseService
     {
         // Si la instancia no existe, la crea
         if (self::$instance == null) {
-            self::$instance = new DatabaseService();
+            self::$instance = new self();
         }
         // Devuelve la única instancia de DatabaseService
         return self::$instance;

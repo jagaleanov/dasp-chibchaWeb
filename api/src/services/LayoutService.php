@@ -31,7 +31,7 @@ class LayoutService
 	{
 		// Si la instancia no existe, la crea
 		if (self::$instance == null) {
-			self::$instance = new LayoutService();
+			self::$instance = new self();
 		}
 		// Devuelve la única instancia de DatabaseService
 		return self::$instance;

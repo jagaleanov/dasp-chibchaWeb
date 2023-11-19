@@ -43,7 +43,7 @@ class CustomerController extends Controller
             if ($id == null) {
                 $id = $this->aclService->getUser()->id;
             }
-            $customer = $this->customerModel->find($id);
+            $customer = $this->customerModel->findByUserId($id);
             $domains = $this->domainModel->findAll([
                 'customer_id' => ['value' => $customer->id, 'operator' => '=']
             ]);
@@ -52,7 +52,7 @@ class CustomerController extends Controller
             ]);
             // print "<pre>";print_r($tickets);print "<pre>";
             $hosts = $this->hostModel->findAll([
-                'customer_id' => ['value' => $id, 'operator' => '='],
+                'customer_id' => ['value' => $customer->id, 'operator' => '='],
                 // 'status' => ['value' => 1, 'operator' => '=']
             ]);
             foreach ($hosts as $id => $host) {

@@ -19,7 +19,7 @@ class ValidationService
     {
         // Si la instancia no existe, la crea
         if (self::$instance == null) {
-            self::$instance = new ValidationService();
+            self::$instance = new self();
         }
         // Devuelve la única instancia de DatabaseService
         return self::$instance;
@@ -96,7 +96,7 @@ class ValidationService
                         }
                         break;
                     case 'integer':
-                        if (!filter_var($value, FILTER_VALIDATE_INT)) {
+                        if (preg_match('/^-?\d+$/', $value) && !filter_var((int)$value, FILTER_VALIDATE_INT)) {
                             $this->errors[] = "El campo $label debe ser un número entero.";
                         }
                         break;

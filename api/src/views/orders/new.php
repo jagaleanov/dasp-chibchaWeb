@@ -6,36 +6,36 @@
         <div class="row">
             <div class="col-sm-6 col-12 mb-3">
                 <label for="name" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="name" name="name" />
+                <input type="text" class="form-control" id="name" name="name" value="<?= $post->get('name') ?>" />
             </div>
             <div class="col-sm-6 col-12 mb-3">
                 <label for="last_name" class="form-label">Apellido</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" />
+                <input type="text" class="form-control" id="last_name" name="last_name" value="<?= $post->get('last_name') ?>" />
             </div>
             <div class="col-sm-6 col-12 mb-3">
                 <label for="email" class="form-label">Email </label>
-                <input type="email" class="form-control" id="email" name="email" />
+                <input type="email" class="form-control" id="email" name="email" value="<?= $post->get('email') ?>" />
             </div>
             <div class="col-sm-6 col-12 mb-3">
                 <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" name="password" />
+                <input type="password" class="form-control" id="password" name="password" value="<?= $post->get('password') ?>" />
             </div>
             <div class="col-sm-6 col-12 mb-3">
                 <label for="address" class="form-label">Dirección</label>
-                <input type="text" class="form-control" id="address" name="address" />
+                <input type="text" class="form-control" id="address" name="address" value="<?= $post->get('address') ?>" />
             </div>
         </div>
 
         <h5 class="mb-4">Datos del hosting</h5>
         <div class="row">
             <div class="col-sm-6 col-12 mb-3">
-                <label for="host_plan" class="form-label">Plan</label>
-                <select class="form-control" id="host_plan" name="host_plan">
+                <label for="host_plan_id" class="form-label">Plan</label>
+                <select class="form-control" id="host_plan_id" name="host_plan_id">
                     <option value=""></option>
                     <?php
                     foreach ($hostPlans as $hostPlan) {
                     ?>
-                        <option value="<?= $hostPlan->id ?>">
+                        <option value="<?= $hostPlan->id ?>" <?= $post->get('host_plan_id')== $hostPlan->id ?'selected':'' ?>>
                             <?= $hostPlan->name ?>
                         </option>
                     <?php
@@ -44,13 +44,13 @@
                 </select>
             </div>
             <div class="col-sm-6 col-12 mb-3">
-                <label for="operative_system" class="form-label">Sistema operativo</label>
-                <select class="form-control" id="operative_system" name="operative_system">
+                <label for="operative_system_id" class="form-label">Sistema operativo</label>
+                <select class="form-control" id="operative_system_id" name="operative_system_id">
                     <option value=""></option>
                     <?php
                     foreach ($operativeSystems as $operativeSystem) {
                     ?>
-                        <option value="<?= $operativeSystem->id ?>">
+                        <option value="<?= $operativeSystem->id ?>" <?= $post->get('operative_system_id')== $operativeSystem->id ?'selected':'' ?>>
                             <?= $operativeSystem->name ?>
                         </option>
                     <?php
@@ -59,13 +59,13 @@
                 </select>
             </div>
             <div class="col-sm-6 col-12 mb-3">
-                <label for="payment_plan" class="form-label">Plan de pagos</label>
-                <select class="form-control" id="payment_plan" name="payment_plan">
+                <label for="payment_plan_id" class="form-label">Plan de pagos</label>
+                <select class="form-control" id="payment_plan_id" name="payment_plan_id">
                     <option value=""></option>
                     <?php
                     foreach ($paymentPlans as $paymentPlan) {
                     ?>
-                        <option value="<?= $paymentPlan->id ?>">
+                        <option value="<?= $paymentPlan->id ?>" <?= $post->get('payment_plan_id')== $paymentPlan->id ?'selected':'' ?>>
                             <?= $paymentPlan->name ?>
                         </option>
                     <?php
@@ -75,7 +75,7 @@
             </div>
         </div>
         <p>Total: $<span id="totalValue">0</span></p>
-        <input type="hidden" class="form-control" id="amount" name="amount" value=""/>
+        <input type="hidden" class="form-control" id="amount" name="amount" value="0" />
 
         <h5 class="mb-4">Datos del pago</h5>
         <h6 class="mb-4">Tarjeta de crédito</h6>
@@ -83,16 +83,16 @@
         <div class="row">
             <div class="col-sm-3 col-6 mb-3">
                 <label for="credit_card_number" class="form-label">Número</label>
-                <input type="text" class="form-control" id="credit_card_number" name="credit_card_number" />
+                <input type="text" class="form-control" id="credit_card_number" name="credit_card_number" value="<?= $post->get('credit_card_number') ?>" />
             </div>
             <div class="col-sm-3 col-6 mb-3">
                 <label for="credit_card_type" class="form-label">Emisor</label>
-                <input type="text" class="form-control" id="credit_card_type" name="credit_card_type" readonly/>
+                <input type="text" class="form-control" id="credit_card_type" name="credit_card_type" value="<?= $post->get('credit_card_type') ?>" readonly />
 
             </div>
             <div class="col-sm-6 col-12 mb-3">
                 <label for="credit_card_name" class="form-label">Nombre en la tarjeta</label>
-                <input type="text" class="form-control" id="credit_card_name" name="credit_card_name" />
+                <input type="text" class="form-control" id="credit_card_name" name="credit_card_name" value="<?= $post->get('credit_card_name') ?>" />
             </div>
             <div class="col-sm-3 col-6 mb-3">
                 <label for="credit_card_month" class="form-label">Mes</label>
@@ -101,7 +101,7 @@
                     <?php
                     for ($i = 1; $i < 13; $i++) {
                     ?>
-                        <option value="<?= $i ?>">
+                        <option value="<?= $i ?>" <?= $post->get('credit_card_month')== $i ?'selected':'' ?>>
                             <?= $i ?>
                         </option>
                     <?php
@@ -116,7 +116,7 @@
                     <?php
                     for ($i = 0; $i < 15; $i++) {
                     ?>
-                        <option value="<?= date('Y') + $i ?>">
+                        <option value="<?= date('Y') + $i ?>" <?= $post->get('credit_card_year')== date('Y') + $i ?'selected':'' ?>>
                             <?= date('Y') +  $i ?>
                         </option>
                     <?php
@@ -126,7 +126,7 @@
             </div>
             <div class="col-sm-6 col-12 mb-3">
                 <label for="credit_card_code" class="form-label">Código de verificación</label>
-                <input type="text" class="form-control" id="credit_card_code" name="credit_card_code" />
+                <input type="text" class="form-control" id="credit_card_code" name="credit_card_code" value="<?= $post->get('credit_card_code') ?>" />
             </div>
         </div>
 
