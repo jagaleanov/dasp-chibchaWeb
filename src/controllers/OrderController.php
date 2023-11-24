@@ -2,6 +2,7 @@
 namespace src\controllers;
 
 use Exception;
+use src\modules\menu\MenuController;
 use src\services\ModelService;
 use stdClass;
 class OrderController extends Controller
@@ -195,6 +196,8 @@ class OrderController extends Controller
                 }
             ');
 
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar',$menu->index());
             $this->layoutService->view('orders/new', $data);
         } catch (\Exception $e) {
             print_r($e);
