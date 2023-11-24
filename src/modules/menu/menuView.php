@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
 
-        <a id="dynamicDomainLink" class="navbar-brand border rounded px-2" href="<?= BASE_URL ?>"><i class="bi bi-globe2"></i>
+        <a id="dynamicDomainLink" class="navbar-brand border rounded px-2" href="<?= BASE_URL ?>/home"><i class="bi bi-globe2"></i>
             ChibchaWeb</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
