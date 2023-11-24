@@ -17,7 +17,9 @@ class Controller
     
     public function __construct()
     {
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         $this->aclService = AclService::getInstance();
         $this->validationService = ValidationService::getInstance();
         $this->layoutService = LayoutService::getInstance();

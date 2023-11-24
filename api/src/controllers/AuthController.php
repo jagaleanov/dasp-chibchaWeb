@@ -4,6 +4,7 @@
 namespace src\controllers;
 
 use Exception;
+use src\modules\menu\MenuController;
 use src\services\ModelService;
 
 // Controlador para gestionar clientes
@@ -48,16 +49,18 @@ class AuthController extends Controller
                     if ($res->success) {
                         header('Location:' . BASE_URL . '/customers/details');
                     } else {
-                        $this->layoutService->setMessage([
+                        $this->layoutService->setMessages([
                             'danger' => [$res->message],
                         ]);
                     }
                 } else {
-                    $this->layoutService->setMessage([
+                    $this->layoutService->setMessages([
                         'danger' => $validate->errors,
                     ]);
                 }
             }
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar',$menu->index());
             $this->layoutService->view('auth/login');
         } catch (\Exception $e) {
             print_r($e);
@@ -66,7 +69,6 @@ class AuthController extends Controller
     // Método para iniciar sesión
     private function login($data)
     {
-        print"<pre>";print_r($data);print"</pre>";
         try {
             $user = $this->userModel->getByEmail($data['email']);
             if (!$user) {
@@ -83,6 +85,19 @@ class AuthController extends Controller
                 'success' => true,
                 // 'data' => ['user' => $user],
             ];
+        } catch (\Exception $e) {
+            return (object)[
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+    // Método para iniciar sesión
+    public function logout()
+    {
+        try {
+            session_destroy();
+            header('Location:'.BASE_URL.'/home');
         } catch (\Exception $e) {
             return (object)[
                 'success' => false,

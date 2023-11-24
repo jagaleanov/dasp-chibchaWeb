@@ -3,6 +3,7 @@
 namespace src\controllers;
 
 use Exception;
+use src\modules\menu\MenuController;
 use src\services\ModelService;
 use stdClass;
 
@@ -41,12 +42,12 @@ class TicketController extends Controller
                     if ($res->success) {
                         header('Location:' . BASE_URL . '/customers/details');
                     } else {
-                        $this->layoutService->setMessage([
+                        $this->layoutService->setMessages([
                             'danger' => [$res->message],
                         ]);
                     }
                 } else {
-                    $this->layoutService->setMessage([
+                    $this->layoutService->setMessages([
                         'danger' => $validate->errors,
                     ]);
                 }
@@ -58,6 +59,8 @@ class TicketController extends Controller
                 'post' => $this->postService,
                 'host' => $host,
             ];
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar',$menu->index());
 
             $this->layoutService->view('tickets/new', $data);
         } catch (\Exception $e) {

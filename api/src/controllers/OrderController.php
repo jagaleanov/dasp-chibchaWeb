@@ -120,12 +120,12 @@ class OrderController extends Controller
                     if ($res->success) {
                         header('Location:' . BASE_URL . '/login');
                     } else {
-                        $this->layoutService->setMessage([
+                        $this->layoutService->setMessages([
                             'danger' => [$res->message],
                         ]);
                     }
                 } else {
-                    $this->layoutService->setMessage([
+                    $this->layoutService->setMessages([
                         'danger' => $validate->errors,
                     ]);
                 }

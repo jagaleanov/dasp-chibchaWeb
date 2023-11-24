@@ -5,6 +5,7 @@
 // Login
 $router->add( '/api/home', 'HomeController@home');
 $router->add( '/api/login', 'AuthController@loginForm');
+$router->add( '/api/logout', 'AuthController@logout');
 // $router->add('POST', '/api/login', 'AuthController@login', true);
 
 // // Usuarios

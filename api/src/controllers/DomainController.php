@@ -6,6 +6,7 @@ namespace src\controllers;
 // Importaciones de otras clases que se usarán en el controlador
 
 use Exception;
+use src\modules\menu\MenuController;
 use src\services\ModelService;
 use stdClass;
 
@@ -53,12 +54,12 @@ class DomainController extends Controller
                     if ($res->success) {
                         header('Location:' . BASE_URL . '/customers/details');
                     } else {
-                        $this->layoutService->setMessage([
+                        $this->layoutService->setMessages([
                             'danger' => [$res->message],
                         ]);
                     }
                 } else {
-                    $this->layoutService->setMessage([
+                    $this->layoutService->setMessages([
                         'danger' => $validate->errors,
                     ]);
                 }
@@ -72,6 +73,8 @@ class DomainController extends Controller
                 'host' => $host,
                 'providers' => $providers,
             ];
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar',$menu->index());
 
             $this->layoutService->view('domains/new', $data);
         } catch (\Exception $e) {

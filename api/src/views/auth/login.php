@@ -1,19 +1,21 @@
-<div class="card-body">
-    <form method="post" class="form-signin">
-        <div class="mb-3">
-            <label for="email" class="form-label">Correo electrónico</label>
-            <input type="email" class="form-control" id="email" name="email" >
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" id="password" name="password" >
-        </div>
-        <button type="submit" class="btn btn-primary" name="submit">Ingresar</button>
-    </form>
+<div class="container">
+    <div class="card-body">
+        <form method="post" class="form-signin">
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <button type="submit" class="btn btn-primary" name="submit">Ingresar</button>
+        </form>
+    </div>
 </div>
 
 
-<style scoped>
+<!-- <style scoped>
     html,
     body {
         height: 100%;
@@ -68,4 +70,4 @@
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }
-</style>
+</style> -->

@@ -33,6 +33,8 @@ use src\models\PaymentModel;
 use src\models\ProviderModel;
 use src\models\RoleModel;
 use src\models\TicketModel;
+use src\modules\menu\MenuModel;
+
 use src\services\ModelService;
 
 // Inicializar el contenedor de servicios
@@ -53,6 +55,8 @@ $container->register('HostModel', HostModel::class);
 $container->register('PaymentModel', PaymentModel::class);
 $container->register('TicketModel', TicketModel::class);
 $container->register('CreditCardModel', CreditCardModel::class);
+
+$container->register('MenuModel', MenuModel::class);
 
 // Inicializar el enrutador y definir rutas, y pasar el contenedor al enrutador
 $router = new \src\router\Router($container);

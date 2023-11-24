@@ -5,6 +5,7 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
+use src\modules\menu\MenuController;
 use src\services\ModelService;
 
 // Controlador para gestionar clientes
@@ -68,6 +69,8 @@ class CustomerController extends Controller
                 'domains' => $domains,
                 'tickets' => $tickets,
             ];
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar',$menu->index());
             $this->layoutService->view('customer/details', $data);
         } catch (\Exception $e) {
             print_r($e);

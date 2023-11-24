@@ -19,6 +19,8 @@
 
     <!-- Contenedor principal fluido que se expande al ancho completo -->
     <div class="container-fluid p-0">
+    <?=$this->getModule('navBar') ?>
+
         <!--MENSAJES DEL SISTEMA------------------------------------------------->
         <div style="position:fixed; z-index:10000; top:30px; left:0; width:100%;">
             <?php
@@ -47,7 +49,7 @@
             ?>
         </div>
         <!-- Contenedor principal donde se cargarán dinámicamente los componentes de la SPA -->
-        <?php echo $content_for_layout ?>
+        <?=$content_for_layout ?>
         <!-- built files will be auto injected -->
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

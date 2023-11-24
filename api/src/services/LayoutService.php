@@ -13,6 +13,7 @@ class LayoutService
 	private $title;
 	private $description;
 	private $messages;
+	private $modules;
 
 	private function __construct()
 	{
@@ -24,6 +25,7 @@ class LayoutService
 		$this->title = 'ChibchaWeb';
 		$this->description = 'Hosting Service';
 		$this->messages = [];
+		$this->modules = [];
 	}
 
 	// Método estático para obtener la única instancia 
@@ -74,11 +76,28 @@ class LayoutService
 		$this->description = $description;
 	}
 
-	public function setMessage($messages = [])
+	public function setMessages($messages = [])
 	{
 		foreach ($messages as $type => $message) {
 			$this->messages[$type] = $message;
 		}
+	}
+
+	public function setModules($modules = [])
+	{
+		foreach ($modules as $position => $module) {
+			$this->modules[$position] = $module;
+		}
+	}
+
+	public function setModule($position, $module)
+	{
+		$this->modules[$position] = $module;
+	}
+
+	public function getModule($position)
+	{
+		return isset($this->modules[$position]) ? $this->modules[$position] : false;
 	}
 
 	public function setJs($files = [])
