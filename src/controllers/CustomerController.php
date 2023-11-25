@@ -31,11 +31,19 @@ class CustomerController extends Controller
     public function getAllCustomers()
     {
         try {
-            $users = $this->customerModel->findAll();
-            return $this->successResponse($users);
+
+            $customers = $this->customerModel->findAll();
+
+            $data = [
+                'post' => $this->postService,
+                'customers' => $customers,
+            ];
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar', $menu->index());
+
+            $this->layoutService->view('customers/list', $data);
         } catch (\Exception $e) {
-            // En caso de error, se retorna un mensaje de error
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+            print_r($e);
         }
     }
 
@@ -75,7 +83,7 @@ class CustomerController extends Controller
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar',$menu->index());
-            $this->layoutService->view('customer/details', $data);
+            $this->layoutService->view('customers/details', $data);
         } catch (\Exception $e) {
             print_r($e);
         }

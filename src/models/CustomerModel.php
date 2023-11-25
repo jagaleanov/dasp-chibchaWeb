@@ -49,20 +49,19 @@ class CustomerModel extends Model
         return null;
     }
 
-    // Método para encontrar todos los clientes, con opción de filtro por nombre o email
-    public function findAll($search = null)
+    // Método para encontrar todos los clientes, con opción de filtro 
+    public function findAll($filters = [])
     {
         $query =
             "SELECT c.id, u.name, u.last_name, u.email, u.password, c.address, c .user_id, c.created_at, c.updated_at
         FROM customers c
-        JOIN users u ON c.user_id = u.id";
-        $params = [];
-
-        // Aplicación de filtros si se proporcionan
-        if (!empty($search)) {
-            $query .= " WHERE u.name LIKE :search OR u.last_name LIKE :search OR u.email LIKE :search";
-            $params['search'] = '%' . $search . '%';
-        }
+        JOIN users u ON c.user_id = u.id
+        JOIN roles r ON u.role_id = r.id";
+        
+        // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
+        $whereData = $this->buildWhereClause($filters);
+        $query .= $whereData['whereClause'];
+        $params = $whereData['params'];
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);

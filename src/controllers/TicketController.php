@@ -71,8 +71,6 @@ class TicketController extends Controller
     private function createTicket($data)
     {
         try {
-            // Iniciar una transacción
-            $this->ticketModel->beginTransaction();
 
             $ticket = new stdClass();
             $ticket->description = $data['description'];
@@ -80,12 +78,8 @@ class TicketController extends Controller
 
             $ticket = $this->ticketModel->save($ticket);
             if (!$ticket) {
-                $this->ticketModel->rollback();
-                throw new Exception('Datos de cliente inválidos');
+                throw new Exception('Datos de ticket inválidos');
             }
-
-            // Confirmar la transacción
-            $this->ticketModel->commit();
 
             return (object)[
                 'success' => true,
@@ -99,23 +93,23 @@ class TicketController extends Controller
         }
     }
 
-
-
-
-
-
-
-
-
     // Método para obtener todos los dominios
     public function getAllTickets()
     {
         try {
+
             $tickets = $this->ticketModel->findAll();
-            return $this->successResponse($tickets);
+
+            $data = [
+                'post' => $this->postService,
+                'tickets' => $tickets,
+            ];
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar', $menu->index());
+            // print"<pre>";print_r($data);print"</pre>";
+            $this->layoutService->view('tickets/list', $data);
         } catch (\Exception $e) {
-            // En caso de error, se retorna un mensaje de error
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+            print_r($e);
         }
     }
 

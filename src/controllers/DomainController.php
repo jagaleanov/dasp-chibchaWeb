@@ -85,8 +85,6 @@ class DomainController extends Controller
     private function createDomain($data)
     {
         try {
-            // Iniciar una transacción
-            $this->domainModel->beginTransaction();
 
             $domain = new stdClass();
             $domain->domain = $data['domain'];
@@ -95,12 +93,8 @@ class DomainController extends Controller
 
             $ticket = $this->domainModel->save($domain);
             if (!$ticket) {
-                $this->domainModel->rollback();
-                throw new Exception('Datos de cliente inválidos');
+                throw new Exception('Datos de dominio inválidos');
             }
-
-            // Confirmar la transacción
-            $this->domainModel->commit();
 
             return (object)[
                 'success' => true,
@@ -118,11 +112,19 @@ class DomainController extends Controller
     public function getAllDomains()
     {
         try {
+
             $domains = $this->domainModel->findAll();
-            return $this->successResponse($domains);
+
+            $data = [
+                'post' => $this->postService,
+                'domains' => $domains,
+            ];
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar', $menu->index());
+            // print"<pre>";print_r($data);print"</pre>";
+            $this->layoutService->view('domains/list', $data);
         } catch (\Exception $e) {
-            // En caso de error, se retorna un mensaje de error
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+            print_r($e);
         }
     }
 

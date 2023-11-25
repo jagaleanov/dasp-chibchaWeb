@@ -1,19 +1,16 @@
 <?php
 
-// Espacio de nombres utilizado por el controlador
 namespace src\controllers;
 
 use Exception;
 use src\modules\menu\MenuController;
 use src\services\ModelService;
 
-// Controlador para gestionar clientes
 class AuthController extends Controller
 {
     private $userModel;
     private $roleModel;
 
-    // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
         parent::__construct();
@@ -23,11 +20,8 @@ class AuthController extends Controller
 
     public function loginForm()
     {
-        // print"<pre>";print_r($_SESSION);print"</pre>";
         try {
             if (isset($_POST['submit'])) {
-                // print"<pre>";print_r($_POST);print"</pre>";
-                // Validación de datos de entrada
                 $rules = [
                     [
                         'field' => 'email',
@@ -66,6 +60,7 @@ class AuthController extends Controller
             print_r($e);
         }
     }
+
     // Método para iniciar sesión
     private function login($data)
     {
@@ -92,7 +87,7 @@ class AuthController extends Controller
             ];
         }
     }
-    // Método para iniciar sesión
+    // Método para finalizar sesión
     public function logout()
     {
         try {

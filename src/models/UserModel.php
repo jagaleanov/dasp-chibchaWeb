@@ -22,16 +22,14 @@ class UserModel extends Model
     }
 
     // Método para encontrar todos los clientes, con opción de filtro por nombre o email
-    public function findAll($search = null)
+    public function findAll($filters = [])
     {
         $query = "SELECT * FROM users";
-        $params = [];
-
-        // Aplicación de filtros si se proporcionan
-        if (!empty($search)) {
-            $query .= " WHERE name LIKE :search OR last_name LIKE :search OR email LIKE :search";
-            $params['search'] = '%' . $search . '%';
-        }
+        
+        // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
+        $whereData = $this->buildWhereClause($filters);
+        $query .= $whereData['whereClause'];
+        $params = $whereData['params'];
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);

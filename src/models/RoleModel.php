@@ -25,17 +25,38 @@ class RoleModel extends Model
     }
 
     // Método para encontrar todos los roles
-    public function findAll($search = null)
-    {
-        $query =
-            "SELECT * FROM roles ";
-        $params = [];
+    // public function findAll($search = null)
+    // {
+    //     $query =
+    //         "SELECT * FROM roles ";
+    //     $params = [];
 
-        // Aplicación de filtros si se proporcionan
-        if (!empty($search)) {
-            $query .= "WHERE name LIKE :search";
-            $params['search'] = '%' . $search . '%';
-        }
+    //     // Aplicación de filtros si se proporcionan
+    //     if (!empty($search)) {
+    //         $query .= "WHERE name LIKE :search";
+    //         $params['search'] = '%' . $search . '%';
+    //     }
+
+    //     $stmt = $this->connection->prepare($query);
+    //     $stmt->execute($params);
+
+    //     $data = $stmt->fetchAll();
+
+    //     $roles = [];
+    //     foreach ($data as $roleData) {
+    //         $roles[] = (object) $roleData;
+    //     }
+
+    //     return $roles;
+    // }
+    public function findAll($filters = [])
+    {
+        $query = "SELECT * FROM roles";
+
+        // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
+        $whereData = $this->buildWhereClause($filters);
+        $query .= $whereData['whereClause'];
+        $params = $whereData['params'];
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);

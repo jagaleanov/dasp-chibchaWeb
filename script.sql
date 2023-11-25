@@ -163,3 +163,4 @@ INSERT INTO host_plans VALUES (1,'Chibcha-Platino',2500),(2,'Chibcha-Plata',2000
 INSERT INTO operative_systems VALUES (1,'Linux',0),(2,'Windows',100);
 INSERT INTO payment_plans VALUES (1,'Mensual'),(2,'Trimestral'),(3,'Semestral'),(4,'Anual');
 INSERT INTO roles VALUES (1,'Cliente'),(2,'Soporte pagos'),(3,'Soporte host'),(4,'Soporte dominio'),(5,'Soporte tecnico'),(6,'Super Admin');
+INSERT INTO providers VALUES (1,'Provider 1'),(2,'Provider 2');

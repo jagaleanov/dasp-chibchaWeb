@@ -15,13 +15,10 @@ use src\payment\strategies\QuarterlyPaymentStrategy;
 use src\services\ModelService;
 use stdClass;
 
-// Controlador para gestionar dominios
 class PaymentController extends Controller
 {
-    // Propiedad para el repositorio de dominios
     private $paymentModel, $hostModel, $operativeSystemModel, $hostPlanModel, $paymentPlanModel, $creditCardModel;
 
-    // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
         parent::__construct();
@@ -99,17 +96,24 @@ class PaymentController extends Controller
         }
     }
 
-    // Método para obtener todos los dominios
-    // public function getAllPayments()
-    // {
-    //     try {
-    //         $payments = $this->paymentModel->findAll();
-    //         return $this->successResponse($payments);
-    //     } catch (\Exception $e) {
-    //         // En caso de error, se retorna un mensaje de error
-    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-    // }
+    public function getAllPayments()
+    {
+        try {
+
+            $payments = $this->paymentModel->findAll();
+
+            $data = [
+                'post' => $this->postService,
+                'payments' => $payments,
+            ];
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar', $menu->index());
+            // print"<pre>";print_r($data);print"</pre>";
+            $this->layoutService->view('payments/list', $data);
+        } catch (\Exception $e) {
+            print_r($e);
+        }
+    }
 
     // Método para obtener un dominio por su ID
     // public function getPayment($id)

@@ -35,22 +35,21 @@ class PaymentModel extends Model
         return null;
     }
 
-    public function findAll($search = null)
+    public function findAll($filters = [])
     {
         $query =
-            "SELECT * FROM payments";
-        $params = [];
+            "SELECT p.*, h.ip FROM payments p
+            JOIN hosts h ON p.host_id = h.id";
 
-        // Aplicación de filtros si se proporcionan
-        if (!empty($search)) {
-            $query .= " WHERE ip LIKE :search";
-            $params['search'] = '%' . $search . '%';
-        }
-
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute($params);
-
-        $data = $stmt->fetchAll();
+            // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
+            $whereData = $this->buildWhereClause($filters);
+            $query .= $whereData['whereClause'];
+            $params = $whereData['params'];
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute($params);
+    
+            $data = $stmt->fetchAll();
 
         $payments = [];
         foreach ($data as $paymentData) {

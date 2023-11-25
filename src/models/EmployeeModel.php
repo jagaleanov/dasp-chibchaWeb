@@ -47,19 +47,18 @@ class EmployeeModel extends Model
     }
 
     // Método para encontrar todos los empleados, con opción de filtro por nombre o email
-    public function findAll($search = null)
+    public function findAll($filters = [])
     {
         $query =
-            "SELECT e.id, u.name, u.last_name, u.email, u.password, u.role_id, e.mobile_phone, e.user_id, e.created_at, e.updated_at
+            "SELECT e.id, u.name, u.last_name, u.email, u.password, u.role_id, r.name AS role_name, e.mobile_phone, e.user_id, e.created_at, e.updated_at
         FROM employees e
-        JOIN users u ON e.user_id = u.id";
-        $params = [];
-
-        // Aplicación de filtros si se proporcionan
-        if (!empty($search)) {
-            $query .= " WHERE u.name LIKE :search OR u.last_name LIKE :search OR u.email LIKE :search";
-            $params['search'] = '%' . $search . '%';
-        }
+        JOIN users u ON e.user_id = u.id
+        JOIN roles r ON u.role_id = r.id";
+        
+        // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
+        $whereData = $this->buildWhereClause($filters);
+        $query .= $whereData['whereClause'];
+        $params = $whereData['params'];
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
@@ -67,8 +66,8 @@ class EmployeeModel extends Model
         $data = $stmt->fetchAll();
 
         $employees = [];
-        foreach ($data as $employeeData) {
-            $employees[] = (object) $employeeData;
+        foreach ($data as $domainData) {
+            $employees[] = (object) $domainData;
         }
 
         return $employees;

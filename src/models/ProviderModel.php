@@ -3,10 +3,8 @@
 // Espacio de nombres utilizado por el repositorio
 namespace src\models;
 
-// Repositorio para gestionar operaciones relacionadas con los providers en la base de datos
 class ProviderModel extends Model
 {
-    // Método para encontrar un proveedor de dominios por su ID
     public function find($id)
     {
         $stmt = $this->connection->prepare(
@@ -23,18 +21,15 @@ class ProviderModel extends Model
         return null;
     }
 
-    // Método para encontrar todos los clientes, con opción de filtro por nombre o email
-    public function findAll($search = null)
+    public function findAll($filters = [])
     {
         $query =
             "SELECT * FROM providers ";
-        $params = [];
 
-        // Aplicación de filtros si se proporcionan
-        if (!empty($search)) {
-            $query .= "WHERE name LIKE :search";
-            $params['search'] = '%' . $search . '%';
-        }
+        // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
+        $whereData = $this->buildWhereClause($filters);
+        $query .= $whereData['whereClause'];
+        $params = $whereData['params'];
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
