@@ -112,6 +112,41 @@ class DomainController extends Controller
     public function getAllDomains()
     {
         try {
+            
+            if ($this->postService->get('submit')) {
+                // Validación de datos de entrada
+                $rules = [
+                    [
+                        'field' => 'domain_id',
+                        'label' => 'dominio id',
+                        'rules' => ['required']
+                    ],
+                    [
+                        'field' => 'status',
+                        'label' => 'estado',
+                        'rules' => ['required']
+                    ],
+                ];
+
+                $validate = $this->validationService->validate($this->postService->get(), $rules);
+
+                if ($validate->valid === true) {
+                    $validatedData = $validate->sanitizedData;
+                    $res = $this->updateDomainStatus($validatedData);
+
+                    if ($res->success) {
+                        header('Location:' . BASE_URL . '/domains/list');
+                    } else {
+                        $this->layoutService->setMessages([
+                            'danger' => [$res->message],
+                        ]);
+                    }
+                } else {
+                    $this->layoutService->setMessages([
+                        'danger' => $validate->errors,
+                    ]);
+                }
+            }
 
             $domains = $this->domainModel->findAll();
 
@@ -125,6 +160,27 @@ class DomainController extends Controller
             $this->layoutService->view('domains/list', $data);
         } catch (\Exception $e) {
             print_r($e);
+        }
+    }
+
+    private function updateDomainStatus($data)
+    {
+        try {
+
+            $domain = $this->domainModel->updateStatus($data['domain_id'], $data['status']);
+            if (!$domain) {
+                throw new Exception('Datos de dominio inválidos');
+            }
+
+            return (object)[
+                'success' => true,
+                'domain' => $domain,
+            ];
+        } catch (\Exception $e) {
+            return (object)[
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
         }
     }
 

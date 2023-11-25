@@ -41,7 +41,12 @@ class AuthController extends Controller
                     $res = $this->login($validate->sanitizedData);
 
                     if ($res->success) {
-                        header('Location:' . BASE_URL . '/customers/details');
+                        if ($res->user->role_id > 1) {
+                            // $uri = 'employees';
+                            header('Location:' . BASE_URL . '/home');
+                        } else {
+                            header('Location:' . BASE_URL . '/customers/details');
+                        }
                     } else {
                         $this->layoutService->setMessages([
                             'danger' => [$res->message],
@@ -54,7 +59,7 @@ class AuthController extends Controller
                 }
             }
             $menu = new MenuController();
-            $this->layoutService->setModule('navBar',$menu->index());
+            $this->layoutService->setModule('navBar', $menu->index());
             $this->layoutService->view('auth/login');
         } catch (\Exception $e) {
             print_r($e);
@@ -73,12 +78,12 @@ class AuthController extends Controller
             if (!password_verify($data['password'], $user->password)) {
                 throw new Exception('Password inválido');
             }
-            
+
             $_SESSION['userId'] = $user->id;
 
             return (object)[
                 'success' => true,
-                // 'data' => ['user' => $user],
+                'user' => $user,
             ];
         } catch (\Exception $e) {
             return (object)[
@@ -92,7 +97,7 @@ class AuthController extends Controller
     {
         try {
             session_destroy();
-            header('Location:'.BASE_URL.'/home');
+            header('Location:' . BASE_URL . '/home');
         } catch (\Exception $e) {
             return (object)[
                 'success' => false,

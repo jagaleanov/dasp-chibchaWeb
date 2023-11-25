@@ -117,8 +117,6 @@ class EmployeeModel extends Model
     // Método para actualizar un empleado en la base de datos
     public function update($employee)
     {
-        // Iniciar una transacción
-        $this->connection->beginTransaction();
         try {
             //Validación de la relación del user y el employee
             $stmt = $this->connection->prepare(
@@ -142,7 +140,6 @@ class EmployeeModel extends Model
                     name = :name, 
                     last_name = :last_name,
                     email = :email ,
-                    password = :password ,
                     role_id = :role_id ,
                     updated_at = :updated_at
                     WHERE id = :id"
@@ -151,7 +148,6 @@ class EmployeeModel extends Model
                 'name' => $employee->name,
                 'last_name' => $employee->last_name,
                 'email' => $employee->email,
-                'password' => $employee->password,
                 'role_id' => $employee->role_id,
                 'updated_at' => date('Y-m-d H:i:s'),
                 'id' => $employee->user_id
@@ -182,26 +178,62 @@ class EmployeeModel extends Model
         }
     }
 
-    // Método para eliminar un empleado por su ID
-    public function delete($id)
+    public function updatePassword($id, $password)
     {
         try {
-            // Iniciar una transacción
-            $this->connection->beginTransaction();
-
             //Validación de la relación del user y el employee
-            $stmt = $this->connection->prepare("DELETE FROM employees WHERE id = :id");
-            $stmt->execute(['id' => $id]);
+            $stmt = $this->connection->prepare(
+                "SELECT e.id, e.user_id
+                FROM employees e 
+                JOIN users u ON e.user_id = u.id 
+                WHERE e.id = :id"
+            );
+            $stmt->execute([
+                'id' => $id,
+            ]);
+            
+            $employee = $stmt->fetch();
 
-            // Confirmar la transacción
-            $this->connection->commit();
+            // Actualización del usuario
+            $stmt = $this->connection->prepare(
+                "UPDATE users SET 
+                    password = :password ,
+                    updated_at = :updated_at
+                    WHERE id = :id"
+            );
+            $stmt->execute([
+                'password' => $password,
+                'updated_at' => date('Y-m-d H:i:s'),
+                'id' => $employee->user_id
+            ]);
 
             //Respuesta
-            return $stmt->rowCount() == 1;
+            return $this->find($id);
         } catch (\Exception $e) {
-            // Si hay un error, revertir la transacción
-            $this->connection->rollback();
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
+
+    // // Método para eliminar un empleado por su ID
+    // public function delete($id)
+    // {
+    //     try {
+    //         // Iniciar una transacción
+    //         $this->connection->beginTransaction();
+
+    //         //Validación de la relación del user y el employee
+    //         $stmt = $this->connection->prepare("DELETE FROM employees WHERE id = :id");
+    //         $stmt->execute(['id' => $id]);
+
+    //         // Confirmar la transacción
+    //         $this->connection->commit();
+
+    //         //Respuesta
+    //         return $stmt->rowCount() == 1;
+    //     } catch (\Exception $e) {
+    //         // Si hay un error, revertir la transacción
+    //         $this->connection->rollback();
+    //         throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
+    //     }
+    // }
 }

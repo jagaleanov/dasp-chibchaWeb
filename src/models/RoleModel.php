@@ -55,6 +55,8 @@ class RoleModel extends Model
 
         // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
         $whereData = $this->buildWhereClause($filters);
+        // print "LIKE OK";
+        // print "<pre>";print_r($whereData);print "</pre>";
         $query .= $whereData['whereClause'];
         $params = $whereData['params'];
 

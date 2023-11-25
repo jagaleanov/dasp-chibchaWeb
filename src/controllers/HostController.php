@@ -5,6 +5,7 @@ namespace src\controllers;
 
 // Importaciones de otras clases que se usarán en el controlador
 
+use src\modules\menu\MenuController;
 use src\services\ModelService;
 
 // Controlador para gestionar dominios
@@ -16,6 +17,7 @@ class HostController extends Controller
     // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
+        parent::__construct();
         $this->hostModel = ModelService::getInstance()->get('HostModel');
     }
 
@@ -23,11 +25,19 @@ class HostController extends Controller
     public function getAllHosts()
     {
         try {
+
             $hosts = $this->hostModel->findAll();
-            return $this->successResponse($hosts);
+
+            $data = [
+                'post' => $this->postService,
+                'hosts' => $hosts,
+            ];
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar', $menu->index());
+            // print"<pre>";print_r($data);print"</pre>";
+            $this->layoutService->view('hosts/list', $data);
         } catch (\Exception $e) {
-            // En caso de error, se retorna un mensaje de error
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString() , self::HTTP_INTERNAL_SERVER_ERROR);
+            print_r($e);
         }
     }
 

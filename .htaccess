@@ -14,6 +14,9 @@
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    
+    # Redirige solicitudes a la raíz a /home
+    RewriteRule ^$ /home [R=301,L]
 
     # Si la solicitud es para un archivo real, directorio o symlink, no reescribir
     RewriteCond %{REQUEST_FILENAME} !-f

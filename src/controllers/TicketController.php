@@ -9,13 +9,14 @@ use stdClass;
 
 class TicketController extends Controller
 {
-    private $ticketModel,$hostModel;
+    private $ticketModel, $hostModel, $roleModel;
 
     public function __construct()
     {
         parent::__construct();
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
         $this->hostModel = ModelService::getInstance()->get('HostModel');
+        $this->roleModel = ModelService::getInstance()->get('RoleModel');
     }
 
     public function newTicket($hostId)
@@ -60,7 +61,7 @@ class TicketController extends Controller
                 'host' => $host,
             ];
             $menu = new MenuController();
-            $this->layoutService->setModule('navBar',$menu->index());
+            $this->layoutService->setModule('navBar', $menu->index());
 
             $this->layoutService->view('tickets/new', $data);
         } catch (\Exception $e) {
@@ -98,11 +99,100 @@ class TicketController extends Controller
     {
         try {
 
-            $tickets = $this->ticketModel->findAll();
+            if ($this->postService->get('submitRole')) {
+                // Validación de datos de entrada
+                $rules = [
+                    [
+                        'field' => 'ticket_id',
+                        'label' => 'ticket id',
+                        'rules' => ['required', 'integer', 'min:1']
+                    ],
+                    [
+                        'field' => 'role_id',
+                        'label' => 'role',
+                        'rules' => ['required', 'integer', 'min:1']
+                    ],
+                ];
+
+                $validate = $this->validationService->validate($this->postService->get(), $rules);
+
+                if ($validate->valid === true) {
+                    $validatedData = $validate->sanitizedData;
+                    $res = $this->updateTicketRole($validatedData);
+
+                    if ($res->success) {
+                        header('Location:' . BASE_URL . '/tickets/list');
+                    } else {
+                        $this->layoutService->setMessages([
+                            'danger' => [$res->message],
+                        ]);
+                    }
+                } else {
+                    $this->layoutService->setMessages([
+                        'danger' => $validate->errors,
+                    ]);
+                }
+            }
+
+            if ($this->postService->get('submitStatus')) {
+                // Validación de datos de entrada
+                $rules = [
+                    [
+                        'field' => 'ticket_id',
+                        'label' => 'ticket id',
+                        'rules' => ['required', 'integer', 'min:1']
+                    ],
+                ];
+
+                $validate = $this->validationService->validate($this->postService->get(), $rules);
+
+                if ($validate->valid === true) {
+                    $validatedData = $validate->sanitizedData;
+                    $res = $this->updateTicketStatus($validatedData);
+
+                    if ($res->success) {
+                        // header('Location:' . BASE_URL . '/tickets/list');
+                    } else {
+                        $this->layoutService->setMessages([
+                            'danger' => [$res->message],
+                        ]);
+                    }
+                } else {
+                    $this->layoutService->setMessages([
+                        'danger' => $validate->errors,
+                    ]);
+                }
+            }
+
+            $roleId = $this->aclService->getUser()->role_id;
+
+            if ($roleId == 6) {
+                $tickets = $this->ticketModel->findAll();
+            } else {
+                $tickets = $this->ticketModel->findAll([
+                    'role_id' => ['value' => $roleId, 'operator' => '=']
+                ]);
+            }
+            $roles = $this->roleModel->findAll([
+                'name' => ['value' => 'Soporte', 'operator' => 'LIKE']
+            ]);
+
+            $changeRoleAvailable = false;
+            $changeStatusAvailable = false;
+            if (in_array($roleId, [5, 6])) {
+                $changeRoleAvailable = true;
+            }
+
+            if (in_array($roleId, [2, 3, 4, 6])) {
+                $changeStatusAvailable = true;
+            }
 
             $data = [
                 'post' => $this->postService,
                 'tickets' => $tickets,
+                'roles' => $roles,
+                'changeRoleAvailable' => $changeRoleAvailable,
+                'changeStatusAvailable' => $changeStatusAvailable,
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar', $menu->index());
@@ -113,16 +203,36 @@ class TicketController extends Controller
         }
     }
 
-    // Método para obtener un dominio por su ID
-    public function getTicket($id)
+    private function updateTicketRole($data)
     {
         try {
-            $ticket = $this->ticketModel->find($id);
-            return $this->successResponse($ticket);
+            $ticket = $this->ticketModel->updateRole($data['ticket_id'], $data['role_id']);
+            if (!$ticket) {
+                throw new Exception('Datos de ticket inválidos');
+            }
+
+            return (object)[
+                'success' => true,
+                'ticket' => $ticket,
+            ];
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+            return (object)[
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
         }
     }
+
+    // // Método para obtener un dominio por su ID
+    // public function getTicket($id)
+    // {
+    //     try {
+    //         $ticket = $this->ticketModel->find($id);
+    //         return $this->successResponse($ticket);
+    //     } catch (\Exception $e) {
+    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 
     // // Método para crear un nuevo dominio
     // public function createTicket()
@@ -174,28 +284,23 @@ class TicketController extends Controller
     // }
 
     // Método para actualizar un dominio por su ID
-    public function updateTicketStatus($id)
+    public function updateTicketStatus($data)
     {
         try {
-            $data = $this->getInputData();
-
-            // Validación de datos de entrada
-            if (empty($data['status'])) {
-                return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
-            }
-
-            $ticket = $this->ticketModel->find($id);
-
+            $ticket = $this->ticketModel->updateStatus($data['ticket_id']);
             if (!$ticket) {
-                return $this->notFoundResponse();
+                throw new Exception('Datos de ticket inválidos');
             }
 
-            $status = $data['status'];
-            $this->ticketModel->updateStatus($id, $status);
-
-            return $this->successResponse(['ticket' => $ticket]);
+            return (object)[
+                'success' => true,
+                'ticket' => $ticket,
+            ];
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
+            return (object)[
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
         }
     }
 

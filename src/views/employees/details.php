@@ -113,7 +113,7 @@
                         <p class="mb-1"><small>Host:</small> <?= $domain->ip ?></p>
                     </div>
                     <div>
-                        <p class="mb-1"><small class="text-muted"><?= $domain->status == 1 ? 'APROBADO' : ($domain->status == 2 ? 'RECHAZADO' : 'PENDIENTE') ?></small></p>
+                        <p class="mb-1"><small class="text-muted"><?= $domain->status == 1 ? 'APROBADO' : ($domain->status == 2 ? 'NO APROBADO' : 'PENDIENTE') ?></small></p>
                     </div>
                     <div>
                         <p><small class="text-muted"><?= $domain->created_at ?></small></p>

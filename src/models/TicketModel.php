@@ -26,8 +26,9 @@ class TicketModel extends Model
     // Método para encontrar todos los clientes, con opción de filtro por nombre o email
     public function findAll($filters = [])
     {
-        $query = "SELECT t.*, h.ip FROM tickets t
-        JOIN hosts h ON t.host_id = h.id";
+        $query = "SELECT t.*, h.ip, r.name AS role_name FROM tickets t
+        JOIN hosts h ON t.host_id = h.id
+        LEFT JOIN roles r ON t.role_id = r.id";
 
         // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
         $whereData = $this->buildWhereClause($filters);
@@ -93,7 +94,7 @@ class TicketModel extends Model
         }
     }
 
-    public function updateStatus($id, $status)
+    public function updateStatus($id)
     {
         try {
             // Actualización del cliente
@@ -104,7 +105,7 @@ class TicketModel extends Model
                 WHERE id = :id"
             );
             $stmt->execute([
-                'status' => $status,
+                'status' => 1,
                 'updated_at' => date('Y-m-d H:i:s'),
                 'id' => $id
             ]);

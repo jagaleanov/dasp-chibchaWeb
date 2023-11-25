@@ -42,12 +42,12 @@ class Model
         foreach ($filters as $key => $filter) {
             if (!empty($filter['value'])) {
                 $operator = isset($filter['operator']) ? $filter['operator'] : 'LIKE';
-                $placeholder = ":$key";
+                $placeholder = ':'.str_replace(".", "_", $key);
 
                 switch ($operator) {
                     case 'LIKE':
                         $conditions[] = "$key LIKE $placeholder";
-                        $params[$key] = '%' . $filter['value'] . '%';
+                        $params[$placeholder] = '%' . $filter['value'] . '%';
                         break;
                     case '=':
                     case '<':

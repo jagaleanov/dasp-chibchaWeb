@@ -19,6 +19,8 @@ $router->add('/customers/details', 'CustomerController@customerDetails');
 $router->add('/customers/list', 'CustomerController@getAllCustomers');
 
 // // Empleados
+$router->add('/employees/edit/{id}', 'EmployeeController@editEmployee');
+$router->add('/employees/details/{id}', 'EmployeeController@employeeDetails');
 $router->add('/employees/new', 'EmployeeController@newEmployee');
 $router->add('/employees/list', 'EmployeeController@getAllEmployees');
 
@@ -41,9 +43,9 @@ $router->add('/credit-cards/validate', 'CreditCardController@validateCreditCard'
 // $router->add('DELETE', '/credit-cards/{customerId,number}', 'CreditCardController@deleteCreditCard');
 
 // // Hosts
+$router->add('/hosts/list', 'HostController@getAllHosts');
 // $router->add('GET', '/hosts/customer/{id}', 'HostController@getCustomerHosts', true);
 // $router->add('GET', '/hosts/{id}', 'HostController@getHost', true);
-// $router->add('GET', '/hosts', 'HostController@getAllHosts', true);
 // // $router->add('POST', '/hosts', 'HostController@createHost', true);
 // $router->add('PUT', '/hosts/{id}', 'HostController@updateHost', true);
 // // $router->add('DELETE', '/hosts/{id}', 'HostController@deleteHost');
