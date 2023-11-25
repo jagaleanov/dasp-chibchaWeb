@@ -28,6 +28,7 @@ class CreditCardModel extends Model
         // Si no se encuentra el cliente, se retorna null
         return null;
     }
+    
     // Método para encontrar un proveedor de tarjetas de crédito por su ID
     public function findByCustomerId($customer_id)
     {
