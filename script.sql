@@ -147,6 +147,7 @@ CREATE TABLE tickets (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     host_id INT UNSIGNED NOT NULL,
     role_id INT UNSIGNED DEFAULT NULL,
+    employee_id INT UNSIGNED DEFAULT NULL,
     status TINYINT (1) UNSIGNED NOT NULL DEFAULT 0,
     description TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -155,7 +156,9 @@ CREATE TABLE tickets (
     INDEX IX_tickets_hosts (host_id ASC),
     CONSTRAINT FK_tickets_hosts FOREIGN KEY (host_id) REFERENCES hosts(id),
     INDEX IX_tickets_roles (role_id ASC),
-    CONSTRAINT FK_tickets_roles FOREIGN KEY (role_id) REFERENCES roles(id)
+    CONSTRAINT FK_tickets_roles FOREIGN KEY (role_id) REFERENCES roles(id),
+    INDEX IX_tickets_employees (employee_id ASC),
+    CONSTRAINT FK_tickets_employees FOREIGN KEY (employee_id) REFERENCES employees(id)
 );
 
 

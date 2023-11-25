@@ -213,27 +213,4 @@ class EmployeeModel extends Model
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
-
-    // // Método para eliminar un empleado por su ID
-    // public function delete($id)
-    // {
-    //     try {
-    //         // Iniciar una transacción
-    //         $this->connection->beginTransaction();
-
-    //         //Validación de la relación del user y el employee
-    //         $stmt = $this->connection->prepare("DELETE FROM employees WHERE id = :id");
-    //         $stmt->execute(['id' => $id]);
-
-    //         // Confirmar la transacción
-    //         $this->connection->commit();
-
-    //         //Respuesta
-    //         return $stmt->rowCount() == 1;
-    //     } catch (\Exception $e) {
-    //         // Si hay un error, revertir la transacción
-    //         $this->connection->rollback();
-    //         throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
-    //     }
-    // }
 }

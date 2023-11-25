@@ -1,27 +1,22 @@
 <?php
 
-// Espacio de nombres utilizado por el controlador
 namespace src\controllers;
-
-// Importaciones de otras clases que se usarán en el controlador
 
 use Exception;
 use src\modules\menu\MenuController;
 use src\services\ModelService;
 use stdClass;
 
-// Controlador para gestionar empleados
 class EmployeeController extends Controller
 {
-    // Propiedad para el repositorio de empleados
-    private $employeeModel, $roleModel;
+    private $employeeModel, $roleModel, $ticketModel;
 
-    // Constructor que inyecta el repositorio de empleados
     public function __construct()
     {
         parent::__construct();
         $this->employeeModel = ModelService::getInstance()->get('EmployeeModel');
         $this->roleModel = ModelService::getInstance()->get('RoleModel');
+        $this->ticketModel = ModelService::getInstance()->get('TicketModel');
     }
 
     public function newEmployee()
@@ -277,7 +272,7 @@ class EmployeeController extends Controller
             $employeeId = $data['id'];
             $employeePassword = $data['password'];
 
-            $employee = $this->employeeModel->updatePassword($employeeId,$employeePassword);
+            $employee = $this->employeeModel->updatePassword($employeeId, $employeePassword);
             if (!$employee) {
                 throw new Exception('Datos de empleado inválidos');
             }
@@ -294,7 +289,6 @@ class EmployeeController extends Controller
         }
     }
 
-    // Método para obtener todos los empleados
     public function getAllEmployees()
     {
         try {
@@ -314,60 +308,24 @@ class EmployeeController extends Controller
         }
     }
 
-    // // Método para obtener un empleado por su ID
-    // public function getEmployee($id)
-    // {
-    //     try {
-    //         $users = $this->employeeModel->find($id);
-    //         return $this->successResponse($users);
-    //     } catch (\Exception $e) {
-    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-    // }
+    // Método para obtener un cliente por su ID
+    public function employeeDetails($id)
+    {
+        try {
+            $employee = $this->employeeModel->find($id);
+            $tickets = $this->ticketModel->findAll([
+                'employee_id' => ['value' => $employee->id, 'operator' => '=']
+            ]);
 
-    // // Método para actualizar un empleado por su ID
-    // public function updateEmployee($id)
-    // {
-    //     try {
-    //         $data = $this->getInputData();
-
-    //         if (empty($data['name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password']) || empty($data['mobile_phone'])) {
-    //             return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
-    //         }
-
-    //         $employee = $this->employeeModel->find($id);
-
-    //         if (!$employee) {
-    //             return $this->notFoundResponse();
-    //         }
-
-    //         $employee->name = $data['name'];
-    //         $employee->last_name = $data['last_name'];
-    //         $employee->email = $data['email'];
-    //         $employee->password = password_hash($data['password'], PASSWORD_DEFAULT);
-    //         $employee->mobile_phone = $data['mobile_phone'];
-    //         $this->employeeModel->update($employee);
-
-    //         return $this->successResponse(['employee' => $employee]);
-    //     } catch (\Exception $e) {
-    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-    // }
-
-    // // Método para eliminar un empleado por su ID
-    // public function deleteEmployee($id)
-    // {
-    //     try {
-    //         $user = $this->employeeModel->find($id);
-
-    //         if (!$user) {
-    //             return $this->notFoundResponse();
-    //         }
-
-    //         $this->employeeModel->delete($user);
-    //         return $this->successResponse(['message' => 'Empleado eliminado exitosamente']);
-    //     } catch (\Exception $e) {
-    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-    // }
+            $data = [
+                'employee' => $employee,
+                'tickets' => $tickets,
+            ];
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar',$menu->index());
+            $this->layoutService->view('employees/details', $data);
+        } catch (\Exception $e) {
+            print_r($e);
+        }
+    }
 }

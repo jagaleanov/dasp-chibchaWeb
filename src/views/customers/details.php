@@ -12,6 +12,9 @@
                 <dt class="col-sm-3">Correo electrónico</dt>
                 <dd class="col-sm-9"><?= $customer->email ?></dd>
 
+                <dt class="col-sm-3">Dirección</dt>
+                <dd class="col-sm-9"><?= $customer->address ?></dd>
+
                 <dt class="col-sm-3">Fecha de registro</dt>
                 <dd class="col-sm-9"><?= $customer->created_at ?></dd>
             </dl>

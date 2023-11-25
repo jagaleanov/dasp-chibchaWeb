@@ -94,18 +94,20 @@ class TicketModel extends Model
         }
     }
 
-    public function updateStatus($id)
+    public function updateStatus($id,$employeeId)
     {
         try {
             // Actualización del cliente
             $stmt = $this->connection->prepare(
                 "UPDATE tickets SET 
                 status = :status,
+                employee_id = :employee_id,
                 updated_at = :updated_at
                 WHERE id = :id"
             );
             $stmt->execute([
                 'status' => 1,
+                'employee_id' => $employeeId,
                 'updated_at' => date('Y-m-d H:i:s'),
                 'id' => $id
             ]);

@@ -1,20 +1,14 @@
 <?php
 
-// Espacio de nombres utilizado por el controlador
 namespace src\controllers;
-
-// Importaciones de otras clases que se usarán en el controlador
 
 use src\modules\menu\MenuController;
 use src\services\ModelService;
 
-// Controlador para gestionar clientes
 class CustomerController extends Controller
 {
-    // Propiedad para el repositorio de clientes
     private $customerModel, $hostModel, $paymentModel, $domainModel, $ticketModel, $creditCardModel;
 
-    // Constructor que inyecta el repositorio de clientes
     public function __construct()
     {
         parent::__construct();
@@ -27,7 +21,6 @@ class CustomerController extends Controller
         
     }
 
-    // Método para obtener todos los clientes
     public function getAllCustomers()
     {
         try {
@@ -47,7 +40,6 @@ class CustomerController extends Controller
         }
     }
 
-    // Método para obtener un cliente por su ID
     public function customerDetails($id = null)
     {
         try {
@@ -62,10 +54,8 @@ class CustomerController extends Controller
             $tickets = $this->ticketModel->findAll([
                 'customer_id' => ['value' => $customer->id, 'operator' => '=']
             ]);
-            // print "<pre>";print_r($tickets);print "<pre>";
             $hosts = $this->hostModel->findAll([
                 'customer_id' => ['value' => $customer->id, 'operator' => '='],
-                // 'status' => ['value' => 1, 'operator' => '=']
             ]);
             foreach ($hosts as $id => $host) {
                 $hosts[$id]->domains = $this->domainModel->findAll([
