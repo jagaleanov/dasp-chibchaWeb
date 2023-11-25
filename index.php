@@ -17,9 +17,6 @@ spl_autoload_register(function ($class) {
     }
 });
 
-use src\middlewares\AuthMiddleware;
-
-
 use src\models\CreditCardModel;
 use src\models\UserModel;
 use src\models\CustomerModel;
@@ -65,7 +62,8 @@ $router = new \src\router\Router($container);
 require_once 'config/routes.php';
 
 // Despachar la solicitud basada en la URI y el método HTTP
-/*$response = */$router->dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+/*$response = */
+$router->dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
 // // Envía respuesta
 // header('Content-Type: application/json; charset=utf-8');

@@ -74,6 +74,12 @@ class MenuController extends Controller
                     'icon' => 'coin',
                     'roles' => [2],
                 ],
+                (object)[
+                    'label' => 'Dashboard',
+                    'url' => BASE_URL . '/customers/details',
+                    'icon' => 'bricks',
+                    'roles' => [1],
+                ],
             ];
 
             $roleId = $this->aclService->getUser()->role_id;

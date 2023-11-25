@@ -1,7 +1,9 @@
 <div class="container">
     <form method="post">
-        <h4 class="mb-4">Nuevo dominio</h4>
+        <h4 class="modal-title my-4">Nuevo dominio</h4>
         <h5 class="mb-4">Host: <?= $host->ip ?></h5>
+        <p>Llene la solicitud de dominio y seleccione un proveedor de doiminios. 
+            Al finalizar su solicitud quedara pendiente para ser aprobada por el proveedor.</p>
         <div class="row">
             <div class="col-sm-6 col-12 mb-3">
                 <div class="mb-3">

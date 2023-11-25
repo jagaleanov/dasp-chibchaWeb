@@ -1,6 +1,6 @@
 <div class="container">
 <form method="post">
-    <h4 class="mb-4">Nuevo ticket de soporte</h4>
+    <h4 class="modal-title my-4">Nuevo ticket de soporte</h4>
     <h5 class="mb-4">Host: <?=$host->ip?></h5>
     <div>
         <div class="mb-3">

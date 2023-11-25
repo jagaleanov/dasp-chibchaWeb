@@ -97,6 +97,7 @@ $router->add('/tickets/new/{hostId}', 'TicketController@newTicket');
 // // $router->add('DELETE', '/tickets/{id}', 'TicketController@deleteTicket');
 
 // // Payments
+$router->add('/payments/new/{hostId}', 'PaymentController@newPayment');
 // $router->add('GET', '/payments/{id}', 'PaymentController@getPayment', true);
 // $router->add('GET', '/payments', 'PaymentController@getAllPayments', true);
 // $router->add('POST', '/payments', 'PaymentController@createPayment', true);

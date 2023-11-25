@@ -12,7 +12,7 @@ use src\services\ModelService;
 class CustomerController extends Controller
 {
     // Propiedad para el repositorio de clientes
-    private $customerModel, $hostModel, $paymentModel, $domainModel, $ticketModel;
+    private $customerModel, $hostModel, $paymentModel, $domainModel, $ticketModel, $creditCardModel;
 
     // Constructor que inyecta el repositorio de clientes
     public function __construct()
@@ -23,6 +23,8 @@ class CustomerController extends Controller
         $this->paymentModel = ModelService::getInstance()->get('PaymentModel');
         $this->domainModel = ModelService::getInstance()->get('DomainModel');
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
+        $this->creditCardModel = ModelService::getInstance()->get('CreditCardModel');
+        
     }
 
     // Método para obtener todos los clientes
@@ -45,6 +47,7 @@ class CustomerController extends Controller
                 $id = $this->aclService->getUser()->id;
             }
             $customer = $this->customerModel->findByUserId($id);
+            $creditCard = $this->creditCardModel->findByCustomerId($customer->id);
             $domains = $this->domainModel->findAll([
                 'customer_id' => ['value' => $customer->id, 'operator' => '=']
             ]);
@@ -65,6 +68,7 @@ class CustomerController extends Controller
 
             $data = [
                 'customer' => $customer,
+                'creditCard' => $creditCard,
                 'hosts' => $hosts,
                 'domains' => $domains,
                 'tickets' => $tickets,

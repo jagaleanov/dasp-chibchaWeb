@@ -23,12 +23,12 @@
                     <div class="row">
                         <div class="col">
 
-                            <h5 class="card-title">411111111111111</h5>
-                            <p class="card-text">VISA</p>
-                            <p class="card-text">Pedro Pascual Perez Padilla</p>
+                            <h5 class="card-title"><?= $creditCard->number ?></h5>
+                            <p class="card-text"><?= $creditCard->type ?></p>
+                            <p class="card-text"><?= $creditCard->name ?></p>
                         </div>
                         <div class="col">
-                            <p class="card-text pt-5">15/2026</p>
+                            <p class="card-text pt-5"><?= $creditCard->expiration_month ?>/<?= $creditCard->expiration_year ?></p>
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                         <p><small class="text-muted"><?= $host->created_at ?></small></p>
                         <p>
                             <a href="<?= BASE_URL ?>/tickets/new/<?= $host->id ?>" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
-                                Ticket de soporte
+                                Nuevo ticket
                             </a>
                         </p>
                         <p>
@@ -80,7 +80,7 @@
         <?php } ?>
     </div>
     <div class="d-flex flex-row-reverse my-2">
-        <a href="#" class="btn btn-primary btn-lg btn-sm" role="button" aria-pressed="true">Nuevo hosting</a>
+        <!-- <a href="#" class="btn btn-primary btn-lg btn-sm" role="button" aria-pressed="true">Nuevo hosting</a> -->
     </div>
 
     <h4 class="modal-title my-4">Tickets de soporte</h4>

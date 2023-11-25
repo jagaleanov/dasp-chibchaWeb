@@ -28,32 +28,52 @@ class CreditCardModel extends Model
         // Si no se encuentra el cliente, se retorna null
         return null;
     }
-
-    // Método para encontrar todos los clientes, con opción de filtro por nombre o email
-    public function findAll($search = null)
+    // Método para encontrar un proveedor de tarjetas de crédito por su ID
+    public function findByCustomerId($customer_id)
     {
-        $query =
-            "SELECT * FROM credit_cards";
-        $params = [];
+        $stmt = $this->connection->prepare(
+            "SELECT *
+            FROM credit_cards cc 
+            WHERE cc.customer_id = :customer_id"
+        );
+        $stmt->execute([
+            'customer_id' => $customer_id
+        ]);
+        $data = $stmt->fetch();
 
-        // Aplicación de filtros si se proporcionan
-        if (!empty($search)) {
-            $query .= " WHERE name LIKE :search";
-            $params['search'] = '%' . $search . '%';
+        if ($data) {
+            return (object) $data;
         }
 
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute($params);
-
-        $data = $stmt->fetchAll();
-
-        $creditCards = [];
-        foreach ($data as $creditCardData) {
-            $creditCards[] = (object) $creditCardData;
-        }
-
-        return $creditCards;
+        // Si no se encuentra el cliente, se retorna null
+        return null;
     }
+
+    // // Método para encontrar todos los clientes, con opción de filtro por nombre o email
+    // public function findAll($search = null)
+    // {
+    //     $query =
+    //         "SELECT * FROM credit_cards";
+    //     $params = [];
+
+    //     // Aplicación de filtros si se proporcionan
+    //     if (!empty($search)) {
+    //         $query .= " WHERE name LIKE :search";
+    //         $params['search'] = '%' . $search . '%';
+    //     }
+
+    //     $stmt = $this->connection->prepare($query);
+    //     $stmt->execute($params);
+
+    //     $data = $stmt->fetchAll();
+
+    //     $creditCards = [];
+    //     foreach ($data as $creditCardData) {
+    //         $creditCards[] = (object) $creditCardData;
+    //     }
+
+    //     return $creditCards;
+    // }
 
     // Método para insertar un proveedor de tarjetas de crédito en la base de datos
     public function save($creditCard)
@@ -106,21 +126,21 @@ class CreditCardModel extends Model
             }
     }
 
-    // Método para eliminar un proveedor de tarjetas de crédito por su ID
-    public function delete($customer_id,$number)
-    {
-        try {
-            //Validación de la relación del user y el creditCard
-            $stmt = $this->connection->prepare("DELETE FROM credit_cards WHERE cc.customer_id = :customer_id AND cc.number = :number");
-            $stmt->execute([
-                'customer_id' => $customer_id,
-                'number' => $number,
-            ]);
+    // // Método para eliminar un proveedor de tarjetas de crédito por su ID
+    // public function delete($customer_id,$number)
+    // {
+    //     try {
+    //         //Validación de la relación del user y el creditCard
+    //         $stmt = $this->connection->prepare("DELETE FROM credit_cards WHERE cc.customer_id = :customer_id AND cc.number = :number");
+    //         $stmt->execute([
+    //             'customer_id' => $customer_id,
+    //             'number' => $number,
+    //         ]);
 
-            //Respuesta
-            return $stmt->rowCount() == 1;
-        } catch (\Exception $e) {
-            throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
-        }
-    }
+    //         //Respuesta
+    //         return $stmt->rowCount() == 1;
+    //     } catch (\Exception $e) {
+    //         throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
+    //     }
+    // }
 }

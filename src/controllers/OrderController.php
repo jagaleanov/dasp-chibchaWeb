@@ -1,10 +1,17 @@
 <?php
+
 namespace src\controllers;
 
 use Exception;
 use src\modules\menu\MenuController;
+use src\payment\PaymentContext;
+use src\payment\strategies\AnnualPaymentStrategy;
+use src\payment\strategies\BiannualPaymentStrategy;
+use src\payment\strategies\MonthlyPaymentStrategy;
+use src\payment\strategies\QuarterlyPaymentStrategy;
 use src\services\ModelService;
 use stdClass;
+
 class OrderController extends Controller
 {
     private $customerModel, $hostModel, $paymentModel, $creditCardModel, $operativeSystemModel, $hostPlanModel, $paymentPlanModel;
@@ -19,15 +26,6 @@ class OrderController extends Controller
         $this->operativeSystemModel = ModelService::getInstance()->get('OperativeSystemModel');
         $this->hostPlanModel = ModelService::getInstance()->get('HostPlanModel');
         $this->paymentPlanModel = ModelService::getInstance()->get('PaymentPlanModel');
-    }
-
-    public function capturePostData($fields)
-    {
-        $postData = [];
-        foreach ($fields as $field) {
-            $postData[$field] = isset($_POST[$field]) ? $_POST[$field] : null;
-        }
-        return $postData;
     }
 
     public function newOrder()
@@ -170,6 +168,7 @@ class OrderController extends Controller
                             payment_plan: $("#payment_plan_id").val(),
                         },
 						success: function (resp) {
+                            console.log(resp)
                             resp=JSON.parse(resp)
                             console.log(resp)
                             $("#totalValue").html(resp.data)
@@ -197,7 +196,7 @@ class OrderController extends Controller
             ');
 
             $menu = new MenuController();
-            $this->layoutService->setModule('navBar',$menu->index());
+            $this->layoutService->setModule('navBar', $menu->index());
             $this->layoutService->view('orders/new', $data);
         } catch (\Exception $e) {
             print_r($e);
@@ -208,7 +207,7 @@ class OrderController extends Controller
     {
         try {
 
-            if ($this->probabilisticFail(0)) {
+            if ($this->probabilisticFail(20)) {
                 throw new Exception('Transaccion fallida');
             }
 
@@ -286,46 +285,67 @@ class OrderController extends Controller
     {
         try {
             // Validación de datos de entrada
-            if (
-                !isset($_POST['host_plan']) || empty($_POST['host_plan'])
-                || !isset($_POST['operative_system']) || empty($_POST['operative_system'])
-                || !isset($_POST['payment_plan']) || empty($_POST['payment_plan'])
-            ) {
-                $res = [
-                    'success' => false,
-                    'data' => 0,
+
+            if (count($this->postService->get()) > 0) {
+                // Validación de datos de entrada
+                $rules = [
+                    [
+                        'field' => 'host_plan',
+                        'label' => 'plan de host',
+                        'rules' => ['required', 'integer', 'min:1']
+                    ],
+                    [
+                        'field' => 'operative_system',
+                        'label' => 'sistema operativo',
+                        'rules' => ['required', 'integer', 'min:1']
+                    ],
+                    [
+                        'field' => 'payment_plan',
+                        'label' => 'plan de pagos',
+                        'rules' => ['required', 'integer', 'min:1']
+                    ],
                 ];
-                print json_encode($res);
-            } else {
-                $hostingPlanId = $_POST['host_plan'];
-                $operativeSystemId = $_POST['operative_system'];
-                $paymentPlanId = $_POST['payment_plan'];
-                $amount = 0;
 
-                if ($hostingPlanId != 'null' && $operativeSystemId != 'null' && $paymentPlanId != 'null') {
-                    if ($hostingPlanId > 1) {
-                        $amount += 1000;
-                    } else {
-                        $amount += 1500;
-                    }
+                $validate = $this->validationService->validate($this->postService->get(), $rules);
 
-                    if ($operativeSystemId > 1) {
-                        $amount += 1000;
-                    } else {
-                        $amount += 1500;
-                    }
+                if ($validate->valid === true) {
+                    $hostingPlanId = $validate->sanitizedData['host_plan'];
+                    $operativeSystemId = $validate->sanitizedData['operative_system'];
+                    $paymentPlanId = $validate->sanitizedData['payment_plan'];
 
-                    if ($paymentPlanId > 1) {
-                        $amount += 1000;
-                    } else {
-                        $amount += 1500;
+                    $hostPlan = $this->hostPlanModel->find($hostingPlanId);
+                    $operativeSystem = $this->operativeSystemModel->find($operativeSystemId);
+                    $paymentPlan = $this->paymentPlanModel->find($paymentPlanId);
+
+                    $paymentContext = new PaymentContext();
+                    
+                    if ($paymentPlan->name == 'Mensual') {
+                        $paymentStrategy = new MonthlyPaymentStrategy();
+                    } elseif ($paymentPlan->name == 'Trimestral') {
+                        $paymentStrategy = new QuarterlyPaymentStrategy();
+                    } elseif ($paymentPlan->name == 'Semestral') {
+                        $paymentStrategy = new BiannualPaymentStrategy();
+                    } elseif ($paymentPlan->name == 'Anual') {
+                        $paymentStrategy = new AnnualPaymentStrategy();
                     }
+                    
+                    $paymentContext->setStrategy($paymentStrategy);
+
+                    $yearPrice = $hostPlan->price + $operativeSystem->price;
+                    $periodicAmount = $paymentContext->calculatePayment($yearPrice);
+
                     $res = [
                         'success' => true,
-                        'data' => $amount,
+                        'data' => $periodicAmount,
                     ];
+                    print json_encode($res);
+                } else {
+                    $res = [
+                        'success' => false,
+                        'data' => 0,
+                    ];
+                    print json_encode($res);
                 }
-                print json_encode($res);
             }
         } catch (\Exception $e) {
 

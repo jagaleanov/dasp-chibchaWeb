@@ -3,10 +3,8 @@
 // Espacio de nombres utilizado por el repositorio
 namespace src\models;
 
-// Repositorio para gestionar operaciones relacionadas con los payments en la base de datos
 class PaymentModel extends Model
 {
-    // Método para encontrar un proveedor de dominios por su ID
     public function find($id)
     {
         $stmt = $this->connection->prepare(
@@ -19,11 +17,24 @@ class PaymentModel extends Model
             return (object) $data;
         }
 
-        // Si no se encuentra el cliente, se retorna null
         return null;
     }
 
-    // Método para encontrar todos los clientes, con opción de filtro por nombre o email
+    public function findHostLastPayment($hostId)
+    {
+        $stmt = $this->connection->prepare(
+            "SELECT * FROM payments WHERE host_id = :host_id ORDER BY created_at DESC LIMIT 1"
+        );
+        $stmt->execute(['host_id' => $hostId]);
+        $data = $stmt->fetch();
+
+        if ($data) {
+            return (object) $data;
+        }
+
+        return null;
+    }
+
     public function findAll($search = null)
     {
         $query =
@@ -49,7 +60,6 @@ class PaymentModel extends Model
         return $payments;
     }
 
-    // Método para insertar un proveedor de dominios en la base de datos
     public function save($payment)
     {
         try {
@@ -72,37 +82,35 @@ class PaymentModel extends Model
         }
     }
 
-    // Método para actualizar un proveedor de dominios en la base de datos
-    public function update($payment)
-    {
-        try {
-            // Actualización del cliente
-            $stmt = $this->connection->prepare(
-                "UPDATE payments SET 
-                host_id = :host_id,
-                credit_card_customer_id = :credit_card_customer_id,
-                credit_card_number = :credit_card_number,
-                amount = :amount,
-                updated_at = :updated_at
-                WHERE id = :id"
-            );
-            $stmt->execute([
-                'host_id' => $payment->host_id,
-                'credit_card_customer_id' => $payment->credit_card_customer_id,
-                'credit_card_number' => $payment->credit_card_number,
-                'amount' => $payment->amount,
-                'updated_at' => date('Y-m-d H:i:s'),
-                'id' => $payment->id
-            ]);
+    // public function update($payment)
+    // {
+    //     try {
+    //         // Actualización del cliente
+    //         $stmt = $this->connection->prepare(
+    //             "UPDATE payments SET 
+    //             host_id = :host_id,
+    //             credit_card_customer_id = :credit_card_customer_id,
+    //             credit_card_number = :credit_card_number,
+    //             amount = :amount,
+    //             updated_at = :updated_at
+    //             WHERE id = :id"
+    //         );
+    //         $stmt->execute([
+    //             'host_id' => $payment->host_id,
+    //             'credit_card_customer_id' => $payment->credit_card_customer_id,
+    //             'credit_card_number' => $payment->credit_card_number,
+    //             'amount' => $payment->amount,
+    //             'updated_at' => date('Y-m-d H:i:s'),
+    //             'id' => $payment->id
+    //         ]);
 
-            //Respuesta
-            return $this->find($payment->id);
-        } catch (\Exception $e) {
-            throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
-        }
-    }
+    //         //Respuesta
+    //         return $this->find($payment->id);
+    //     } catch (\Exception $e) {
+    //         throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
+    //     }
+    // }
 
-    // // Método para eliminar un proveedor de dominios por su ID
     // public function delete($id)
     // {
     //     try {

@@ -1,6 +1,6 @@
 <div class="container">
 <form method="post">
-    <h4 class="mb-4">Nuevo cliente</h4>
+    <h4 class="modal-title my-4">Nuevo cliente</h4>
     <div>
         <h5 class="mb-4">Datos del cliente</h5>
         <div class="row">
