@@ -3,6 +3,8 @@
 // Espacio de nombres utilizado por el repositorio
 namespace src\models;
 
+use Exception;
+
 // Repositorio para gestionar operaciones relacionadas con los empleados en la base de datos
 class EmployeeModel extends Model
 {
@@ -54,7 +56,7 @@ class EmployeeModel extends Model
         FROM employees e
         JOIN users u ON e.user_id = u.id
         JOIN roles r ON u.role_id = r.id";
-        
+
         // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
         $whereData = $this->buildWhereClause($filters);
         $query .= $whereData['whereClause'];
@@ -131,46 +133,53 @@ class EmployeeModel extends Model
                 'user_id' => $employee->user_id
             ]);
 
-            // Iniciar una transacción
-            $this->connection->beginTransaction();
+            $employee = $stmt->fetch();
 
-            // Actualización del usuario
-            $stmt = $this->connection->prepare(
-                "UPDATE users SET 
+            if ($employee) {
+
+                // Iniciar una transacción
+                $this->connection->beginTransaction();
+
+                // Actualización del usuario
+                $stmt = $this->connection->prepare(
+                    "UPDATE users SET 
                     name = :name, 
                     last_name = :last_name,
                     email = :email ,
                     role_id = :role_id ,
                     updated_at = :updated_at
                     WHERE id = :id"
-            );
-            $stmt->execute([
-                'name' => $employee->name,
-                'last_name' => $employee->last_name,
-                'email' => $employee->email,
-                'role_id' => $employee->role_id,
-                'updated_at' => date('Y-m-d H:i:s'),
-                'id' => $employee->user_id
-            ]);
+                );
+                $stmt->execute([
+                    'name' => $employee->name,
+                    'last_name' => $employee->last_name,
+                    'email' => $employee->email,
+                    'role_id' => $employee->role_id,
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'id' => $employee->user_id
+                ]);
 
-            // Actualización del empleado
-            $stmt = $this->connection->prepare(
-                "UPDATE employees SET 
+                // Actualización del empleado
+                $stmt = $this->connection->prepare(
+                    "UPDATE employees SET 
                     mobile_phone = :mobile_phone,
                     updated_at = :updated_at
                     WHERE id = :id"
-            );
-            $stmt->execute([
-                'mobile_phone' => $employee->mobile_phone,
-                'updated_at' => date('Y-m-d H:i:s'),
-                'id' => $employee->id,
-            ]);
+                );
+                $stmt->execute([
+                    'mobile_phone' => $employee->mobile_phone,
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'id' => $employee->id,
+                ]);
 
-            // Confirmar la transacción
-            $this->connection->commit();
+                // Confirmar la transacción
+                $this->connection->commit();
 
-            //Respuesta
-            return $this->find($employee->id);
+                //Respuesta
+                return $this->find($employee->id);
+            } else {
+                throw new Exception('Empleado inexistente');
+            }
         } catch (\Exception $e) {
             // Si hay un error, revertir la transacción
             $this->connection->rollback();
@@ -191,7 +200,7 @@ class EmployeeModel extends Model
             $stmt->execute([
                 'id' => $id,
             ]);
-            
+
             $employee = $stmt->fetch();
 
             // Actualización del usuario
