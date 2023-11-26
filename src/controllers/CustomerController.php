@@ -7,14 +7,13 @@ use src\services\ModelService;
 
 class CustomerController extends Controller
 {
-    private $customerModel, $hostModel, $paymentModel, $domainModel, $ticketModel, $creditCardModel;
+    private $customerModel, $hostModel, $domainModel, $ticketModel, $creditCardModel;
 
     public function __construct()
     {
         parent::__construct();
         $this->customerModel = ModelService::getInstance()->get('CustomerModel');
         $this->hostModel = ModelService::getInstance()->get('HostModel');
-        $this->paymentModel = ModelService::getInstance()->get('PaymentModel');
         $this->domainModel = ModelService::getInstance()->get('DomainModel');
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
         $this->creditCardModel = ModelService::getInstance()->get('CreditCardModel');
