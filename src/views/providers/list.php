@@ -1,5 +1,6 @@
 <div class="container">
-    <h4 class="modal-title my-4">Proveedores de dominios</h4>
+    <h1 class="modal-title my-4">Proveedores</h1><hr>
+    <p>Listado de proveedores de dominios del sistema</p>
     <table class="table table-striped">
         <thead>
             <tr>

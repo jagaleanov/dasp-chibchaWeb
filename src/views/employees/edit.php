@@ -1,6 +1,6 @@
 <div class="container">
     <form method="post">
-        <h4 class="modal-title my-4">Editar Empleado</h4>
+        <h1 class="modal-title my-4">Editar Empleado</h1><hr>
         <div class="row">
             <div class="col-sm-6 col-12 mb-3">
                 <label for="role_id" class="form-label">Rol</label>

@@ -1,5 +1,6 @@
 <div class="container">
-    <h4 class="modal-title my-4">Dominios</h4>
+    <h1 class="modal-title my-4">Dominios</h1><hr>
+    <p>Listado de dominios registrados en el sistema</p>
     <a href="/domains/export" class="btn btn-primary btn-sm ms-1 mb-1"><i class="bi bi-file-arrow-down" title="Exportar XML"></i> Exportar XML</a>
     <table class="table table-striped">
         <thead>

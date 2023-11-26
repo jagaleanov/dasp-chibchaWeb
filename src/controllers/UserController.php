@@ -34,6 +34,7 @@ class UserController extends Controller
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar', $menu->index());
+            // print "<pre>";print_r($data);print "</pre>";
             $this->layoutService->view('users/list', $data);
         } catch (\Exception $e) {
             print_r($e);

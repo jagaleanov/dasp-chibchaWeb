@@ -1,5 +1,6 @@
 <div class="container">
-    <h4 class="modal-title my-4">Empleados</h4>
+    <h1 class="modal-title my-4">Empleados</h1><hr>
+    <p>Listado de empleados del sistema</p>
     <a href="/employees/new" class="btn btn-primary btn-sm ms-1 mb-1"><i class="bi bi-person-fill" title="Nuevo empleado"></i> Nuevo empleado</a>
     <table class="table table-striped">
         <thead>

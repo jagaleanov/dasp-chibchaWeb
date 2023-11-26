@@ -1,8 +1,11 @@
 <div class="container">
-    <h4 class="modal-title my-4">Detalles de host</h4>
+    <h1 class="modal-title my-4">Detalles de host</h1><hr>
     <div class="row">
         <div class="col">
             <dl class="row">
+                <dt class="col-sm-3">Id</dt>
+                <dd class="col-sm-9"><?= $host->id ?></dd>
+
                 <dt class="col-sm-3">Ip</dt>
                 <dd class="col-sm-9"><?= $host->ip ?></dd>
 
@@ -13,7 +16,7 @@
         <div class="col">
         </div>
     </div>
-    <h5 class="modal-title my-4">Cliente</h5>
+    <h2 class="modal-title my-4">Cliente</h2>
     <div class="row">
         <div class="col">
             <dl class="row">
@@ -31,13 +34,14 @@
         </div>
     </div>
 
-    <h4 class="modal-title my-4">Tickets de soporte</h4>
+    <h2 class="modal-title my-4">Tickets de soporte</h2>
     <div class="list-group">
         <?php foreach ($tickets as $ticket) { ?>
             <div class="list-group-item list-group-item-action flex-column ">
                 <div class="d-flex w-100 justify-content-between">
                     <div>
-                        <h5 class="mb-1"><?= $ticket->description ?></h5>
+                        <p class="mb-1 h5"><?= $ticket->description ?></p>
+                        <p class="mb-1"><small>Id:</small> <?= $ticket->id ?></p>
                         <p class="mb-1"><small>Host:</small> <?= $ticket->ip ?></p>
                     </div>
                     <div>
@@ -51,13 +55,14 @@
         <?php } ?>
     </div>
 
-    <h4 class="modal-title my-4">Solicitudes de dominios</h4>
+    <h2 class="modal-title my-4">Solicitudes de dominios</h2>
     <div class="list-group">
         <?php foreach ($domains as $domain) { ?>
             <div class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <div>
-                        <h5 class="mb-1"><?= $domain->domain ?></h5>
+                        <p class="mb-1 h5"><?= $domain->domain ?></p>
+                        <p class="mb-1"><small>Id:</small> <?= $domain->id ?></p>
                         <p class="mb-1"><small>Host:</small> <?= $domain->ip ?></p>
                     </div>
                     <div>
@@ -71,5 +76,4 @@
             </div>
         <?php } ?>
     </div>
-
 </div>

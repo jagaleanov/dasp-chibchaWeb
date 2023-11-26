@@ -1,21 +1,30 @@
 <div>
-    <div class="container-fluid">
+    <div class="container">
         <!-- <h2 class="mt-2">Planes de Hosting</h2>
       <hr> -->
         <div class="container">
             <div class="jumbotron">
-                <h1 class="display-4">Planes de Hosting</h1>
-                <hr />
+                <h1 class="my-4">Planes de Hosting</h1><hr>
                 <div class="row">
                     <!-- columna 1 -->
                     <div class="col">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                                <h5 class="card-title">Chibcha-Platino</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                                    card's
-                                    content.</p>
+                                <h5 class="card-title text-light text-center py-2" style="background-color:chocolate">Chibcha-Platino</h5>
+                                
                                 <ul>
+                                    <li>
+                                        Rendimiento estandar
+                                    </li>
+                                    <li>
+                                        100 GB
+                                    </li>
+                                    <li>
+                                        20 cuentas de email
+                                    </li>
+                                    <li>
+                                        SSL ilimitado gratis
+                                    </li>
                                     <li>
                                         Linux o Windows
                                     </li>
@@ -31,11 +40,21 @@
                     <div class="col">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                                <h5 class="card-title">Chibcha-Plata</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                                    card's
-                                    content.</p>
+                                <h5 class="card-title text-light text-center py-2" style="background-color:dimgray">Chibcha-Plata</h5>
+                                
                                 <ul>
+                                    <li>
+                                        Rendimiento mejorado
+                                    </li>
+                                    <li>
+                                        200 GB
+                                    </li>
+                                    <li>
+                                        50 cuentas de email
+                                    </li>
+                                    <li>
+                                        SSL ilimitado gratis
+                                    </li>
                                     <li>
                                         Linux o Windows
                                     </li>
@@ -51,11 +70,21 @@
                     <div class="col">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                                <h5 class="card-title">Chibcha-Oro</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                                    card's
-                                    content.</p>
+                                <h5 class="card-title text-light text-center py-2" style="background-color:goldenrod">Chibcha-Oro</h5>
+                                
                                 <ul>
+                                    <li>
+                                        Maximo rendimiento
+                                    </li>
+                                    <li>
+                                        500 GB
+                                    </li>
+                                    <li>
+                                        100 cuentas de email
+                                    </li>
+                                    <li>
+                                        SSL ilimitado gratis
+                                    </li>
                                     <li>
                                         Linux o Windows
                                     </li>
@@ -68,8 +97,6 @@
                         </div>
                     </div>
                 </div>
-                <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
-                    featured content or information.</p>
             </div>
         </div>
     </div>

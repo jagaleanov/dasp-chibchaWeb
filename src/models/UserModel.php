@@ -20,7 +20,7 @@ class UserModel extends Model
 
     public function findAll($filters = [])
     {
-        $query = "SELECT * FROM users";
+        $query = "SELECT u.*, r.name AS role_name FROM users u JOIN roles r ON u.role_id = r.id";
 
         $whereData = $this->buildWhereClause($filters);
         $query .= $whereData['whereClause'];

@@ -1,7 +1,7 @@
 <div class="container">
     <form method="post">
-        <h4 class="modal-title my-4">Nuevo pago</h4>
-        <h5 class="mb-4">Host: <?= $host->ip ?></h5>
+        <h1 class="modal-title my-4">Nuevo pago</h1><hr>
+        <p class="mb-4 h5">Host: <?= $host->ip ?></p>
         <p>
             Plan de host: <?= $hostPlan->name ?><br>
             Plan de pagos: <?= $paymentPlan->name ?><br>

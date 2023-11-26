@@ -1,8 +1,11 @@
 <div class="container">
-    <h4 class="modal-title my-4">Detalles de empleado</h4>
+    <h1 class="modal-title my-4">Detalles de empleado</h1><hr>
     <div class="row">
         <div class="col">
             <dl class="row">
+                <dt class="col-sm-3">Id</dt>
+                <dd class="col-sm-9"><?= $employee->id ?></dd>
+
                 <dt class="col-sm-3">Nombre</dt>
                 <dd class="col-sm-9"><?= $employee->name ?></dd>
 
@@ -23,13 +26,14 @@
         </div>
     </div>
 
-    <h4 class="modal-title my-4">Tickets de soporte solucionados</h4>
+    <h2 class="modal-title my-4">Tickets de soporte solucionados</h2>
     <div class="list-group">
         <?php foreach ($tickets as $ticket) { ?>
             <div class="list-group-item list-group-item-action flex-column ">
                 <div class="d-flex w-100 justify-content-between">
                     <div>
-                        <h5 class="mb-1"><?= $ticket->description ?></h5>
+                        <p class="mb-1 h5"><?= $ticket->description ?></p>
+                        <p class="mb-1"><small>Id:</small> <?= $ticket->id ?></p>
                         <p class="mb-1"><small>Host:</small> <?= $ticket->ip ?></p>
                     </div>
                     <div>

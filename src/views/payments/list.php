@@ -1,5 +1,6 @@
 <div class="container">
-    <h4 class="modal-title my-4">Pagos</h4>
+    <h1 class="modal-title my-4">Pagos</h1><hr>
+    <p>Listado de pagos de host registrados en el sistema</p>
     <table class="table table-striped">
         <thead>
             <tr>

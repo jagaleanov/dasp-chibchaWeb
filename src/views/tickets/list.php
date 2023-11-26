@@ -1,5 +1,6 @@
 <div class="container">
-    <h4 class="modal-title my-4">Tickets</h4>
+    <h1 class="modal-title my-4">Tickets</h1><hr>
+    <p>Listado de tickets registrados en el sistema</p>
     <table class="table table-striped">
         <thead>
             <tr>

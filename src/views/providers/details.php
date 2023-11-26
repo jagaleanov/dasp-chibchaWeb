@@ -1,5 +1,5 @@
 <div class="container">
-    <h4 class="modal-title my-4">Detalles de proveedor de dominios</h4>
+    <h1 class="modal-title my-4">Detalles de proveedor de dominios</h1><hr>
     <div class="row">
         <div class="col">
             <dl class="row">
@@ -26,15 +26,15 @@
                     <div class="row">
                         <div class="col">
 
-                            <h6 class="card-title">Solicitudes aprobadas</h6>
+                            <p class="card-title h6">Solicitudes aprobadas</p>
                             <p class="card-text"><?= $approvedCounter ?></p>
-                            <h6 class="card-title">Total costo anual</h6>
+                            <p class="card-title h6">Total costo anual</p>
                             <p class="card-text">$ <?= $commission['totalCost'] ?></p>
                         </div>
                         <div class="col">
-                            <h6 class="card-title">Tipo de proveedor</h6>
+                            <p class="card-title h6">Tipo de proveedor</p>
                             <p class="card-text"><?=$commission['providerType'] ?></p>
-                            <h6 class="card-title">Valor de la comisión</h6>
+                            <p class="card-title h6">Valor de la comisión</p>
                             <p class="card-text">(<?=$commission['comissionValue'] ?>%) $ <?=$commission['comissionTotal'] ?></p>
                         </div>
                     </div>
@@ -43,13 +43,13 @@
         </div>
     </div>
 
-    <h4 class="modal-title my-4">Solicitudes de dominios</h4>
+    <h2 class="modal-title my-4">Solicitudes de dominios</h2>
     <div class="list-group">
         <?php foreach ($domains as $domain) { ?>
             <div class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <div>
-                        <h5 class="mb-1"><?= $domain->domain ?></h5>
+                        <p class="mb-1 h5"><?= $domain->domain ?></p>
                         <p class="mb-1"><small>Host:</small> <?= $domain->ip ?></p>
                     </div>
                     <div>
