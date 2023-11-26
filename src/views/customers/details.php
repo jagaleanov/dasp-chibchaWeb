@@ -1,5 +1,5 @@
 <div class="container">
-    <h4 class="modal-title my-4">Detalles</h4>
+    <h4 class="modal-title my-4">Detalles de cliente</h4>
     <div class="row">
         <div class="col">
             <dl class="row">

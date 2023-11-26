@@ -72,8 +72,6 @@ class HostModel extends Model
         return $hosts;
     }
 
-
-
     // Método para insertar un proveedor de dominios en la base de datos
     public function save($host)
     {

@@ -24,6 +24,7 @@ $router->add('/employees/list', 'EmployeeController@getAllEmployees');
 
 // // Providers
 $router->add('/providers/list', 'ProviderController@getAllProviders');
+$router->add('/providers/details/{id}', 'ProviderController@providerDetails');
 
 // // Domains
 $router->add('/domains/new/{hostId}', 'DomainController@newDomain');

@@ -308,7 +308,6 @@ class EmployeeController extends Controller
         }
     }
 
-    // Método para obtener un cliente por su ID
     public function employeeDetails($id)
     {
         try {
@@ -320,6 +319,7 @@ class EmployeeController extends Controller
             $data = [
                 'employee' => $employee,
                 'tickets' => $tickets,
+                
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar',$menu->index());
