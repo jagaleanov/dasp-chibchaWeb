@@ -17,6 +17,10 @@ class EmployeeController extends Controller
         $this->employeeModel = ModelService::getInstance()->get('EmployeeModel');
         $this->roleModel = ModelService::getInstance()->get('RoleModel');
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
+
+        if (!$this->aclService->isRoleIn([5,6])) {
+            header('Location:' . BASE_URL . '/home');
+        }
     }
 
     public function newEmployee()
@@ -319,8 +323,8 @@ class EmployeeController extends Controller
             $data = [
                 'employee' => $employee,
                 'tickets' => $tickets,
-                
             ];
+
             $menu = new MenuController();
             $this->layoutService->setModule('navBar',$menu->index());
             $this->layoutService->view('employees/details', $data);

@@ -9,17 +9,19 @@ use src\services\ModelService;
 class AuthController extends Controller
 {
     private $userModel;
-    // private $roleModel;
 
     public function __construct()
     {
         parent::__construct();
         $this->userModel = ModelService::getInstance()->get('UserModel');
-        // $this->roleModel = ModelService::getInstance()->get('RoleModel');
     }
 
     public function loginForm()
     {
+        if (!$this->aclService->isLoggedIn()) {
+            header('Location:' . BASE_URL . '/home');
+        }
+
         try {
             if (isset($_POST['submit'])) {
                 $rules = [

@@ -1,4 +1,5 @@
 <?php
+
 namespace src\controllers;
 
 use Exception;
@@ -21,6 +22,10 @@ class DomainController extends Controller
 
     public function newDomain($hostId)
     {
+        if (!$this->aclService->isRoleIn([1])) {
+            header('Location:' . BASE_URL . '/home');
+        }
+
         try {
 
             if ($this->postService->get('submit')) {
@@ -68,7 +73,7 @@ class DomainController extends Controller
                 'providers' => $providers,
             ];
             $menu = new MenuController();
-            $this->layoutService->setModule('navBar',$menu->index());
+            $this->layoutService->setModule('navBar', $menu->index());
 
             $this->layoutService->view('domains/new', $data);
         } catch (\Exception $e) {
@@ -101,11 +106,15 @@ class DomainController extends Controller
             ];
         }
     }
-    
+
     public function getAllDomains()
     {
+        if (!$this->aclService->isRoleIn([4, 6])) {
+            header('Location:' . BASE_URL . '/home');
+        }
+
         try {
-            
+
             if ($this->postService->get('submit')) {
                 $rules = [
                     [

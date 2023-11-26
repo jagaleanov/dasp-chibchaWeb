@@ -12,6 +12,10 @@ class UserController extends Controller
     {
         parent::__construct();
         $this->userModel = ModelService::getInstance()->get('UserModel');
+
+        if (!$this->aclService->isRoleIn([2, 3, 4, 5, 6])) {
+            header('Location:' . BASE_URL . '/home');
+        }
     }
 
     public function getAllUsers()

@@ -16,6 +16,10 @@ class HostController extends Controller
         $this->customerModel = ModelService::getInstance()->get('CustomerModel');
         $this->domainModel = ModelService::getInstance()->get('DomainModel');
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
+
+        if (!$this->aclService->isRoleIn([2, 3, 4, 5, 6])) {
+            header('Location:' . BASE_URL . '/home');
+        }
     }
 
     public function getAllHosts()

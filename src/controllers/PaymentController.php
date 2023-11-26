@@ -32,6 +32,10 @@ class PaymentController extends Controller
 
     public function newPayment($hostId)
     {
+        if (!$this->aclService->isRoleIn([1])) {
+            header('Location:' . BASE_URL . '/home');
+        }
+
         try {
 
             $host = $this->hostModel->find($hostId);

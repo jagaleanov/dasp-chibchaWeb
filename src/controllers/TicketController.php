@@ -22,6 +22,10 @@ class TicketController extends Controller
 
     public function newTicket($hostId)
     {
+        if (!$this->aclService->isRoleIn([1])) {
+            header('Location:' . BASE_URL . '/home');
+        }
+
         try {
 
             if ($this->postService->get('submit')) {
@@ -97,6 +101,10 @@ class TicketController extends Controller
 
     public function getAllTickets()
     {
+        if (!$this->aclService->isRoleIn( [2, 3, 4, 5, 6])) {
+            header('Location:' . BASE_URL . '/home');
+        }
+
         try {
 
             if ($this->postService->get('submitRole')) {
@@ -220,7 +228,7 @@ class TicketController extends Controller
         }
     }
 
-    public function updateTicketStatus($data)
+    private function updateTicketStatus($data)
     {
         try {
             $userId = $this->aclService->getUser()->id;

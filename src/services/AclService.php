@@ -47,7 +47,16 @@ class AclService
 
     public function isLoggedIn()
     {
-        if (isset($this->user->users_id)) {
+        if (isset($this->user->id)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function isRoleIn($roles)
+    {
+        if (in_array($this->user->role_id,$roles)) {
             return TRUE;
         } else {
             return FALSE;

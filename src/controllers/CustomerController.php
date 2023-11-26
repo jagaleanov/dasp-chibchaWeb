@@ -18,12 +18,19 @@ class CustomerController extends Controller
         $this->domainModel = ModelService::getInstance()->get('DomainModel');
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
         $this->creditCardModel = ModelService::getInstance()->get('CreditCardModel');
+
+        if (!$this->aclService->isRoleIn([2, 3, 4, 5, 6])) {
+            header('Location:' . BASE_URL . '/home');
+        }
         
     }
 
     public function getAllCustomers()
     {
         try {
+            if (!$this->aclService->isRoleIn([2, 3, 4, 5, 6])) {
+                header('Location:' . BASE_URL . '/home');
+            }
 
             $customers = $this->customerModel->findAll();
 

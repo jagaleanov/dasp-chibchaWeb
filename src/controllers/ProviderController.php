@@ -14,6 +14,10 @@ class ProviderController extends Controller
         parent::__construct();
         $this->providerModel = ModelService::getInstance()->get('ProviderModel');
         $this->domainModel = ModelService::getInstance()->get('DomainModel');
+
+        if (!$this->aclService->isRoleIn([4, 6])) {
+            header('Location:' . BASE_URL . '/home');
+        }
     }
 
     public function getAllProviders()
