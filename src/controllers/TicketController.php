@@ -23,7 +23,11 @@ class TicketController extends Controller
     public function newTicket($hostId)
     {
         if (!$this->aclService->isRoleIn([1])) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Acceso restringido.'
+            ];
             header('Location:' . BASE_URL . '/home');
+            exit;
         }
 
         try {
@@ -46,6 +50,9 @@ class TicketController extends Controller
                     $res = $this->createTicket($validatedData);
 
                     if ($res->success) {
+                        $_SESSION['systemMessages'] = [
+                            'success'=>'Ticket registrado.'
+                        ];
                         header('Location:' . BASE_URL . '/customers/details');
                     } else {
                         $this->layoutService->setMessages([
@@ -102,7 +109,11 @@ class TicketController extends Controller
     public function getAllTickets()
     {
         if (!$this->aclService->isRoleIn( [2, 3, 4, 5, 6])) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Acceso restringido.'
+            ];
             header('Location:' . BASE_URL . '/home');
+            exit;
         }
 
         try {
@@ -128,7 +139,11 @@ class TicketController extends Controller
                     $res = $this->updateTicketRole($validatedData);
 
                     if ($res->success) {
+                        $_SESSION['systemMessages'] = [
+                            'success'=>'Asignación de rol registrada.'
+                        ];
                         header('Location:' . BASE_URL . '/tickets/list');
+                        exit;
                     } else {
                         $this->layoutService->setMessages([
                             'danger' => [$res->message],
@@ -157,7 +172,11 @@ class TicketController extends Controller
                     $res = $this->updateTicketStatus($validatedData);
 
                     if ($res->success) {
+                        $_SESSION['systemMessages'] = [
+                            'success'=>'Cambio de estado registrado.'
+                        ];
                         header('Location:' . BASE_URL . '/tickets/list');
+                        exit;
                     } else {
                         $this->layoutService->setMessages([
                             'danger' => [$res->message],

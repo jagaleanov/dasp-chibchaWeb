@@ -19,7 +19,11 @@ class EmployeeController extends Controller
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
 
         if (!$this->aclService->isRoleIn([5,6])) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Acceso restringido.'
+            ];
             header('Location:' . BASE_URL . '/home');
+            exit;
         }
     }
 
@@ -69,7 +73,11 @@ class EmployeeController extends Controller
                     $res = $this->createEmployee($validatedData);
 
                     if ($res->success) {
+                        $_SESSION['systemMessages'] = [
+                            'success'=>'Empleado registrado.'
+                        ];
                         header('Location:' . BASE_URL . '/employees/list');
+                        exit;
                     } else {
                         $this->layoutService->setMessages([
                             'danger' => [$res->message],
@@ -175,7 +183,11 @@ class EmployeeController extends Controller
                     $res = $this->updateEmployee($validatedData);
 
                     if ($res->success) {
+                        $_SESSION['systemMessages'] = [
+                            'success'=>'Empleado actualizado.'
+                        ];
                         header('Location:' . BASE_URL . '/employees/list');
+                        exit;
                     } else {
                         $this->layoutService->setMessages([
                             'danger' => [$res->message],
@@ -207,7 +219,11 @@ class EmployeeController extends Controller
                     $res = $this->updateEmployeePassword($validatedData);
 
                     if ($res->success) {
+                        $_SESSION['systemMessages'] = [
+                            'success'=>'Contraseña de empleado actualizada.'
+                        ];
                         header('Location:' . BASE_URL . '/employees/list');
+                        exit;
                     } else {
                         $this->layoutService->setMessages([
                             'danger' => [$res->message],

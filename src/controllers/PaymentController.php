@@ -33,7 +33,11 @@ class PaymentController extends Controller
     public function newPayment($hostId)
     {
         if (!$this->aclService->isRoleIn([1])) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Acceso restringido.'
+            ];
             header('Location:' . BASE_URL . '/home');
+            exit;
         }
 
         try {
@@ -41,7 +45,7 @@ class PaymentController extends Controller
             $host = $this->hostModel->find($hostId);
             $paymentPlan = $this->paymentPlanModel->find($host->payment_plan_id);
             $hostPlan = $this->hostPlanModel->find($host->payment_plan_id);
-            $operativeSystem = $this->operativeSystemModel->find($host->payment_plan_id);
+            $operativeSystem = $this->operativeSystemModel->find($host->operative_system_id);
             $creditCard = $this->creditCardModel->findByCustomerId($host->customer_id);
             $lastPayment = $this->paymentModel->findHostLastPayment($hostId);
 
@@ -59,7 +63,8 @@ class PaymentController extends Controller
 
             $paymentContext->setStrategy($paymentStrategy);
 
-            $yearPrice = $hostPlan->price + $operativeSystem->price;
+            $yearPrice = $hostPlan->price + 
+            $operativeSystem->price;
             $periodicAmount = $paymentContext->calculatePayment($yearPrice);
             $nextPaymentDate = $paymentContext->getNextPaymentDate($lastPayment->created_at);
 
@@ -73,7 +78,11 @@ class PaymentController extends Controller
 
                 $payment = $this->paymentModel->save($payment);
                 if ($payment) {
+                    $_SESSION['systemMessages'] = [
+                        'success'=>'Pago registrado.'
+                    ];
                     header('Location:' . BASE_URL . '/customers/details');
+                    exit;
                 }else{
                     throw new Exception('Error durante el pago');
                 }

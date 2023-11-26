@@ -14,7 +14,11 @@ class UserController extends Controller
         $this->userModel = ModelService::getInstance()->get('UserModel');
 
         if (!$this->aclService->isRoleIn([2, 3, 4, 5, 6])) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Acceso restringido.'
+            ];
             header('Location:' . BASE_URL . '/home');
+            exit;
         }
     }
 

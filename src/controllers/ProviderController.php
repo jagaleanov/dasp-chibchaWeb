@@ -16,7 +16,11 @@ class ProviderController extends Controller
         $this->domainModel = ModelService::getInstance()->get('DomainModel');
 
         if (!$this->aclService->isRoleIn([4, 6])) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Acceso restringido.'
+            ];
             header('Location:' . BASE_URL . '/home');
+            exit;
         }
     }
 

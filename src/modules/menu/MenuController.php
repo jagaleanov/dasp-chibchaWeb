@@ -3,6 +3,7 @@
 namespace src\modules\menu;
 
 use src\controllers\Controller;
+use src\services\LayoutService;
 
 class MenuController extends Controller
 {
@@ -86,7 +87,7 @@ class MenuController extends Controller
                 'login' => !$this->aclService->isLoggedIn(),
             ];
 
-            $this->layoutService->view('../modules/menu/menuView', $data);
+            return $this->layoutService->html('../modules/menu/menuView', $data);
         } catch (\Exception $e) {
             print_r($e);
         }

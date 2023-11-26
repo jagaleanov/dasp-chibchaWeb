@@ -17,18 +17,26 @@ class CustomerController extends Controller
         $this->domainModel = ModelService::getInstance()->get('DomainModel');
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
         $this->creditCardModel = ModelService::getInstance()->get('CreditCardModel');
-
-        if (!$this->aclService->isRoleIn([2, 3, 4, 5, 6])) {
-            header('Location:' . BASE_URL . '/home');
-        }
         
     }
 
     public function getAllCustomers()
     {
+        if (!$this->aclService->isRoleIn([2, 3, 4, 5, 6])) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Acceso restringido.'
+            ];
+            header('Location:' . BASE_URL . '/home');
+            exit;
+        }
+
         try {
             if (!$this->aclService->isRoleIn([2, 3, 4, 5, 6])) {
+                $_SESSION['systemMessages'] = [
+                    'danger'=>'Acceso restringido.'
+                ];
                 header('Location:' . BASE_URL . '/home');
+                exit;
             }
 
             $customers = $this->customerModel->findAll();
@@ -48,6 +56,14 @@ class CustomerController extends Controller
 
     public function customerDetails($id = null)
     {
+        if (!$this->aclService->isRoleIn([1, 2, 3, 4, 5, 6])) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Acceso restringido.'
+            ];
+            header('Location:' . BASE_URL . '/home');
+            exit;
+        }
+
         try {
             if ($id == null) {
                 $id = $this->aclService->getUser()->id;

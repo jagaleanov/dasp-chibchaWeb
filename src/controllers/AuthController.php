@@ -4,6 +4,7 @@ namespace src\controllers;
 
 use Exception;
 use src\modules\menu\MenuController;
+use src\services\LayoutService;
 use src\services\ModelService;
 
 class AuthController extends Controller
@@ -18,8 +19,12 @@ class AuthController extends Controller
 
     public function loginForm()
     {
-        if (!$this->aclService->isLoggedIn()) {
+        if ($this->aclService->isLoggedIn()) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Ya ha iniciado sesión.'
+            ];
             header('Location:' . BASE_URL . '/home');
+            exit;
         }
 
         try {
@@ -46,8 +51,10 @@ class AuthController extends Controller
                         if ($res->user->role_id > 1) {
                             // $uri = 'employees';
                             header('Location:' . BASE_URL . '/home');
+                            exit;
                         } else {
                             header('Location:' . BASE_URL . '/customers/details');
+                            exit;
                         }
                     } else {
                         $this->layoutService->setMessages([
@@ -99,6 +106,7 @@ class AuthController extends Controller
         try {
             session_destroy();
             header('Location:' . BASE_URL . '/home');
+            exit;
         } catch (\Exception $e) {
             return (object)[
                 'success' => false,

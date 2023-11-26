@@ -18,7 +18,11 @@ class HostController extends Controller
         $this->ticketModel = ModelService::getInstance()->get('TicketModel');
 
         if (!$this->aclService->isRoleIn([2, 3, 4, 5, 6])) {
+            $_SESSION['systemMessages'] = [
+                'danger'=>'Acceso restringido.'
+            ];
             header('Location:' . BASE_URL . '/home');
+            exit;
         }
     }
 

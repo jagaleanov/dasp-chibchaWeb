@@ -10,7 +10,7 @@ class CreditCardController extends Controller
     public function __construct()
     {
         parent::__construct();
-        // $this->creditCardModel = ModelService::getInstance()->get('CreditCardModel');
+        $this->creditCardModel = ModelService::getInstance()->get('CreditCardModel');
     }
 
     public function validateCreditCard()

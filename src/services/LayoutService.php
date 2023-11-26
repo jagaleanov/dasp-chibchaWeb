@@ -43,13 +43,44 @@ class LayoutService
 	{
 		$layout			= "layouts/" . $this->layout;
 		$view			= $view;
-		$loadView		= array('content_for_layout' => $this->render($view, $data, true));
+		$loadView		= [
+			'contentForLayout' => $this->render($view, $data, true),
+			'navBar' => $this->getModule('navBar'),
+		];
 
 		if ($return)
 			return $this->render($layout, $loadView, true);
 		else
 			$this->render($layout, $loadView, false);
 	}
+
+	public function html($view = null, $data = [])
+	{
+
+		// print $this->render($view, $data, true);
+		return $this->render($view, $data, true);
+	}
+
+
+
+
+	private function render($view, $data = [], $returnContent = false)
+	{
+		extract($data);
+		ob_start();
+		include "src/views/$view.php";
+		$content = ob_get_clean();
+
+		if ($returnContent) {
+			return $content;
+		} else {
+			print $content;
+		}
+	}
+
+
+
+
 
 	public function setLayout($layout)
 	{
@@ -140,23 +171,6 @@ class LayoutService
 			return FALSE;
 		} else {
 			return $this->messages;
-		}
-	}
-
-
-
-
-	private function render($view, $data = [], $returnContent = false)
-	{
-		extract($data);
-		ob_start();
-		include "src/views/$view.php";
-		$content = ob_get_clean();
-
-		if ($returnContent) {
-			return $content;
-		} else {
-			print $content;
 		}
 	}
 }

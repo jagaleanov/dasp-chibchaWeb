@@ -116,7 +116,11 @@ class OrderController extends Controller
                     $res = $this->createOrder($validate->sanitizedData);
 
                     if ($res->success) {
+                        $_SESSION['systemMessages'] = [
+                            'success'=>'Compra registrada.'
+                        ];
                         header('Location:' . BASE_URL . '/login');
+                        exit;
                     } else {
                         $this->layoutService->setMessages([
                             'danger' => [$res->message],

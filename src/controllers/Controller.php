@@ -23,5 +23,11 @@ class Controller
         $this->validationService = ValidationService::getInstance();
         $this->layoutService = LayoutService::getInstance();
         $this->postService = PostService::getInstance();
+        
+        if(isset($_SESSION['systemMessages']) && is_array($_SESSION['systemMessages'])){
+			$message = $_SESSION['systemMessages'];
+            $this->layoutService->setMessages($message);
+			unset($_SESSION['systemMessages']);
+        }
     }
 }
