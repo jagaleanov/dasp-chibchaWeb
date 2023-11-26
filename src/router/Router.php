@@ -26,8 +26,6 @@ class Router
         foreach ($this->routes as $route) {
             // Convertimos la URI definida en una expresión regular para hacer coincidir con la URI solicitada
             $pattern = $this->generatePattern($route['uri']);
-            // print "<pre>";print_r($pattern);print "</pre>";
-            // print "<pre>";print_r($requestUri);print "</pre>";
 
             if ( preg_match($pattern, $requestUri, $matches)) {
                 array_shift($matches);  // Removemos la primera coincidencia que es la URI completa
@@ -53,8 +51,6 @@ class Router
         // Si no se encuentra ninguna ruta que coincida, devolvemos un error 404
         $layoutService = LayoutService::getInstance();
         $layoutService->view('error404');
-        // header("HTTP/1.1 404 Not Found");
-        // return $this->notFoundResponse();  // Usamos el método del trait para devolver una respuesta coherente
     }
 
     // Método privado que convierte la URI con parámetros (por ej. {id}) en una expresión regular

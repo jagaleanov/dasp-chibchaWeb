@@ -1,11 +1,8 @@
 <?php
 
-// Espacio de nombres utilizado por el controlador
 namespace src\modules\menu;
 
 use src\controllers\Controller;
-use src\services\ModelService;
-
 
 class MenuController extends Controller
 {

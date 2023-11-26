@@ -1,6 +1,5 @@
 <?php
 
-// Espacio de nombres utilizado por el controlador
 namespace src\controllers;
 
 use src\services\AclService;

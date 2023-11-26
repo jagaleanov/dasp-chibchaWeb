@@ -61,10 +61,5 @@ $router = new \src\router\Router($container);
 // Inicializar el enrutador y definir rutas
 require_once 'config/routes.php';
 
-// Despachar la solicitud basada en la URI y el método HTTP
-/*$response = */
+// Despachar la solicitud basada en la URI 
 $router->dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-
-// // Envía respuesta
-// header('Content-Type: application/json; charset=utf-8');
-// echo json_encode($response, JSON_UNESCAPED_UNICODE);
