@@ -1,12 +1,9 @@
 <?php
 
-// Espacio de nombres utilizado por el repositorio
 namespace src\models;
 
-// Repositorio para gestionar operaciones relacionadas con los creditCards en la base de datos
 class CreditCardModel extends Model
 {
-    // Método para encontrar un proveedor de tarjetas de crédito por su ID
     public function find($customer_id,$number)
     {
         $stmt = $this->connection->prepare(
@@ -29,7 +26,6 @@ class CreditCardModel extends Model
         return null;
     }
     
-    // Método para encontrar un proveedor de tarjetas de crédito por su ID
     public function findByCustomerId($customer_id)
     {
         $stmt = $this->connection->prepare(
@@ -50,33 +46,6 @@ class CreditCardModel extends Model
         return null;
     }
 
-    // // Método para encontrar todos los clientes, con opción de filtro por nombre o email
-    // public function findAll($search = null)
-    // {
-    //     $query =
-    //         "SELECT * FROM credit_cards";
-    //     $params = [];
-
-    //     // Aplicación de filtros si se proporcionan
-    //     if (!empty($search)) {
-    //         $query .= " WHERE name LIKE :search";
-    //         $params['search'] = '%' . $search . '%';
-    //     }
-
-    //     $stmt = $this->connection->prepare($query);
-    //     $stmt->execute($params);
-
-    //     $data = $stmt->fetchAll();
-
-    //     $creditCards = [];
-    //     foreach ($data as $creditCardData) {
-    //         $creditCards[] = (object) $creditCardData;
-    //     }
-
-    //     return $creditCards;
-    // }
-
-    // Método para insertar un proveedor de tarjetas de crédito en la base de datos
     public function save($creditCard)
     {
         try {
@@ -106,7 +75,6 @@ class CreditCardModel extends Model
         }
     }
 
-    // Método para obtener el emisor de una tarjeta de crédito
     public function getCreditCardType($number){
 
             // Verifica la marca de la tarjeta basándose en los primeros dígitos
@@ -126,22 +94,4 @@ class CreditCardModel extends Model
                 return false;
             }
     }
-
-    // // Método para eliminar un proveedor de tarjetas de crédito por su ID
-    // public function delete($customer_id,$number)
-    // {
-    //     try {
-    //         //Validación de la relación del user y el creditCard
-    //         $stmt = $this->connection->prepare("DELETE FROM credit_cards WHERE cc.customer_id = :customer_id AND cc.number = :number");
-    //         $stmt->execute([
-    //             'customer_id' => $customer_id,
-    //             'number' => $number,
-    //         ]);
-
-    //         //Respuesta
-    //         return $stmt->rowCount() == 1;
-    //     } catch (\Exception $e) {
-    //         throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
-    //     }
-    // }
 }

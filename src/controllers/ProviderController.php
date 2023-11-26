@@ -1,20 +1,14 @@
 <?php
 
-// Espacio de nombres utilizado por el controlador
 namespace src\controllers;
-
-// Importaciones de otras clases que se usarán en el controlador
 
 use src\modules\menu\MenuController;
 use src\services\ModelService;
 
-// Controlador para gestionar provedores
 class ProviderController extends Controller
 {
-    // Propiedad para el repositorio de provedores
     private $providerModel, $domainModel;
 
-    // Constructor que inyecta el repositorio de provedores
     public function __construct()
     {
         parent::__construct();
@@ -22,7 +16,6 @@ class ProviderController extends Controller
         $this->domainModel = ModelService::getInstance()->get('DomainModel');
     }
 
-    // Método para obtener todos los provedores
     public function getAllProviders()
     {
         try {
@@ -35,7 +28,6 @@ class ProviderController extends Controller
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar', $menu->index());
-
             $this->layoutService->view('providers/list', $data);
         } catch (\Exception $e) {
             print_r($e);
@@ -67,7 +59,6 @@ class ProviderController extends Controller
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar', $menu->index());
-            // print"<pre>";print_r($data);print"</pre>";
             $this->layoutService->view('providers/details', $data);
         } catch (\Exception $e) {
             print_r($e);

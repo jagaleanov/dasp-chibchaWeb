@@ -89,7 +89,6 @@ class PaymentController extends Controller
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar', $menu->index());
-            // print "<pre>";print_r($data);print "</pre>";
             $this->layoutService->view('payments/new', $data);
         } catch (\Exception $e) {
             print_r($e);
@@ -108,67 +107,9 @@ class PaymentController extends Controller
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar', $menu->index());
-            // print"<pre>";print_r($data);print"</pre>";
             $this->layoutService->view('payments/list', $data);
         } catch (\Exception $e) {
             print_r($e);
         }
     }
-
-    // Método para obtener un dominio por su ID
-    // public function getPayment($id)
-    // {
-    //     try {
-    //         $payment = $this->paymentModel->find($id);
-    //         return $this->successResponse($payment);
-    //     } catch (\Exception $e) {
-    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-    // }
-
-    // Método para actualizar un dominio por su ID
-    // public function updatePayment($id)
-    // {
-    //     try {
-    //         $data = $this->getInputData();
-
-    //         // Validación de datos de entrada
-    //         if (empty($data['host_id']) || empty($data['credit_card_customer_id']) || empty($data['credit_card_number']) || empty($data['amount'])) {
-    //             return $this->errorResponse('Datos inválidos', self::HTTP_BAD_REQUEST);
-    //         }
-
-    //         $payment = $this->paymentModel->find($id);
-
-    //         if (!$payment) {
-    //             return $this->notFoundResponse();
-    //         }
-
-    //         $payment->host_id = $data['host_id'];
-    //         $payment->credit_card_customer_id = $data['credit_card_customer_id'];
-    //         $payment->credit_card_number = $data['credit_card_number'];
-    //         $payment->amount = $data['amount'];
-    //         $this->paymentModel->update($payment);
-
-    //         return $this->successResponse(['payment' => $payment]);
-    //     } catch (\Exception $e) {
-    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-    // }
-
-    // Método para eliminar un dominio por su ID
-    // public function deletePayment($id)
-    // {
-    //     try {
-    //         $payment = $this->paymentModel->find($id);
-
-    //         if (!$payment) {
-    //             return $this->notFoundResponse();
-    //         }
-
-    //         $this->paymentModel->delete($payment);
-    //         return $this->successResponse(['message' => 'Cliente eliminado exitosamente']);
-    //     } catch (\Exception $e) {
-    //         return $this->errorResponse($e->getMessage() . ' on ' . $e->getFile() . ' in line ' . $e->getLine() . '. ' . $e->getTraceAsString(), self::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-    // }
 }

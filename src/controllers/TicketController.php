@@ -100,7 +100,6 @@ class TicketController extends Controller
         try {
 
             if ($this->postService->get('submitRole')) {
-                // Validación de datos de entrada
                 $rules = [
                     [
                         'field' => 'ticket_id',
@@ -135,7 +134,6 @@ class TicketController extends Controller
             }
 
             if ($this->postService->get('submitStatus')) {
-                // Validación de datos de entrada
                 $rules = [
                     [
                         'field' => 'ticket_id',
@@ -151,7 +149,7 @@ class TicketController extends Controller
                     $res = $this->updateTicketStatus($validatedData);
 
                     if ($res->success) {
-                        // header('Location:' . BASE_URL . '/tickets/list');
+                        header('Location:' . BASE_URL . '/tickets/list');
                     } else {
                         $this->layoutService->setMessages([
                             'danger' => [$res->message],
@@ -196,7 +194,6 @@ class TicketController extends Controller
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar', $menu->index());
-            // print"<pre>";print_r($data);print"</pre>";
             $this->layoutService->view('tickets/list', $data);
         } catch (\Exception $e) {
             print_r($e);

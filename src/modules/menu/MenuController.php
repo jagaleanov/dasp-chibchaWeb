@@ -6,19 +6,13 @@ namespace src\modules\menu;
 use src\controllers\Controller;
 use src\services\ModelService;
 
-// Importaciones de otras clases que se usarán en el controlador
 
-// Controlador para gestionar tarjetas de crédito
 class MenuController extends Controller
 {
-    // Propiedad para el repositorio de tarjetas de crédito
-    private $menuModel;
 
-    // Constructor que inyecta el repositorio de usuarios
     public function __construct()
     {
         parent::__construct();
-        $this->menuModel = ModelService::getInstance()->get('MenuModel');
     }
 
     public function index()
@@ -74,12 +68,6 @@ class MenuController extends Controller
                     'icon' => 'question-diamond',
                     'roles' => [2,3,4,5,6],
                 ],
-                // (object)[
-                //     'label' => 'Comisiones',
-                //     'url' => BASE_URL,
-                //     'icon' => 'coin',
-                //     'roles' => [2],
-                // ],
                 (object)[
                     'label' => 'Dashboard',
                     'url' => BASE_URL . '/customers/details',

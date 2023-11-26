@@ -168,3 +168,5 @@ INSERT INTO operative_systems VALUES (1,'Linux',0),(2,'Windows',100);
 INSERT INTO payment_plans VALUES (1,'Mensual'),(2,'Trimestral'),(3,'Semestral'),(4,'Anual');
 INSERT INTO roles VALUES (1,'Cliente'),(2,'Soporte pagos'),(3,'Soporte host'),(4,'Soporte dominio'),(5,'Soporte tecnico'),(6,'Super Admin');
 INSERT INTO providers VALUES (1,'GoDaddy', 80),(2,'Hostinger',75),(3,'WebDomains',82);
+INSERT INTO users VALUES (1,6,'admin@email.com','admin_name','admin_last_name','$2y$10$oP4rFCmwY9ZF5mB2SFjHAe/CLzdcfn2kKq.3yyQvPKDEYH0gdEeMG',CURRENT_TIMESTAMP,null);
+INSERT INTO employees VALUES (1,1,'1234567890',CURRENT_TIMESTAMP,null);

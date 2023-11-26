@@ -1,14 +1,11 @@
 <?php
 
-// Espacio de nombres utilizado por el repositorio
 namespace src\models;
 
 use Exception;
 
-// Repositorio para gestionar operaciones relacionadas con los empleados en la base de datos
 class EmployeeModel extends Model
 {
-    // Método para encontrar un empleado por su ID
     public function find($id)
     {
         $stmt = $this->connection->prepare(
@@ -24,11 +21,9 @@ class EmployeeModel extends Model
             return (object) $data;
         }
 
-        // Si no se encuentra el empleado, se retorna null
         return null;
     }
 
-    // Método para encontrar un empleado por su user ID
     public function findByUserId($userId)
     {
         $stmt = $this->connection->prepare(
@@ -48,7 +43,6 @@ class EmployeeModel extends Model
         return null;
     }
 
-    // Método para encontrar todos los empleados, con opción de filtro por nombre o email
     public function findAll($filters = [])
     {
         $query =
@@ -75,7 +69,6 @@ class EmployeeModel extends Model
         return $employees;
     }
 
-    // Método para insertar un empleado en la base de datos
     public function save($employee)
     {
         // Iniciar una transacción
@@ -116,7 +109,6 @@ class EmployeeModel extends Model
         }
     }
 
-    // Método para actualizar un empleado en la base de datos
     public function update($employee)
     {
         try {

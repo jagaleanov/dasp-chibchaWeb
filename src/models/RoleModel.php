@@ -23,40 +23,12 @@ class RoleModel extends Model
         // Si no se encuentra el cliente, se retorna null
         return null;
     }
-
-    // Método para encontrar todos los roles
-    // public function findAll($search = null)
-    // {
-    //     $query =
-    //         "SELECT * FROM roles ";
-    //     $params = [];
-
-    //     // Aplicación de filtros si se proporcionan
-    //     if (!empty($search)) {
-    //         $query .= "WHERE name LIKE :search";
-    //         $params['search'] = '%' . $search . '%';
-    //     }
-
-    //     $stmt = $this->connection->prepare($query);
-    //     $stmt->execute($params);
-
-    //     $data = $stmt->fetchAll();
-
-    //     $roles = [];
-    //     foreach ($data as $roleData) {
-    //         $roles[] = (object) $roleData;
-    //     }
-
-    //     return $roles;
-    // }
+    
     public function findAll($filters = [])
     {
         $query = "SELECT * FROM roles";
 
-        // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
         $whereData = $this->buildWhereClause($filters);
-        // print "LIKE OK";
-        // print "<pre>";print_r($whereData);print "</pre>";
         $query .= $whereData['whereClause'];
         $params = $whereData['params'];
 
@@ -73,7 +45,6 @@ class RoleModel extends Model
         return $roles;
     }
 
-    // Método para insertar un rol en la base de datos
     public function save($role)
     {
         try {
@@ -93,7 +64,6 @@ class RoleModel extends Model
         }
     }
 
-    // Método para actualizar un rol en la base de datos
     public function update($role)
     {
         try {
@@ -116,7 +86,6 @@ class RoleModel extends Model
         }
     }
 
-    // Método para eliminar un rol por su ID
     public function delete($id)
     {
         try {

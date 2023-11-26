@@ -9,13 +9,13 @@ use src\services\ModelService;
 class AuthController extends Controller
 {
     private $userModel;
-    private $roleModel;
+    // private $roleModel;
 
     public function __construct()
     {
         parent::__construct();
         $this->userModel = ModelService::getInstance()->get('UserModel');
-        $this->roleModel = ModelService::getInstance()->get('RoleModel');
+        // $this->roleModel = ModelService::getInstance()->get('RoleModel');
     }
 
     public function loginForm()
@@ -65,8 +65,7 @@ class AuthController extends Controller
             print_r($e);
         }
     }
-
-    // Método para iniciar sesión
+    
     private function login($data)
     {
         try {
@@ -92,7 +91,7 @@ class AuthController extends Controller
             ];
         }
     }
-    // Método para finalizar sesión
+    
     public function logout()
     {
         try {

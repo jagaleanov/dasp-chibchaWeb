@@ -32,7 +32,6 @@ class OrderController extends Controller
     {
         try {
             if ($this->postService->get('submit')) {
-                // Validación de datos de entrada
                 $rules = [
                     [
                         'field' => 'name',
@@ -210,8 +209,7 @@ class OrderController extends Controller
             if ($this->probabilisticFail(20)) {
                 throw new Exception('Transaccion fallida');
             }
-
-            // Iniciar una transacción
+            
             $this->customerModel->beginTransaction();
 
             $customer = new stdClass();
@@ -266,7 +264,6 @@ class OrderController extends Controller
                 throw new Exception('Datos de pago inválidos');
             }
 
-            // Confirmar la transacción
             $this->customerModel->commit();
 
             return (object)[

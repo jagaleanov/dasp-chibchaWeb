@@ -1,20 +1,14 @@
 <?php
 
-// Espacio de nombres utilizado por el repositorio
 namespace src\models;
-
-// Importaciones de otras clases que se usarán en el repositorio
 
 use Exception;
 use src\services\DatabaseService;
 
-// Repositorio para gestionar operaciones relacionadas con los clientes en la base de datos
 class Model
 {
-    // Propiedad para la conexión a la base de datos
     protected $connection;
 
-    // Constructor que establece la conexión a la base de datos
     public function __construct()
     {
         $this->connection = DatabaseService::getInstance()->getConnection();
@@ -34,6 +28,7 @@ class Model
     {
         $this->connection->rollback();
     }
+
     protected function buildWhereClause($filters = [])
     {
         $conditions = [];
@@ -42,7 +37,7 @@ class Model
         foreach ($filters as $key => $filter) {
             if (!empty($filter['value'])) {
                 $operator = isset($filter['operator']) ? $filter['operator'] : 'LIKE';
-                $placeholder = ':'.str_replace(".", "_", $key);
+                $placeholder = ':' . str_replace(".", "_", $key);
 
                 switch ($operator) {
                     case 'LIKE':

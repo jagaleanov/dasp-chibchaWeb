@@ -41,7 +41,6 @@ class PaymentModel extends Model
             "SELECT p.*, h.ip FROM payments p
             JOIN hosts h ON p.host_id = h.id";
 
-            // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
             $whereData = $this->buildWhereClause($filters);
             $query .= $whereData['whereClause'];
             $params = $whereData['params'];
@@ -80,47 +79,4 @@ class PaymentModel extends Model
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }
     }
-
-    // public function update($payment)
-    // {
-    //     try {
-    //         // Actualización del cliente
-    //         $stmt = $this->connection->prepare(
-    //             "UPDATE payments SET 
-    //             host_id = :host_id,
-    //             credit_card_customer_id = :credit_card_customer_id,
-    //             credit_card_number = :credit_card_number,
-    //             amount = :amount,
-    //             updated_at = :updated_at
-    //             WHERE id = :id"
-    //         );
-    //         $stmt->execute([
-    //             'host_id' => $payment->host_id,
-    //             'credit_card_customer_id' => $payment->credit_card_customer_id,
-    //             'credit_card_number' => $payment->credit_card_number,
-    //             'amount' => $payment->amount,
-    //             'updated_at' => date('Y-m-d H:i:s'),
-    //             'id' => $payment->id
-    //         ]);
-
-    //         //Respuesta
-    //         return $this->find($payment->id);
-    //     } catch (\Exception $e) {
-    //         throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
-    //     }
-    // }
-
-    // public function delete($id)
-    // {
-    //     try {
-    //         //Validación de la relación del user y el payment
-    //         $stmt = $this->connection->prepare("DELETE FROM payments WHERE id = :id");
-    //         $stmt->execute(['id' => $id]);
-
-    //         //Respuesta
-    //         return $stmt->rowCount() == 1;
-    //     } catch (\Exception $e) {
-    //         throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
-    //     }
-    // }
 }
