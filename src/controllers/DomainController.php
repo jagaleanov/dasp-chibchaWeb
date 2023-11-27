@@ -7,7 +7,6 @@ use src\modules\menu\MenuController;
 use src\services\ModelService;
 use stdClass;
 
-// Controlador para gestionar dominios
 class DomainController extends Controller
 {
     private $domainModel, $hostModel, $providerModel;
