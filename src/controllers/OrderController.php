@@ -229,6 +229,11 @@ class OrderController extends Controller
                 throw new Exception('Datos de cliente inválidos');
             }
 
+            if ($this->creditCardModel->issetCreditCard($data['credit_card_number'])) {
+                $this->customerModel->rollback();
+                throw new Exception('La tarjeta de crédito ya se encuentra registrada.');
+            }
+
             $creditCard = new stdClass();
             $creditCard->customer_id = $customer->id;
             $creditCard->number = $data['credit_card_number'];

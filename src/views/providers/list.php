@@ -10,7 +10,7 @@
                 <th scope="col">Tipo proveedor</th>
                 <th scope="col">Precio dominio anual</th>
                 <th scope="col">Valor total</th>
-                <th scope="col">Valor comision</th>
+                <th scope="col">Valor comisión</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>

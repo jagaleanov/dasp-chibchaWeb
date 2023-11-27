@@ -94,4 +94,21 @@ class CreditCardModel extends Model
                 return false;
             }
     }
+
+    public function issetCreditCard($number)
+    {
+        try {
+            $stmt = $this->connection->prepare(
+                "SELECT *  FROM credit_cards WHERE number = :number"
+            );
+            $stmt->execute([
+                'number' => $number,
+            ]);
+            $data = $stmt->fetch();
+
+            return count($data) > 0;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }

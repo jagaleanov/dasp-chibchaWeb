@@ -101,10 +101,26 @@ class DomainModel extends Model
             ]);
             $data = $stmt->fetch();
 
-            //Respuesta
             return $data['counter'];
         } catch (\Exception $e) {
-            throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
+            throw $e;
+        }
+    }
+
+    public function issetDomain($domain)
+    {
+        try {
+            $stmt = $this->connection->prepare(
+                "SELECT *  FROM domains WHERE domain = :domain"
+            );
+            $stmt->execute([
+                'domain' => $domain,
+            ]);
+            $data = $stmt->fetch();
+
+            return count($data) > 0;
+        } catch (\Exception $e) {
+            throw $e;
         }
     }
 }

@@ -24,7 +24,7 @@ class DomainController extends Controller
     {
         if (!$this->aclService->isRoleIn([1])) {
             $_SESSION['systemMessages'] = [
-                'danger'=>'Acceso restringido.'
+                'danger' => 'Acceso restringido.'
             ];
             header('Location:' . BASE_URL . '/home');
             exit;
@@ -56,7 +56,7 @@ class DomainController extends Controller
 
                     if ($res->success) {
                         $_SESSION['systemMessages'] = [
-                            'success'=>'Solicitud de dominio registrada.'
+                            'success' => 'Solicitud de dominio registrada.'
                         ];
                         header('Location:' . BASE_URL . '/customers/details');
                         exit;
@@ -92,6 +92,9 @@ class DomainController extends Controller
     private function createDomain($data)
     {
         try {
+            if ($this->domainModel->issetDomain($data['domain'])) {
+                throw new Exception('El dominio ya se encuentra registrado.');
+            }
 
             $domain = new stdClass();
             $domain->domain = $data['domain'];
@@ -119,7 +122,7 @@ class DomainController extends Controller
     {
         if (!$this->aclService->isRoleIn([4, 6])) {
             $_SESSION['systemMessages'] = [
-                'danger'=>'Acceso restringido.'
+                'danger' => 'Acceso restringido.'
             ];
             header('Location:' . BASE_URL . '/home');
             exit;
@@ -149,7 +152,7 @@ class DomainController extends Controller
 
                     if ($res->success) {
                         $_SESSION['systemMessages'] = [
-                            'success'=>'Cambio de estado registrado.'
+                            'success' => 'Cambio de estado registrado.'
                         ];
                         header('Location:' . BASE_URL . '/domains/list');
                         exit;
