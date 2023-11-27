@@ -101,14 +101,14 @@ class DomainController extends Controller
             $domain->host_id = $data['host_id'];
             $domain->provider_id = $data['provider_id'];
 
-            $ticket = $this->domainModel->save($domain);
-            if (!$ticket) {
+            $domain = $this->domainModel->save($domain);
+            if (!$domain) {
                 throw new Exception('Datos de dominio inválidos');
             }
 
             return (object)[
                 'success' => true,
-                'data' => $ticket,
+                'data' => $domain,
             ];
         } catch (\Exception $e) {
             return (object)[
