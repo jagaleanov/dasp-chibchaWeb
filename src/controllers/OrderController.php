@@ -117,7 +117,7 @@ class OrderController extends Controller
 
                     if ($res->success) {
                         $_SESSION['systemMessages'] = [
-                            'success'=>'Compra registrada.'
+                            'success' => 'Compra registrada.'
                         ];
                         header('Location:' . BASE_URL . '/login');
                         exit;
@@ -171,9 +171,7 @@ class OrderController extends Controller
                             payment_plan: $("#payment_plan_id").val(),
                         },
 						success: function (resp) {
-                            console.log(resp)
                             resp=JSON.parse(resp)
-                            console.log(resp)
                             $("#totalValue").html(resp.data)
                             $("#amount").val(resp.data)
                             
@@ -213,7 +211,7 @@ class OrderController extends Controller
             if ($this->probabilisticFail(20)) {
                 throw new Exception('Transaccion fallida');
             }
-            
+
             $this->customerModel->beginTransaction();
 
             $customer = new stdClass();
@@ -256,7 +254,7 @@ class OrderController extends Controller
             $host->operative_system_id = $data['operative_system_id'];
 
             $host = $this->hostModel->save($host);
-            if (!$customer) {
+            if (!$host) {
                 $this->customerModel->rollback();
                 throw new Exception('Datos de host inválidos');
             }
@@ -278,6 +276,172 @@ class OrderController extends Controller
             return (object)[
                 'success' => true,
                 'data' => ['customer' => $customer, 'creditCard' => $creditCard, 'host' => $host, 'payment' => $payment],
+            ];
+        } catch (\Exception $e) {
+            return (object)[
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    public function addOrder()
+    {
+        try {
+            if (!$this->aclService->isRoleIn([1])) {
+                $_SESSION['systemMessages'] = [
+                    'danger' => 'Acceso restringido.'
+                ];
+                header('Location:' . BASE_URL . '/home');
+                exit;
+            }
+
+            $user = $this->aclService->getUser();
+            $operativeSystems = $this->operativeSystemModel->findAll();
+            $hostPlans = $this->hostPlanModel->findAll();
+            $paymentPlans = $this->paymentPlanModel->findAll();
+            $customer = $this->customerModel->findByUserId($user->id);
+            $creditCard = $this->creditCardModel->findByCustomerId($customer->id);
+
+            if ($this->postService->get('submit')) {
+                $rules = [
+                    [
+                        'field' => 'host_plan_id',
+                        'label' => 'plan de hosting',
+                        'rules' => ['required', 'integer']
+                    ],
+                    [
+                        'field' => 'operative_system_id',
+                        'label' => 'sistema operativo',
+                        'rules' => ['required', 'integer']
+                    ],
+                    [
+                        'field' => 'payment_plan_id',
+                        'label' => 'plan de pago',
+                        'rules' => ['required', 'integer']
+                    ],
+                    [
+                        'field' => 'amount',
+                        'label' => 'total',
+                        'rules' => ['required', 'integer']
+                    ],
+                ];
+
+                $validate = $this->validationService->validate($this->postService->get(), $rules);
+
+                if ($validate->valid === true) {
+                    $validatedData = $validate->sanitizedData;
+                    $validatedData['customer_id'] = $customer->id;
+                    $validatedData['credit_card_number'] = $creditCard->number;
+                    $res = $this->addHost($validatedData);
+
+                    if ($res->success) {
+                        $_SESSION['systemMessages'] = [
+                            'success' => 'Compra registrada.'
+                        ];
+                        header('Location:' . BASE_URL . '/customers/details');
+                        exit;
+                    } else {
+                        $this->layoutService->setMessages([
+                            'danger' => [$res->message],
+                        ]);
+                    }
+                } else {
+                    $this->layoutService->setMessages([
+                        'danger' => $validate->errors,
+                    ]);
+                }
+            }
+
+            $data = [
+                'user' => $user,
+                'post' => $this->postService,
+                'operativeSystems' => $operativeSystems,
+                'hostPlans' => $hostPlans,
+                'paymentPlans' => $paymentPlans,
+                'creditCard' => $creditCard,
+            ];
+
+            $this->layoutService->setScript('
+                $(document).ready(function () {
+                    getTotal();
+                    $("#host_plan_id").change(function () {
+                        getTotal();
+                    });
+                    $("#operative_system_id").change(function () {
+                        getTotal();
+                    });
+                    $("#payment_plan_id").change(function () {
+                        getTotal();
+                    });
+                })
+
+                function getTotal(){
+					$.ajax({
+						url: "' . BASE_URL . '/orders/amount",
+						type: "POST",
+						data: { 
+                            host_plan: $("#host_plan_id").val(),
+                            operative_system: $("#operative_system_id").val(),
+                            payment_plan: $("#payment_plan_id").val(),
+                        },
+						success: function (resp) {
+                            resp=JSON.parse(resp)
+                            $("#totalValue").html(resp.data)
+                            $("#amount").val(resp.data)
+                            
+						}
+					});
+                }
+            ');
+
+            $menu = new MenuController();
+            $this->layoutService->setModule('navBar', $menu->index());
+            $this->layoutService->view('orders/add', $data);
+        } catch (\Exception $e) {
+            print_r($e);
+        }
+    }
+
+    private function addHost($data)
+    {
+        try {
+
+            if ($this->probabilisticFail(20)) {
+                throw new Exception('Transaccion fallida');
+            }
+
+            $this->hostModel->beginTransaction();
+
+            $host = new stdClass();
+            $host->customer_id = $data['customer_id'];
+            $host->host_plan_id = $data['host_plan_id'];
+            $host->payment_plan_id = $data['payment_plan_id'];
+            $host->operative_system_id = $data['operative_system_id'];
+
+            $host = $this->hostModel->save($host);
+            if (!$host) {
+                $this->hostModel->rollback();
+                throw new Exception('Datos de host inválidos');
+            }
+
+            $payment = new stdClass();
+            $payment->host_id = $host->id;
+            $payment->credit_card_customer_id = $data['customer_id'];
+            $payment->credit_card_number = $data['credit_card_number'];
+            $payment->amount = $data['amount'];
+
+            $payment = $this->paymentModel->save($payment);
+            if (!$payment) {
+                $this->hostModel->rollback();
+                throw new Exception('Datos de pago inválidos');
+            }
+
+            $this->hostModel->commit();
+
+            return (object)[
+                'success' => true,
+                'data' => ['host' => $host, 'payment' => $payment],
             ];
         } catch (\Exception $e) {
             return (object)[
@@ -324,7 +488,7 @@ class OrderController extends Controller
                     $paymentPlan = $this->paymentPlanModel->find($paymentPlanId);
 
                     $paymentContext = new PaymentContext();
-                    
+
                     if ($paymentPlan->name == 'Mensual') {
                         $paymentStrategy = new MonthlyPaymentStrategy();
                     } elseif ($paymentPlan->name == 'Trimestral') {
@@ -334,7 +498,7 @@ class OrderController extends Controller
                     } elseif ($paymentPlan->name == 'Anual') {
                         $paymentStrategy = new AnnualPaymentStrategy();
                     }
-                    
+
                     $paymentContext->setStrategy($paymentStrategy);
 
                     $yearPrice = $hostPlan->price + $operativeSystem->price;

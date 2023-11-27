@@ -56,19 +56,19 @@ class CustomerController extends Controller
 
     public function customerDetails($id = null)
     {
-        if (!$this->aclService->isRoleIn([1, 2, 3, 4, 5, 6])) {
-            $_SESSION['systemMessages'] = [
-                'danger'=>'Acceso restringido.'
-            ];
-            header('Location:' . BASE_URL . '/home');
-            exit;
-        }
-
         try {
+            if (!$this->aclService->isRoleIn([1, 2, 3, 4, 5, 6])) {
+                $_SESSION['systemMessages'] = [
+                    'danger'=>'Acceso restringido.'
+                ];
+                header('Location:' . BASE_URL . '/home');
+                exit;
+            }
+
             if ($id == null) {
                 $id = $this->aclService->getUser()->id;
             }
-            $customer = $this->customerModel->findByUserId($id);
+            $customer = $this->customerModel->find($id);
             $creditCard = $this->creditCardModel->findByCustomerId($customer->id);
             $domains = $this->domainModel->findAll([
                 'customer_id' => ['value' => $customer->id, 'operator' => '=']
@@ -86,12 +86,18 @@ class CustomerController extends Controller
                 ]);
             }
 
+            $showActions = false;
+            if ($this->aclService->isRoleIn([1])) {
+                $showActions = true;
+            }
+
             $data = [
                 'customer' => $customer,
                 'creditCard' => $creditCard,
                 'hosts' => $hosts,
                 'domains' => $domains,
                 'tickets' => $tickets,
+                'showActions' => $showActions,
             ];
             $menu = new MenuController();
             $this->layoutService->setModule('navBar',$menu->index());

@@ -28,7 +28,6 @@ class HostPlanModel extends Model
             $whereData = $this->buildWhereClause($filters);
             $query .= $whereData['whereClause'];
             $params = $whereData['params'];
-            $query .= " ORDER BY created_at DESC";
     
             $stmt = $this->connection->prepare($query);
             $stmt->execute($params);

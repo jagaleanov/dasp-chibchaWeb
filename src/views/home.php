@@ -4,14 +4,15 @@
       <hr> -->
         <div class="container">
             <div class="jumbotron">
-                <h1 class="my-4">Planes de Hosting</h1><hr>
+                <h1 class="my-4">Planes de Hosting</h1>
+                <hr>
                 <div class="row">
                     <!-- columna 1 -->
                     <div class="col">
-                        <div class="card" style="width: 18rem;">
+                        <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title text-light text-center py-2" style="background-color:chocolate">Chibcha-Platino</h5>
-                                
+
                                 <ul>
                                     <li>
                                         Rendimiento estandar
@@ -38,10 +39,10 @@
                     </div>
                     <!-- columna 2 -->
                     <div class="col">
-                        <div class="card" style="width: 18rem;">
+                        <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title text-light text-center py-2" style="background-color:dimgray">Chibcha-Plata</h5>
-                                
+
                                 <ul>
                                     <li>
                                         Rendimiento mejorado
@@ -68,10 +69,10 @@
                     </div>
                     <!-- columna 3 -->
                     <div class="col">
-                        <div class="card" style="width: 18rem;">
+                        <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title text-light text-center py-2" style="background-color:goldenrod">Chibcha-Oro</h5>
-                                
+
                                 <ul>
                                     <li>
                                         Maximo rendimiento

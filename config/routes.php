@@ -47,6 +47,7 @@ $router->add('/payments/list', 'PaymentController@getAllPayments');
 
 // Orders
 $router->add('/orders/amount', 'OrderController@getAmount');
+$router->add('/orders/add', 'OrderController@addOrder');
 $router->add('/orders/new', 'OrderController@newOrder');
 
 return $router;

@@ -6,23 +6,15 @@
         <div class="row">
             <div class="col-sm-6 col-12 mb-3">
                 <label for="name" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="name" name="name" value="<?= $post->get('name') ?>" />
+                <input type="text" class="form-control" id="name" name="name" value="<?= $user->name ?>" readonly disabled/>
             </div>
             <div class="col-sm-6 col-12 mb-3">
                 <label for="last_name" class="form-label">Apellido</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" value="<?= $post->get('last_name') ?>" />
+                <input type="text" class="form-control" id="last_name" name="last_name" value="<?= $user->last_name ?>" readonly disabled/>
             </div>
             <div class="col-sm-6 col-12 mb-3">
                 <label for="email" class="form-label">Email </label>
-                <input type="email" class="form-control" id="email" name="email" value="<?= $post->get('email') ?>" />
-            </div>
-            <div class="col-sm-6 col-12 mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" name="password" value="<?= $post->get('password') ?>" />
-            </div>
-            <div class="col-sm-6 col-12 mb-3">
-                <label for="address" class="form-label">Dirección</label>
-                <input type="text" class="form-control" id="address" name="address" value="<?= $post->get('address') ?>" />
+                <input type="email" class="form-control" id="email" name="email" value="<?= $user->email ?>" readonly disabled/>
             </div>
         </div>
 
@@ -83,50 +75,16 @@
         <div class="row">
             <div class="col-sm-3 col-6 mb-3">
                 <label for="credit_card_number" class="form-label">Número</label>
-                <input type="text" class="form-control" id="credit_card_number" name="credit_card_number" value="<?= $post->get('credit_card_number') ?>" />
+                <input type="text" class="form-control" id="credit_card_number" name="credit_card_number" value="<?= $creditCard->number ?>" readonly disabled/>
             </div>
             <div class="col-sm-3 col-6 mb-3">
                 <label for="credit_card_type" class="form-label">Emisor</label>
-                <input type="text" class="form-control" id="credit_card_type" name="credit_card_type" value="<?= $post->get('credit_card_type') ?>" readonly />
+                <input type="text" class="form-control" id="credit_card_type" name="credit_card_type" value="<?= $creditCard->type ?>" readonly disabled/>
 
             </div>
             <div class="col-sm-6 col-12 mb-3">
                 <label for="credit_card_name" class="form-label">Nombre en la tarjeta</label>
-                <input type="text" class="form-control" id="credit_card_name" name="credit_card_name" value="<?= $post->get('credit_card_name') ?>" />
-            </div>
-            <div class="col-sm-3 col-6 mb-3">
-                <label for="credit_card_month" class="form-label">Mes</label>
-                <select class="form-control" id="credit_card_month" name="credit_card_month">
-                    <option value=""></option>
-                    <?php
-                    for ($i = 1; $i < 13; $i++) {
-                    ?>
-                        <option value="<?= $i ?>" <?= $post->get('credit_card_month') == $i ? 'selected' : '' ?>>
-                            <?= $i ?>
-                        </option>
-                    <?php
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="col-sm-3 col-6 mb-3">
-                <label for="credit_card_year" class="form-label">Año</label>
-                <select class="form-control" id="credit_card_year" name="credit_card_year">
-                    <option value=""></option>
-                    <?php
-                    for ($i = 0; $i < 15; $i++) {
-                    ?>
-                        <option value="<?= date('Y') + $i ?>" <?= $post->get('credit_card_year') == date('Y') + $i ? 'selected' : '' ?>>
-                            <?= date('Y') +  $i ?>
-                        </option>
-                    <?php
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="col-sm-6 col-12 mb-3">
-                <label for="credit_card_code" class="form-label">Código de verificación</label>
-                <input type="text" class="form-control" id="credit_card_code" name="credit_card_code" value="<?= $post->get('credit_card_code') ?>" />
+                <input type="text" class="form-control" id="credit_card_name" name="credit_card_name" value="<?= $creditCard->name ?>" readonly disabled/>
             </div>
         </div>
 

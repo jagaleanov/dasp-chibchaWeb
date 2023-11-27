@@ -2,6 +2,7 @@
 
 namespace src\router;
 
+use src\modules\menu\MenuController;
 use src\services\LayoutService;
 
 // Clase Router que gestiona las rutas y su correspondencia con los controladores y métodos
@@ -50,6 +51,8 @@ class Router
 
         // Si no se encuentra ninguna ruta que coincida, devolvemos un error 404
         $layoutService = LayoutService::getInstance();
+        $menu = new MenuController();
+        $layoutService->setModule('navBar', $menu->index());
         $layoutService->view('error404');
     }
 

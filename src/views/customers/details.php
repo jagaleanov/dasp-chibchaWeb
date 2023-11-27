@@ -1,5 +1,6 @@
 <div class="container">
-    <h1 class="modal-title my-4">Detalles de cliente</h1><hr>
+    <h1 class="modal-title my-4">Detalles de cliente</h1>
+    <hr>
     <div class="row">
         <div class="col">
             <dl class="row">
@@ -66,29 +67,33 @@
                     </div>
                     <div class="text-right align-items-end">
                         <p><small class="text-muted"><?= $host->created_at ?></small></p>
-                        <p>
-                            <a href="<?= BASE_URL ?>/tickets/new/<?= $host->id ?>" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
-                                Nuevo ticket
-                            </a>
-                        </p>
-                        <p>
-                            <a href="<?= BASE_URL ?>/domains/new/<?= $host->id ?>" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
-                                Nuevo dominio
-                            </a>
-                        </p>
-                        <p>
-                            <a href="<?= BASE_URL ?>/payments/new/<?= $host->id ?>" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
-                                Realizar pago
-                            </a>
-                        </p>
+                        <?php if ($showActions) { ?>
+                            <p>
+                                <a href="<?= BASE_URL ?>/tickets/new/<?= $host->id ?>" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
+                                    Nuevo ticket
+                                </a>
+                            </p>
+                            <p>
+                                <a href="<?= BASE_URL ?>/domains/new/<?= $host->id ?>" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
+                                    Nuevo dominio
+                                </a>
+                            </p>
+                            <p>
+                                <a href="<?= BASE_URL ?>/payments/new/<?= $host->id ?>" class="btn btn-primary btn-lg btn-sm me-1" role="button" aria-pressed="true">
+                                    Realizar pago
+                                </a>
+                            </p>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
         <?php } ?>
     </div>
-    <div class="d-flex flex-row-reverse my-2">
-        <!-- <a href="#" class="btn btn-primary btn-lg btn-sm" role="button" aria-pressed="true">Nuevo hosting</a> -->
-    </div>
+    <?php if ($showActions) { ?>
+        <div class="d-flex flex-row-reverse my-2">
+            <a href="<?= BASE_URL ?>/orders/add" class="btn btn-primary btn-lg btn-sm" role="button" aria-pressed="true">Nuevo hosting</a>
+        </div>
+    <?php } ?>
 
     <h2 class="modal-title my-4">Tickets de soporte</h2>
     <div class="list-group">
