@@ -20,22 +20,20 @@ class HostPlanModel extends Model
         return null;
     }
 
-    public function findAll($search = null)
+    public function findAll($filters = [])
     {
         $query =
             "SELECT * FROM host_plans ";
-        $params = [];
 
-        // Aplicación de filtros si se proporcionan
-        if (!empty($search)) {
-            $query .= "WHERE name LIKE :search";
-            $params['search'] = '%' . $search . '%';
-        }
-
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute($params);
-
-        $data = $stmt->fetchAll();
+            $whereData = $this->buildWhereClause($filters);
+            $query .= $whereData['whereClause'];
+            $params = $whereData['params'];
+            $query .= " ORDER BY created_at DESC";
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute($params);
+    
+            $data = $stmt->fetchAll();
 
         $hostPlans = [];
         foreach ($data as $hostPlanData) {

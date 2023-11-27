@@ -23,9 +23,10 @@ class DomainModel extends Model
     public function findAll($filters = [])
     {
         $query =
-            "SELECT d.*, h.ip 
+            "SELECT d.*, h.ip, p.name AS provider_name
             FROM domains d 
-            JOIN hosts h ON d.host_id = h.id";
+            JOIN hosts h ON d.host_id = h.id
+            JOIN providers p ON p.id=d.provider_id";
 
         $whereData = $this->buildWhereClause($filters);
         $query .= $whereData['whereClause'];
@@ -69,7 +70,6 @@ class DomainModel extends Model
     public function updateStatus($id, $status)
     {
         try {
-            // Actualización del cliente
             $stmt = $this->connection->prepare(
                 "UPDATE domains SET 
                 status = :status,
@@ -84,6 +84,25 @@ class DomainModel extends Model
 
             //Respuesta
             return $this->find($id);
+        } catch (\Exception $e) {
+            throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
+        }
+    }
+
+    public function countApprovedDomains($providerId)
+    {
+        try {
+            $stmt = $this->connection->prepare(
+                "SELECT COUNT(*) AS counter FROM domains WHERE provider_id = :provider_id AND status = :status"
+            );
+            $stmt->execute([
+                'provider_id' => $providerId,
+                'status' => 1,
+            ]);
+            $data = $stmt->fetch();
+
+            //Respuesta
+            return $data['counter'];
         } catch (\Exception $e) {
             throw $e;  // Lanzar la excepción para que pueda ser manejada en una capa superior
         }

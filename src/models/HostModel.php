@@ -41,11 +41,14 @@ class HostModel extends Model
             "SELECT h.*,
             os.name AS operative_system_name,
             pp.name AS payment_plan_name,
-            hp.name AS host_plan_name
+            hp.name AS host_plan_name,
+            u.email
             FROM hosts h
             JOIN operative_systems os ON h.operative_system_id = os.id
             JOIN payment_plans pp ON h.payment_plan_id = pp.id
-            JOIN host_plans hp ON h.host_plan_id = hp.id";
+            JOIN host_plans hp ON h.host_plan_id = hp.id
+            JOIN customers c ON c.id = h.customer_id
+            JOIN users u ON u.id = c.user_id";
 
         // Utilizar la función buildWhereClause para construir la cláusula WHERE y los parámetros
         $whereData = $this->buildWhereClause($filters);

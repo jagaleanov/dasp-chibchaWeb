@@ -38,8 +38,11 @@ class PaymentModel extends Model
     public function findAll($filters = [])
     {
         $query =
-            "SELECT p.*, h.ip FROM payments p
-            JOIN hosts h ON p.host_id = h.id";
+            "SELECT p.*, h.ip, u.email, cc.number as credit_card_number FROM payments p
+            JOIN hosts h ON p.host_id = h.id
+            JOIN customers c ON c.id=h.customer_id
+            JOIN users u ON u.id=c.user_id
+            JOIN credit_cards cc ON p.credit_card_number = cc.number";
 
             $whereData = $this->buildWhereClause($filters);
             $query .= $whereData['whereClause'];

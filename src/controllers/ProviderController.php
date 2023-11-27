@@ -10,7 +10,7 @@ class ProviderController extends Controller
     private $providerModel, $domainModel;
 
     public function __construct()
-    {
+    { 
         parent::__construct();
         $this->providerModel = ModelService::getInstance()->get('ProviderModel');
         $this->domainModel = ModelService::getInstance()->get('DomainModel');
@@ -29,6 +29,10 @@ class ProviderController extends Controller
         try {
 
             $providers = $this->providerModel->findAll();
+            foreach($providers as $i => $provider){
+                $providers[$i]->approvedDomains = $this->domainModel->countApprovedDomains($provider->id);
+                $providers[$i]->commission = $this->calculateCommision($providers[$i]->approvedDomains,$provider->price);
+            }
 
             $data = [
                 'post' => $this->postService,
@@ -50,11 +54,7 @@ class ProviderController extends Controller
                 'provider_id' => ['value' => $provider->id, 'operator' => '=']
             ]);
             $requestsCounter = count($domains);
-            $approvedDomains = $this->domainModel->findAll([
-                'provider_id' => ['value' => $provider->id, 'operator' => '='],
-                'status' => ['value' => 1, 'operator' => '='],
-            ]);
-            $approvedCounter = count($approvedDomains);
+            $approvedCounter = $this->domainModel->countApprovedDomains($provider->id);
 
             $commission = $this->calculateCommision($approvedCounter, $provider->price);
 

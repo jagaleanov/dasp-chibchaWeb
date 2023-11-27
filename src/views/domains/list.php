@@ -9,6 +9,7 @@
                 <th scope="col">Host id</th>
                 <th scope="col">Host IP</th>
                 <th scope="col">Dominio</th>
+                <th scope="col">Proveedor</th>
                 <th scope="col">Estado</th>
                 <th scope="col">Fecha de registro</th>
                 <th scope="col">Acciones</th>
@@ -22,6 +23,7 @@
                         <td><?= $domain->host_id ?></td>
                         <td><?= $domain->ip ?></td>
                         <td><?= $domain->domain ?></td>
+                        <td><?= $domain->provider_name ?></td>
                         <td>
                             <?php if ($domain->status > 0) { ?>
                                 <?= $domain->status == 1 ? 'APROBADO' : 'RECHAZADO' ?>
