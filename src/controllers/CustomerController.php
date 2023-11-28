@@ -67,8 +67,10 @@ class CustomerController extends Controller
 
             if ($id == null) {
                 $id = $this->aclService->getUser()->id;
+                $customer = $this->customerModel->findByUserId($id);
+            }else{
+                $customer = $this->customerModel->find($id);
             }
-            $customer = $this->customerModel->find($id);
             $creditCard = $this->creditCardModel->findByCustomerId($customer->id);
             $domains = $this->domainModel->findAll([
                 'customer_id' => ['value' => $customer->id, 'operator' => '=']

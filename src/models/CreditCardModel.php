@@ -106,7 +106,7 @@ class CreditCardModel extends Model
             ]);
             $data = $stmt->fetch();
 
-            return count($data) > 0;
+            return is_array($data) && count($data) > 0;
         } catch (\Exception $e) {
             throw $e;
         }
