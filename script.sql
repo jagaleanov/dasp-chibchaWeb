@@ -104,7 +104,7 @@ CREATE TABLE credit_cards (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (number, customer_id),
-    UNIQUE INDEX U_credit_cards (customer_id ASC, number ASC),
+    UNIQUE INDEX U_credit_cards (number ASC),
     INDEX IX_credit_cards_customers (customer_id ASC),
     CONSTRAINT FK_credit_cards_customers FOREIGN KEY (customer_id) REFERENCES customers(id),
     CONSTRAINT CHK_expiration_month CHECK (expiration_month >= 1 AND expiration_month <= 12)

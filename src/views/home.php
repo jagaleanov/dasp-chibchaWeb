@@ -75,7 +75,7 @@
 
                                 <ul>
                                     <li>
-                                        Maximo rendimiento
+                                        Máximo rendimiento
                                     </li>
                                     <li>
                                         500 GB
